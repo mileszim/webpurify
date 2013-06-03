@@ -9,8 +9,9 @@ Install & Initialize
 `npm install webpurify`
 
 To initialize:
-    var WebPurify = require('webpurify');
 
+    var WebPurify = require('webpurify');
+    
     var wp = new WebPurify({
         api_key: 'my_api_key'
     });
