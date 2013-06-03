@@ -56,6 +56,16 @@ Check a string of text for profanity. Replaces any found profanity with a provid
     });
 
 
+### Return
+Check a string of text for profanity. If any found, returns an array of profane words. Else, returns empty array.
+
+    wp.return('some profane text', function(err, profanity) {
+      for (word in profanity) {
+        console.log(profanity[word]);
+      }
+    });
+
+
 In Progress
 -----------
 

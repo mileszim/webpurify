@@ -232,6 +232,41 @@ WebPurify.prototype.replace = function(text, replace_symbol, options, callback) 
 
 
 
+/**
+ * WebPurify API: Return
+ * Checks the passed text for any profanity. If found, returns an array of expletives.
+ * @param  {string}   text           The text to check for profanity
+ * @param  {Object}   options        The optional API parameters
+ * @param  {Function} callback       The callback function
+ * @throws {Error}    Throws an error if callback is not a function.
+ */
+WebPurify.prototype.return = function(text, options, callback) {
+    // Adjust or throw errors
+    if (options instanceof Function) {
+        callback = options;
+        options = null;
+    }
+    if (!(callback instanceof Function)) {
+        throw new Error('Invalid Callback');
+        return this;
+    }
+    
+    var method = 'webpurify.live.return';
+    
+    this.get({method:method,text:text}, options, function(err,res) {
+        if (err) callback(err,null);
+        if (!res.expletive) {
+            callback(null, []);
+        } else if (res.expletive && typeof res.expletive==='string') {
+            callback(null, [res.expletive]);
+        } else {
+            callback(null, res.expletive);
+        }
+    });
+}
+
+
+
 
 
 /**
