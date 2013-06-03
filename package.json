@@ -1,0 +1,16 @@
+{
+  "name": "webpurify",
+  "version": "0.1.0",
+  "description": "This provides an easy module for interacting with the WebPurify API",
+  "main": "webpurify.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "keywords": [
+    "webpurify",
+    "api"
+  ],
+  "author": "Miles Zimmerman",
+  "license": "BSD"
+}
