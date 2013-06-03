@@ -27,11 +27,11 @@ Commands
 Check a string of text for profanity. Returns 1 if profanity found, 0 if none.
 
     wp.check('some profane text', function(err, profanity) {
-        if (profanity===1) {
-          console.log('A bunch of sailors in here!');
-        } else {
-          console.log('This is a pure string');
-        }
+      if (profanity===1) {
+        console.log('A bunch of sailors in here!');
+      } else {
+        console.log('This is a pure string');
+      }
     });
 
 
@@ -46,3 +46,17 @@ Check a string of text for profanity. Returns number of words if profanity found
         console.log('This is a pure string');
       }
     });
+
+
+### Replace
+Check a string of text for profanity. Replaces any found profanity with a provided symbol, and returns the formatted string.
+
+    wp.replace('some profane text', '*', function(err, purified_text) {
+      console.log(purified_text);
+    });
+
+
+In Progress
+-----------
+
+The plan is to make this mimic the WebPurify API as closely as possible. Features will be added eventually. If you want to contribute, please do, that would be amazing.
