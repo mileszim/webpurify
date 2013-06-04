@@ -267,6 +267,79 @@ WebPurify.prototype.return = function(text, options, callback) {
 
 
 
+/**
+ * WebPurify API: addToBlacklist
+ * Add a word to the blacklist
+ * @param  {string}   word        The word to add to the blacklist
+ * @param  {string}   deep_search 1 if deepsearch, 0 or null if you don't care
+ * @param  {Function} callback    The callback function (optional)
+ */
+WebPurify.prototype.addToBlacklist = function(word, deep_search, callback) {
+    // Adjust or throw errors
+    if (deep_search instanceof Function) {
+        callback = deep_search;
+        deep_search = null;
+    }
+    
+    var method = 'webpurify.live.addtoblacklist';
+    
+    this.get({method:method,word:word,ds:deep_search}, function(err,res) {
+        if (callback) {
+            if (err) callback(err,null);
+            callback(null, res.success);
+        }
+    });
+}
+
+
+
+/**
+ * WebPurify API: removeFromBlacklist
+ * Remove a word to the blacklist
+ * @param  {string}   word        The word to remove to the blacklist
+ * @param  {Function} callback    The callback function
+ */
+WebPurify.prototype.removeFromBlacklist = function(word, callback) {    
+    var method = 'webpurify.live.removefromblacklist';
+    
+    this.get({method:method,word:word}, function(err,res) {
+        if (callback) {
+            if (err) callback(err,null);
+            callback(null, res.success);
+        }
+    });
+}
+
+
+
+/**
+ * WebPurify API: getBlacklist
+ * Get the blacklist
+ * @param  {Function} callback    The callback function
+ * @throws {Error} Throws an error if callback does not exist or invalid.
+ */
+WebPurify.prototype.getBlacklist = function(callback) {  
+    if (!(callback instanceof Function)) {
+        throw new Error('Invalid Callback');
+        return this;
+    }
+      
+    var method = 'webpurify.live.getblacklist';
+    
+    this.get({method:method}, function(err,res) {
+        if (err) callback(err,null);
+        if (!res.word) {
+            callback(null, []);
+        } else if (res.word && typeof res.word==='string') {
+            callback(null, [res.word]);
+        } else {
+            callback(null, res.word);
+        }
+    });
+}
+
+
+
 
 
 /**

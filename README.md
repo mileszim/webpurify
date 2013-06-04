@@ -22,7 +22,7 @@ To initialize:
 Commands
 --------
 
-### Check
+### check
 
 Check a string of text for profanity. Returns 1 if profanity found, 0 if none.
 
@@ -35,20 +35,20 @@ Check a string of text for profanity. Returns 1 if profanity found, 0 if none.
     });
 
 
-### CheckCount
+### checkCount
 
 Check a string of text for profanity. Returns number of words if profanity found, 0 if none.
 
     wp.checkCount('some profane text', function(err, profanity) {
       if (profanity > 0) {
-        console.log(profanity.toString() + 'sailors in here!');
+        console.log(profanity.toString() + ' sailors in here!');
       } else {
         console.log('This is a pure string');
       }
     });
 
 
-### Replace
+### replace
 Check a string of text for profanity. Replaces any found profanity with a provided symbol, and returns the formatted string.
 
     wp.replace('some profane text', '*', function(err, purified_text) {
@@ -56,12 +56,50 @@ Check a string of text for profanity. Replaces any found profanity with a provid
     });
 
 
-### Return
+### return
 Check a string of text for profanity. If any found, returns an array of profane words. Else, returns empty array.
 
     wp.return('some profane text', function(err, profanity) {
       for (word in profanity) {
         console.log(profanity[word]);
+      }
+    });
+
+
+### addToBlacklist
+Add a word to the blacklist.
+
+    wp.addToBlacklist('my_word', function(err, success) {
+      if (success===1) console.log('success!');
+    });
+    
+Can also be called without callback:
+
+    wp.addToBlacklist('my_word');
+    
+For Deep search, add optional parameter 1 after word:
+
+    wp.addToBlacklist('my_word', 1);
+
+
+### removeFromBlacklist
+Remove a word from the blacklist.
+
+    wp.removeFromBlacklist('my_word', function(err, success) {
+      if (success===1) console.log('success!');
+    });
+    
+Can also be called without callback:
+
+    wp.removeFromBlacklist('my_word');
+
+
+### getBlackList
+Get the blacklist as an array of words.
+
+    wp.getBlacklist(function(err, blacklist) {
+      for (word in blacklist) {
+        console.log(blacklist[word]);
       }
     });
 
