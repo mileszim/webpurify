@@ -20,14 +20,15 @@ Install & Initialize
 
 To initialize:
 
-    var WebPurify = require('webpurify');
-    
-    var wp = new WebPurify({
-        api_key: 'my_api_key'
-        //, endpoint:   'us'  // Optional, available choices: 'eu', 'ap'. Default: 'us'.
-        //, enterprise: false // Optional, set to true if you are using the enterprise API, allows SSL
-    });
+```js
+var WebPurify = require('webpurify');
 
+var wp = new WebPurify({
+    api_key: 'my_api_key'
+    //, endpoint:   'us'  // Optional, available choices: 'eu', 'ap'. Default: 'us'.
+    //, enterprise: false // Optional, set to true if you are using the enterprise API, allows SSL
+});
+```
 
 Commands
 --------
