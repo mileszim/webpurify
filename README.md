@@ -3,6 +3,16 @@ WebPurify API for Node.js
 
 This project is designed to allow simple interaction with the WebPurify API within Node.js. For more information about WebPurify and the services it offers, check out (http://webpurify.com/).
 
+### Commands
+* [check](#check)
+* [checkCount](#checkCount)
+* [replace](#replace)
+* [return](#return)
+* [addToBlacklist](#addToBlacklist)
+* [removeFromBlacklist](#removeFromBlacklist)
+* [getBlacklist](#getBlacklist)
+
+
 Install & Initialize
 --------------------
 
@@ -22,6 +32,7 @@ To initialize:
 Commands
 --------
 
+<a name="check" />
 ### check
 
 Check a string of text for profanity. Returns 1 if profanity found, 0 if none.
@@ -35,6 +46,7 @@ Check a string of text for profanity. Returns 1 if profanity found, 0 if none.
     });
 
 
+<a name="checkCount" />
 ### checkCount
 
 Check a string of text for profanity. Returns number of words if profanity found, 0 if none.
@@ -48,6 +60,7 @@ Check a string of text for profanity. Returns number of words if profanity found
     });
 
 
+<a name="replace" />
 ### replace
 Check a string of text for profanity. Replaces any found profanity with a provided symbol, and returns the formatted string.
 
@@ -56,6 +69,7 @@ Check a string of text for profanity. Replaces any found profanity with a provid
     });
 
 
+<a name="return" />
 ### return
 Check a string of text for profanity. If any found, returns an array of profane words. Else, returns empty array.
 
@@ -66,6 +80,7 @@ Check a string of text for profanity. If any found, returns an array of profane 
     });
 
 
+<a name="addToBlacklist" />
 ### addToBlacklist
 Add a word to the blacklist.
 
@@ -82,6 +97,7 @@ For Deep search, add optional parameter 1 after word:
     wp.addToBlacklist('my_word', 1);
 
 
+<a name="removeFromBlacklist" />
 ### removeFromBlacklist
 Remove a word from the blacklist.
 
@@ -94,7 +110,8 @@ Can also be called without callback:
     wp.removeFromBlacklist('my_word');
 
 
-### getBlackList
+<a name="getBlacklist" />
+### getBlacklist
 Get the blacklist as an array of words.
 
     wp.getBlacklist(function(err, blacklist) {
@@ -102,6 +119,7 @@ Get the blacklist as an array of words.
         console.log(blacklist[word]);
       }
     });
+
 
 
 In Progress
