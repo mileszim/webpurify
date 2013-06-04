@@ -1,7 +1,7 @@
 WebPurify API for Node.js
 =========================
 
-This project is designed to allow simple interaction with the WebPurify API within Node.js. For more information about WebPurify and the services it offers, check out (http://webpurify.com/).
+This module allows simple interaction with the WebPurify API within Node.js. For more information about WebPurify and the services it offers, check out (http://webpurify.com/).
 
 ### Commands
 * [check](#check)
@@ -11,6 +11,9 @@ This project is designed to allow simple interaction with the WebPurify API with
 * [addToBlacklist](#addToBlacklist)
 * [removeFromBlacklist](#removeFromBlacklist)
 * [getBlacklist](#getBlacklist)
+* [addToWhitelist](#addToWhitelist)
+* [removeFromWhitelist](#removeFromWhitelist)
+* [getWhitelist](#getWhitelist)
 
 
 Install & Initialize
@@ -137,7 +140,53 @@ wp.getBlacklist(function(err, blacklist) {
 ```
 
 
-In Progress
------------
+<a name="addToWhitelist" />
+### addToWhitelist
+Add a word to the whitelist.
 
-The plan is to make this mimic the WebPurify API as closely as possible. Features will be added eventually. If you want to contribute, please do, that would be amazing.
+```js
+wp.addToWhitelist('my_word', function(err, success) {
+  if (success===1) console.log('success!');
+});
+```
+
+Can also be called without callback:
+
+```js
+wp.addToWhitelist('my_word');
+```
+
+
+<a name="removeFromWhitelist" />
+### removeFromWhitelist
+Remove a word from the whitelist.
+
+```js
+wp.removeFromWhitelist('my_word', function(err, success) {
+  if (success===1) console.log('success!');
+});
+```
+    
+Can also be called without callback:
+
+```js
+wp.removeFromWhitelist('my_word');
+```
+
+<a name="getWhitelist" />
+### getWhitelist
+Get the whitelist as an array of words.
+
+```js
+wp.getWhitelist(function(err, whitelist) {
+  for (word in whitelist) {
+    console.log(whitelist[word]);
+  }
+});
+```
+
+
+Status
+------
+
+So far it mimics the WebPurify API as closely as possible. In the future, I might change it to have 1 and 0 be replaced with true and false natively, but we'll see. If you find bugs or want to contribute, please do, that would be amazing.

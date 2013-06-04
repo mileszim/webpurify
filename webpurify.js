@@ -295,8 +295,8 @@ WebPurify.prototype.addToBlacklist = function(word, deep_search, callback) {
 
 /**
  * WebPurify API: removeFromBlacklist
- * Remove a word to the blacklist
- * @param  {string}   word        The word to remove to the blacklist
+ * Remove a word from the blacklist
+ * @param  {string}   word        The word to remove from the blacklist
  * @param  {Function} callback    The callback function
  */
 WebPurify.prototype.removeFromBlacklist = function(word, callback) {    
@@ -325,6 +325,72 @@ WebPurify.prototype.getBlacklist = function(callback) {
     }
       
     var method = 'webpurify.live.getblacklist';
+    
+    this.get({method:method}, function(err,res) {
+        if (err) callback(err,null);
+        if (!res.word) {
+            callback(null, []);
+        } else if (res.word && typeof res.word==='string') {
+            callback(null, [res.word]);
+        } else {
+            callback(null, res.word);
+        }
+    });
+}
+
+
+
+/**
+ * WebPurify API: addToWhitelist
+ * Add a word to the whitelist
+ * @param  {string}   word        The word to add to the whitelist
+ * @param  {Function} callback    The callback function (optional)
+ */
+WebPurify.prototype.addToWhitelist = function(word, callback) {
+    var method = 'webpurify.live.addtowhitelist';
+    
+    this.get({method:method,word:word}, function(err,res) {
+        if (callback) {
+            if (err) callback(err,null);
+            callback(null, res.success);
+        }
+    });
+}
+
+
+
+/**
+ * WebPurify API: removeFromWhitelist
+ * Remove a word from the whitelist
+ * @param  {string}   word        The word to remove from the whitelist
+ * @param  {Function} callback    The callback function
+ */
+WebPurify.prototype.removeFromWhitelist = function(word, callback) {    
+    var method = 'webpurify.live.removefromwhitelist';
+    
+    this.get({method:method,word:word}, function(err,res) {
+        if (callback) {
+            if (err) callback(err,null);
+            callback(null, res.success);
+        }
+    });
+}
+
+
+
+/**
+ * WebPurify API: getWhitelist
+ * Get the whitelist
+ * @param  {Function} callback    The callback function
+ * @throws {Error} Throws an error if callback does not exist or invalid.
+ */
+WebPurify.prototype.getWhitelist = function(callback) {  
+    if (!(callback instanceof Function)) {
+        throw new Error('Invalid Callback');
+        return this;
+    }
+      
+    var method = 'webpurify.live.getwhitelist';
     
     this.get({method:method}, function(err,res) {
         if (err) callback(err,null);
