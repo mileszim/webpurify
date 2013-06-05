@@ -4,13 +4,19 @@ WebPurify API for Node.js
 This module allows simple interaction with the WebPurify API within Node.js. For more information about WebPurify and the services it offers, check out (http://webpurify.com/).
 
 ### Commands
+
+#### Filters
 * [check](#check)
 * [checkCount](#checkCount)
 * [replace](#replace)
 * [return](#return)
+
+#### Blacklist
 * [addToBlacklist](#addToBlacklist)
 * [removeFromBlacklist](#removeFromBlacklist)
 * [getBlacklist](#getBlacklist)
+
+#### Whitelist
 * [addToWhitelist](#addToWhitelist)
 * [removeFromWhitelist](#removeFromWhitelist)
 * [getWhitelist](#getWhitelist)
@@ -85,6 +91,23 @@ wp.return('some profane text', function(err, profanity) {
   for (word in profanity) {
     console.log(profanity[word]);
   }
+});
+```
+
+
+### Options
+All filter commands can take an additional options object, just before the callback. The available options are:
+
+```js
+var optional = {
+  lang:   'en', // the 2 letter language code for the text you are submitting
+  semail: 1,    // treat email addresses like profanity
+  sphone: 1,    // treat phone numbers like profanity
+  slink:  1    // treat urls like profanity
+};
+
+wp.check('some profane text', optional, function(error, profanity) {
+  console.log(profanity);
 });
 ```
 

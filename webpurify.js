@@ -106,6 +106,7 @@ WebPurify.prototype.get = function(params, options, callback) {
 
     // make query and request
     var query = this.request_base.path + '?' + querystring.stringify(this.query_base) + '&' + querystring.stringify(params);
+    if (options != null) query += '&' + querystring.stringify(options);
     this.request(this.request_base.host, query, 'GET', this.options.enterprise, function(error, response) {
         if (!error && response) {
             var rsp = response.rsp;
