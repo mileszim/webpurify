@@ -5,18 +5,18 @@ This module allows simple interaction with the WebPurify API within Node.js. For
 
 ### Commands
 
-#### Filters
+##### Filters
 * [check](#check)
 * [checkCount](#checkCount)
 * [replace](#replace)
 * [return](#return)
 
-#### Blacklist
+##### Blacklist
 * [addToBlacklist](#addToBlacklist)
 * [removeFromBlacklist](#removeFromBlacklist)
 * [getBlacklist](#getBlacklist)
 
-#### Whitelist
+##### Whitelist
 * [addToWhitelist](#addToWhitelist)
 * [removeFromWhitelist](#removeFromWhitelist)
 * [getWhitelist](#getWhitelist)
