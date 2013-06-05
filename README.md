@@ -103,7 +103,7 @@ var optional = {
   lang:   'en', // the 2 letter language code for the text you are submitting
   semail: 1,    // treat email addresses like profanity
   sphone: 1,    // treat phone numbers like profanity
-  slink:  1    // treat urls like profanity
+  slink:  1     // treat urls like profanity
 };
 
 wp.check('some profane text', optional, function(error, profanity) {

@@ -73,7 +73,6 @@ WebPurify.prototype.request = function(host, path, method, ssl, callback) {
         base_type = https;
     }
     var req = base_type.request(options, function(res) {
-        //res.setEncoding('utf8');
         res.on('data', function(data) {
             callback(null, JSON.parse(data));
         })
