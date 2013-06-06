@@ -1,10 +1,10 @@
 {
   "name": "webpurify",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "This provides an easy module for interacting with the WebPurify API",
   "main": "webpurify.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": ""
   },
   "repository": "https://github.com/mileszim/webpurify",
   "keywords": [

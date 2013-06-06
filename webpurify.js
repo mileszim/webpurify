@@ -197,7 +197,7 @@ WebPurify.prototype.checkCount = function(text, options, callback) {
     
     this.get({method:method,text:text}, options, function(err,res) {
         if (err) callback(err,null);
-        callback(null, res.found);
+        callback(null, parseInt(res.found));
     });
 }
 
@@ -287,7 +287,8 @@ WebPurify.prototype.addToBlacklist = function(word, deep_search, callback) {
     this.get({method:method,word:word,ds:deep_search}, function(err,res) {
         if (callback) {
             if (err) callback(err,null);
-            callback(null, res.success);
+            if (res.success==='1') callback(null, true)
+            else callback(null, false);
         }
     });
 }
@@ -306,7 +307,8 @@ WebPurify.prototype.removeFromBlacklist = function(word, callback) {
     this.get({method:method,word:word}, function(err,res) {
         if (callback) {
             if (err) callback(err,null);
-            callback(null, res.success);
+            if (res.success==='1') callback(null, true)
+            else callback(null, false);
         }
     });
 }
@@ -353,7 +355,8 @@ WebPurify.prototype.addToWhitelist = function(word, callback) {
     this.get({method:method,word:word}, function(err,res) {
         if (callback) {
             if (err) callback(err,null);
-            callback(null, res.success);
+            if (res.success==='1') callback(null, true)
+            else callback(null, false);
         }
     });
 }
@@ -372,7 +375,8 @@ WebPurify.prototype.removeFromWhitelist = function(word, callback) {
     this.get({method:method,word:word}, function(err,res) {
         if (callback) {
             if (err) callback(err,null);
-            callback(null, res.success);
+            if (res.success==='1') callback(null, true)
+            else callback(null, false);
         }
     });
 }

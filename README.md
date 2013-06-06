@@ -117,7 +117,7 @@ Add a word to the blacklist.
 
 ```js
 wp.addToBlacklist('my_word', function(err, success) {
-  if (success===1) console.log('success!');
+  if (success===true) console.log('success!');
 });
 ```
 
@@ -140,7 +140,7 @@ Remove a word from the blacklist.
 
 ```js
 wp.removeFromBlacklist('my_word', function(err, success) {
-  if (success===1) console.log('success!');
+  if (success===true) console.log('success!');
 });
 ```
     
@@ -169,7 +169,7 @@ Add a word to the whitelist.
 
 ```js
 wp.addToWhitelist('my_word', function(err, success) {
-  if (success===1) console.log('success!');
+  if (success===true) console.log('success!');
 });
 ```
 
@@ -186,7 +186,7 @@ Remove a word from the whitelist.
 
 ```js
 wp.removeFromWhitelist('my_word', function(err, success) {
-  if (success===1) console.log('success!');
+  if (success===true) console.log('success!');
 });
 ```
     
