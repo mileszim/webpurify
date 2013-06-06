@@ -20,7 +20,7 @@ function WebPurify(options) {
         throw new Error('Invalid parameters');
     }
     if (typeof options.api_key !== 'string') {
-        throw new Error('Missing API Key');
+        throw new Error('Invalid API Key');
     }
     
     // API Information
@@ -178,12 +178,7 @@ WebPurify.prototype.check = function(text, options, callback) {
         if (err) {
             callback(WebPurify.prototype.handleError(err),null);
         } else {
-            if (res.found==='1') {
-                callback(null, true);
-            }
-            else {
-                callback(null, false);
-            }
+            callback(null, res.found === '1' ? true : false);
         }
     });
 };
@@ -311,8 +306,7 @@ WebPurify.prototype.addToBlacklist = function(word, deep_search, callback) {
             if (err) {
                 callback(WebPurify.prototype.handleError(err),null);
             } else {
-                if (res.success==='1') callback(null, true)
-                else callback(null, false);
+                callback(null, res.success === '1' ? true : false);
             }
         }
     });
@@ -334,8 +328,7 @@ WebPurify.prototype.removeFromBlacklist = function(word, callback) {
             if (err) {
                 callback(WebPurify.prototype.handleError(err),null);
             } else {
-                if (res.success==='1') callback(null, true)
-                else callback(null, false);
+                callback(null, res.success === '1' ? true : false);
             }
         }
     });
@@ -387,8 +380,7 @@ WebPurify.prototype.addToWhitelist = function(word, callback) {
             if (err) {
                 callback(WebPurify.prototype.handleError(err),null);
             } else {
-                if (res.success==='1') callback(null, true)
-                else callback(null, false);
+                callback(null, res.success === '1' ? true : false);
             }
         }
     });
@@ -410,8 +402,7 @@ WebPurify.prototype.removeFromWhitelist = function(word, callback) {
             if (err) {
                 callback(WebPurify.prototype.handleError(err),null);
             } else {
-                if (res.success==='1') callback(null, true)
-                else callback(null, false);
+                callback(null, res.success === '1' ? true : false);
             }
         }
     });
