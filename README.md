@@ -1,7 +1,7 @@
 WebPurify API for Node.js
 =========================
 
-This module allows simple interaction with the WebPurify API within Node.js. For more information about WebPurify and the services it offers, check out (http://webpurify.com/).
+This module allows simple interaction with the WebPurify API within Node.js. For more information about WebPurify and the services it offers, check out http://webpurify.com/.
 
 ### Commands
 
