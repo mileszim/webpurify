@@ -1,4 +1,3 @@
-var util = require('util');
 var querystring = require('querystring');
 var http = require('http');
 var https = require('https');
@@ -20,7 +19,7 @@ function WebPurify(options) {
     if (!(options instanceof Object)) {
         throw new Error('Invalid parameters');
     }
-    if (!(typeof options.api_key === 'string')) {
+    if (typeof options.api_key !== 'string') {
         throw new Error('Missing API Key');
     }
     
@@ -75,13 +74,13 @@ WebPurify.prototype.request = function(host, path, method, ssl, callback) {
     var req = base_type.request(options, function(res) {
         res.on('data', function(data) {
             callback(null, JSON.parse(data));
-        })
+        });
     });
     req.on('error', function(error) {
         callback(error.message, null);
     });
     req.end();
-}
+};
 
 
 
@@ -100,12 +99,11 @@ WebPurify.prototype.get = function(params, options, callback) {
     }
     if (!(callback instanceof Function)) {
         throw new Error('Invalid Callback');
-        return this;
     }
 
     // make query and request
     var query = this.request_base.path + '?' + querystring.stringify(this.query_base) + '&' + querystring.stringify(params);
-    if (options != null) query += '&' + querystring.stringify(options);
+    if (options !== null) query += '&' + querystring.stringify(options);
     this.request(this.request_base.host, query, 'GET', this.options.enterprise, function(error, response) {
         if (!error && response) {
             var rsp = response.rsp;
@@ -123,12 +121,12 @@ WebPurify.prototype.get = function(params, options, callback) {
     });
     
     return this;
-}
+};
 
 
 
 /**
- * Strips the WepPrufiy JSON response to be useful
+ * Strips the WebPurify JSON response to be useful
  * @param  {Object} response The response JSON to be stripped
  * @return {Object} The stripped response
  */
@@ -140,7 +138,7 @@ WebPurify.prototype.strip = function(response) {
         delete response.format;
     }
     return response;
-}
+};
 
 
 
@@ -150,9 +148,9 @@ WebPurify.prototype.strip = function(response) {
  * @return {string} An error message
  */
 WebPurify.prototype.handleError = function(err) {
-    if (err.msg)  return "Error: " + err.msg
+    if (err.msg) return "Error: " + err.msg;
     return "There was an error.";
-}
+};
 
 
 
@@ -172,7 +170,6 @@ WebPurify.prototype.check = function(text, options, callback) {
     }
     if (!(callback instanceof Function)) {
         throw new Error('Invalid Callback');
-        return this;
     }
     
     var method = 'webpurify.live.check';
@@ -189,7 +186,7 @@ WebPurify.prototype.check = function(text, options, callback) {
             }
         }
     });
-}
+};
 
 
 
@@ -209,7 +206,6 @@ WebPurify.prototype.checkCount = function(text, options, callback) {
     }
     if (!(callback instanceof Function)) {
         throw new Error('Invalid Callback');
-        return this;
     }
     
     var method = 'webpurify.live.checkcount';
@@ -218,10 +214,10 @@ WebPurify.prototype.checkCount = function(text, options, callback) {
         if (err) {
             callback(WebPurify.prototype.handleError(err),null);
         } else {
-            callback(null, parseInt(res.found));
+            callback(null, parseInt(res.found, 10));
         }
     });
-}
+};
 
 
 
@@ -242,7 +238,6 @@ WebPurify.prototype.replace = function(text, replace_symbol, options, callback) 
     }
     if (!(callback instanceof Function)) {
         throw new Error('Invalid Callback');
-        return this;
     }
     
     var method = 'webpurify.live.replace';
@@ -254,7 +249,7 @@ WebPurify.prototype.replace = function(text, replace_symbol, options, callback) 
             callback(null, res.text);
         }
     });
-}
+};
 
 
 
@@ -274,7 +269,6 @@ WebPurify.prototype.return = function(text, options, callback) {
     }
     if (!(callback instanceof Function)) {
         throw new Error('Invalid Callback');
-        return this;
     }
     
     var method = 'webpurify.live.return';
@@ -292,7 +286,7 @@ WebPurify.prototype.return = function(text, options, callback) {
             }
         }
     });
-}
+};
 
 
 
@@ -322,7 +316,7 @@ WebPurify.prototype.addToBlacklist = function(word, deep_search, callback) {
             }
         }
     });
-}
+};
 
 
 
@@ -345,7 +339,7 @@ WebPurify.prototype.removeFromBlacklist = function(word, callback) {
             }
         }
     });
-}
+};
 
 
 
@@ -358,7 +352,6 @@ WebPurify.prototype.removeFromBlacklist = function(word, callback) {
 WebPurify.prototype.getBlacklist = function(callback) {  
     if (!(callback instanceof Function)) {
         throw new Error('Invalid Callback');
-        return this;
     }
       
     var method = 'webpurify.live.getblacklist';
@@ -376,7 +369,7 @@ WebPurify.prototype.getBlacklist = function(callback) {
             }
         }
     });
-}
+};
 
 
 
@@ -399,7 +392,7 @@ WebPurify.prototype.addToWhitelist = function(word, callback) {
             }
         }
     });
-}
+};
 
 
 
@@ -422,7 +415,7 @@ WebPurify.prototype.removeFromWhitelist = function(word, callback) {
             }
         }
     });
-}
+};
 
 
 
@@ -435,7 +428,6 @@ WebPurify.prototype.removeFromWhitelist = function(word, callback) {
 WebPurify.prototype.getWhitelist = function(callback) {  
     if (!(callback instanceof Function)) {
         throw new Error('Invalid Callback');
-        return this;
     }
       
     var method = 'webpurify.live.getwhitelist';
@@ -453,7 +445,7 @@ WebPurify.prototype.getWhitelist = function(callback) {
             }
         }
     });
-}
+};
 
 
 
