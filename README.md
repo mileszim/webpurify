@@ -45,11 +45,11 @@ Commands
 <a name="check" />
 ### check
 
-Check a string of text for profanity. Returns 1 if profanity found, 0 if none.
+Check a string of text for profanity. Returns true if profanity found, false if none.
 
 ```js
 wp.check('some profane text', function(err, profanity) {
-  if (profanity===1) {
+  if (profanity===true) {
     console.log('A bunch of sailors in here!');
   } else {
     console.log('This is a pure string');

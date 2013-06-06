@@ -34,8 +34,8 @@ function WebPurify(options) {
     
     // Configured options
     this.options = {
-        api_key: options.api_key,
-        endpoint: options.endpoint || 'us',
+        api_key:    options.api_key,
+        endpoint:   options.endpoint   || 'us',
         enterprise: options.enterprise || false
     };
     
@@ -146,7 +146,7 @@ WebPurify.prototype.strip = function(response) {
 
 /**
  * WebPurify API: Check
- * Checks the passed text for any profanity. If found, returns 1, else 0.
+ * Checks the passed text for any profanity. If found, returns true, else false.
  * @param  {string}   text     The text to check for profanity
  * @param  {Object}   options  The optional API parameters
  * @param  {Function} callback The callback function
@@ -167,7 +167,8 @@ WebPurify.prototype.check = function(text, options, callback) {
     
     this.get({method:method,text:text}, options, function(err,res) {
         if (err) callback(err,null);
-        callback(null, res.found);
+        if (res.found==='1') callback(null, true)
+        else callback(null, false);
     });
 }
 
