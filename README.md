@@ -212,4 +212,4 @@ wp.getWhitelist(function(err, whitelist) {
 Status
 ------
 
-So far it mimics the WebPurify API as closely as possible. In the future, I might change it to have 1 and 0 be replaced with true and false natively, but we'll see. If you find bugs or want to contribute, please do, that would be amazing.
+So far it mimics the WebPurify API as closely as possible. If you find bugs or want to contribute, please do, that would be amazing.
