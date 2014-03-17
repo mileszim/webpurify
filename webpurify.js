@@ -73,7 +73,13 @@ WebPurify.prototype.request = function(host, path, method, ssl, callback) {
     }
     var req = base_type.request(options, function(res) {
         res.on('data', function(data) {
-            callback(null, JSON.parse(data));
+            try {
+                data = JSON.parse(data);
+            } catch (e) {
+                return callback("Invalid JSON");
+            }
+
+            callback(null, data);
         });
     });
     req.on('error', function(error) {
