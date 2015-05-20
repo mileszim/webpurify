@@ -173,7 +173,7 @@ WebPurify.prototype.check = function(text, options, callback) {
         if (err) {
             callback(err, null);
         } else {
-            callback(null, res.found === '1' ? true : false);
+            callback(null, res.found === '1');
         }
     });
 };
@@ -301,7 +301,7 @@ WebPurify.prototype.addToBlacklist = function(word, deep_search, callback) {
             if (err) {
                 callback(err,null);
             } else {
-                callback(null, res.success === '1' ? true : false);
+                callback(null, res.success === '1');
             }
         }
     });
@@ -323,7 +323,7 @@ WebPurify.prototype.removeFromBlacklist = function(word, callback) {
             if (err) {
                 callback(err,null);
             } else {
-                callback(null, res.success === '1' ? true : false);
+                callback(null, res.success === '1');
             }
         }
     });
@@ -375,7 +375,7 @@ WebPurify.prototype.addToWhitelist = function(word, callback) {
             if (err) {
                 callback(err,null);
             } else {
-                callback(null, res.success === '1' ? true : false);
+                callback(null, res.success === '1');
             }
         }
     });
@@ -397,7 +397,7 @@ WebPurify.prototype.removeFromWhitelist = function(word, callback) {
             if (err) {
                 callback(err,null);
             } else {
-                callback(null, res.success === '1' ? true : false);
+                callback(null, res.success === '1');
             }
         }
     });
