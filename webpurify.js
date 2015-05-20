@@ -113,18 +113,19 @@ WebPurify.prototype.get = function(params, options, callback) {
     var query = this.request_base.path + '?' + querystring.stringify(this.query_base) + '&' + querystring.stringify(params);
     if (options !== null) query += '&' + querystring.stringify(options);
     this.request(this.request_base.host, query, 'GET', this.options.enterprise, function(error, response) {
-        if (!error && response) {
-            var rsp = response.rsp;
-            var status = rsp['@attributes'].stat;
-            // errors (to handle later)
-            if (status==='fail' && rsp.err instanceof Object) {
-                callback(rsp.err['@attributes'], null);
-            
-            // accepted
-            } else if (status==='ok') {
-                callback(null, WebPurify.prototype.strip(rsp));
+        if (error) return callback(error, null);
+
+        var rsp = response.rsp;
+        if (rsp.hasOwnProperty('err')) {
+            var err_attrs = rsp.err['@attributes'] || {msg: "Unknown Webpurify Error"};
+            var error = new Error(err_attrs.msg);
+            if (err_attrs.hasOwnProperty('code')) {
+                error.code = err_attrs.code;
             }
-            
+            callback(error, null);
+        }
+        else {
+            callback(null, WebPurify.prototype.strip(rsp));
         }
     });
     
@@ -148,20 +149,6 @@ WebPurify.prototype.strip = function(response) {
     return response;
 };
 
-
-
-/**
- * Handles errors
- * @param  {Object} err The error object
- * @return {string} An error message
- */
-WebPurify.prototype.handleError = function(err) {
-    if (err.msg) return "Error: " + err.msg;
-    return "There was an error.";
-};
-
-
-
 /**
  * WebPurify API: Check
  * Checks the passed text for any profanity. If found, returns true, else false.
@@ -184,7 +171,7 @@ WebPurify.prototype.check = function(text, options, callback) {
     
     this.get({method:method,text:text}, options, function(err,res) {
         if (err) {
-            callback(WebPurify.prototype.handleError(err),null);
+            callback(err, null);
         } else {
             callback(null, res.found === '1' ? true : false);
         }
@@ -215,7 +202,7 @@ WebPurify.prototype.checkCount = function(text, options, callback) {
     
     this.get({method:method,text:text}, options, function(err,res) {
         if (err) {
-            callback(WebPurify.prototype.handleError(err),null);
+            callback(err,null);
         } else {
             callback(null, parseInt(res.found, 10));
         }
@@ -247,7 +234,7 @@ WebPurify.prototype.replace = function(text, replace_symbol, options, callback) 
     
     this.get({method:method,text:text,replacesymbol:replace_symbol}, options, function(err,res) {
         if (err) {
-            callback(WebPurify.prototype.handleError(err),null);
+            callback(err,null);
         } else {
             callback(null, res.text);
         }
@@ -278,7 +265,7 @@ WebPurify.prototype.return = function(text, options, callback) {
     
     this.get({method:method,text:text}, options, function(err,res) {
         if (err) {
-            callback(WebPurify.prototype.handleError(err),null);
+            callback(err,null);
         } else {
             if (!res.expletive) {
                 callback(null, []);
@@ -312,7 +299,7 @@ WebPurify.prototype.addToBlacklist = function(word, deep_search, callback) {
     this.get({method:method,word:word,ds:deep_search}, function(err,res) {
         if (callback) {
             if (err) {
-                callback(WebPurify.prototype.handleError(err),null);
+                callback(err,null);
             } else {
                 callback(null, res.success === '1' ? true : false);
             }
@@ -334,7 +321,7 @@ WebPurify.prototype.removeFromBlacklist = function(word, callback) {
     this.get({method:method,word:word}, function(err,res) {
         if (callback) {
             if (err) {
-                callback(WebPurify.prototype.handleError(err),null);
+                callback(err,null);
             } else {
                 callback(null, res.success === '1' ? true : false);
             }
@@ -359,7 +346,7 @@ WebPurify.prototype.getBlacklist = function(callback) {
     
     this.get({method:method}, function(err,res) {
         if (err) {
-            callback(WebPurify.prototype.handleError(err),null);
+            callback(err,null);
         } else {
             if (!res.word) {
                 callback(null, []);
@@ -386,7 +373,7 @@ WebPurify.prototype.addToWhitelist = function(word, callback) {
     this.get({method:method,word:word}, function(err,res) {
         if (callback) {
             if (err) {
-                callback(WebPurify.prototype.handleError(err),null);
+                callback(err,null);
             } else {
                 callback(null, res.success === '1' ? true : false);
             }
@@ -408,7 +395,7 @@ WebPurify.prototype.removeFromWhitelist = function(word, callback) {
     this.get({method:method,word:word}, function(err,res) {
         if (callback) {
             if (err) {
-                callback(WebPurify.prototype.handleError(err),null);
+                callback(err,null);
             } else {
                 callback(null, res.success === '1' ? true : false);
             }
@@ -433,7 +420,7 @@ WebPurify.prototype.getWhitelist = function(callback) {
     
     this.get({method:method}, function(err,res) {
         if (err) {
-            callback(WebPurify.prototype.handleError(err),null);
+            callback(err,null);
         } else {
             if (!res.word) {
                 callback(null, []);
