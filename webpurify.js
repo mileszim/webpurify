@@ -1,6 +1,7 @@
-var querystring = require('querystring');
-var http = require('http');
-var https = require('https');
+var http = require('http'),
+    https = require('https'),
+    url = require('url'),
+    extend = require('util')._extend;
 
 
 /**
@@ -50,48 +51,6 @@ function WebPurify(options) {
     
 }
 
-
-
-/**
- * Handles the HTTP/S requests
- * @param {string}   host     The hostname for the request URL (ie. api1.webpurify.com)
- * @param {string}   path     The path of the request (ie. /services/rest/)
- * @param {string}   method   The method, either 'GET or 'PUT'
- * @param {boolean}  ssl      True or false for using HTTPS or HTTP. If you are using enterprise API, you can set this to true.
- * @param {Function} callback The callback function
- */
-WebPurify.prototype.request = function(host, path, method, ssl, callback) {
-    var options = {
-        hostname: host,
-        port: 80,
-        path: path,
-        method: method
-    };
-    var base_type = http;
-    if (ssl) {
-        base_type = https;
-    }
-    var req = base_type.request(options, function(res) {
-        var chunks = [];
-        res.on('data', function(chunk) {
-            chunks.push(chunk);
-        });
-        res.on('end', function() {
-            try {
-                callback(null, JSON.parse(Buffer.concat(chunks)));
-            } catch (e) {
-                callback(e, null);
-            }
-        });
-    });
-    req.on('error', function(error) {
-        callback(error, null);
-    });
-    req.end();
-};
-
-
-
 /**
  * Formats the request for the request function
  * @param  {Object}   params   The params object passed into the request
@@ -110,25 +69,50 @@ WebPurify.prototype.get = function(params, options, callback) {
     }
 
     // make query and request
-    var query = this.request_base.path + '?' + querystring.stringify(this.query_base) + '&' + querystring.stringify(params);
-    if (options !== null) query += '&' + querystring.stringify(options);
-    this.request(this.request_base.host, query, 'GET', this.options.enterprise, function(error, response) {
-        if (error) return callback(error, null);
+    var query = extend(this.query_base, params);
+    if (options !== null) query = extend(query, options);
+    var request_options = {
+        hostname: this.request_base.host,
+        path: url.format({pathname: this.request_base.path, query: query}),
+        method: 'GET'
+    };
 
-        var rsp = response.rsp;
-        if (rsp.hasOwnProperty('err')) {
-            var err_attrs = rsp.err['@attributes'] || {msg: "Unknown Webpurify Error"};
-            var error = new Error(err_attrs.msg);
-            if (err_attrs.hasOwnProperty('code')) {
-                error.code = err_attrs.code;
+    var base_type = this.options.enterprise ? https : http;
+    var req = base_type.request(request_options, function(res) {
+        var chunks = [];
+        res.on('data', chunks.push.bind(chunks));
+        res.on('end', function() {
+
+            var response = null;
+            try {
+                response = JSON.parse(Buffer.concat(chunks));
+            } catch (e) {
+                return callback(e, null);
             }
-            callback(error, null);
-        }
-        else {
-            callback(null, WebPurify.prototype.strip(rsp));
-        }
+
+            var rsp = response ? response.rsp : null;
+            if (!rsp || !rsp.hasOwnProperty('@attributes')) {
+                var error = new Error("Malformed Webpurify response")
+                error.response = response;
+                error.http_status = res.statusCode;
+                callback(error, null);
+            }
+            else if (rsp.hasOwnProperty('err')) {
+                var err_attrs = rsp.err['@attributes'] || {msg: "Unknown Webpurify Error"};
+                var error = new Error(err_attrs.msg);
+                error.code = err_attrs.code;
+                callback(error, null);
+            }
+            else {
+                callback(null, WebPurify.prototype.strip(rsp));
+            }
+        });
     });
-    
+    req.on('error', function(error) {
+        callback(error, null);
+    });
+    req.end();
+
     return this;
 };
 
