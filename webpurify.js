@@ -72,18 +72,20 @@ WebPurify.prototype.request = function(host, path, method, ssl, callback) {
         base_type = https;
     }
     var req = base_type.request(options, function(res) {
-        res.on('data', function(data) {
+        var chunks = [];
+        res.on('data', function(chunk) {
+            chunks.push(chunk);
+        });
+        res.on('end', function() {
             try {
-                data = JSON.parse(data);
+                callback(null, JSON.parse(Buffer.concat(chunks)));
             } catch (e) {
-                return callback("Invalid JSON");
+                callback(e, null);
             }
-
-            callback(null, data);
         });
     });
     req.on('error', function(error) {
-        callback(error.message, null);
+        callback(error, null);
     });
     req.end();
 };
