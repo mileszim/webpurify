@@ -7,7 +7,7 @@ var http = require('http'),
 /**
  * WebPurify NPM Module
  * A Node NPM module for interacting with the WebPurify API
- * @param {Object} options The options object, passed in on initialization. This defines 
+ * @param {Object} options The options object, passed in on initialization. This defines
  *   several master paramaters handling the connection and interaction with the API.
  * @throws {Error} Throws an error if parameters are invalid.
  * @throws {Error} Throws an error if API key is missing.
@@ -15,7 +15,7 @@ var http = require('http'),
  */
 function WebPurify(options) {
     if (!(this instanceof WebPurify)) return new WebPurify(options);
-    
+
     // Handle bad parameters
     if (!(options instanceof Object)) {
         throw new Error('Invalid parameters');
@@ -23,7 +23,7 @@ function WebPurify(options) {
     if (typeof options.api_key !== 'string') {
         throw new Error('Invalid API Key');
     }
-    
+
     // API Information
     var endpoints = {
         us: 'api1.webpurify.com',
@@ -31,25 +31,61 @@ function WebPurify(options) {
         ap: 'api1-ap.webpurify.com'
     };
     var rest_path = '/services/rest/';
-    
+
     // Configured options
     this.options = {
         api_key:    options.api_key,
         endpoint:   options.endpoint   || 'us',
         enterprise: options.enterprise || false
     };
-    
+
     this.request_base = {
         host: endpoints[this.options.endpoint],
         path: rest_path
     };
-    
+
     this.query_base = {
         api_key:    this.options.api_key,
         format:     'json',
     };
-    
+
 }
+
+
+/**
+ * Handles the HTTP/S requests
+ * @param {string}   host     The hostname for the request URL (ie. api1.webpurify.com)
+ * @param {string}   path     The path of the request (ie. /services/rest/)
+ * @param {string}   method   The method, either 'GET or 'PUT'
+ * @param {boolean}  ssl      True or false for using HTTPS or HTTP. If you are using enterprise API, you can set this to true.
+ * @param {Function} callback The callback function
+ */
+WebPurify.prototype.request = function(host, path, method, ssl, callback) {
+    var options = {
+        hostname: host,
+        path: path,
+        method: method
+    };
+    var base_type = ssl ? http : https;
+    var req = base_type.request(options, function(res) {
+        var chunks = [];
+        res.on('data', chunks.push.bind(chunks));
+        res.on('end', function() {
+            try {
+                var parsed = JSON.parse(Buffer.concat(chunks));
+                callback(null, res, parsed);
+            } catch (e) {
+                return callback(e, null, null);
+            }
+        });
+    });
+    req.on('error', function(error) {
+        callback(error, null, null);
+    });
+    req.end();
+};
+
+
 
 /**
  * Formats the request for the request function
@@ -68,50 +104,32 @@ WebPurify.prototype.get = function(params, options, callback) {
         throw new Error('Invalid Callback');
     }
 
-    // make query and request
+    // form query parameters
     var query = extend(this.query_base, params);
     if (options !== null) query = extend(query, options);
-    var request_options = {
-        hostname: this.request_base.host,
-        path: url.format({pathname: this.request_base.path, query: query}),
-        method: 'GET'
-    };
+    var path = url.format({pathname: this.request_base.path, query: query});
 
-    var base_type = this.options.enterprise ? https : http;
-    var req = base_type.request(request_options, function(res) {
-        var chunks = [];
-        res.on('data', chunks.push.bind(chunks));
-        res.on('end', function() {
+    // make request
+    this.request(this.request_base.host, path, 'GET', this.options.enterprise, function(error, response, parsed) {
+        if (error) return callback(error, null);
 
-            var response = null;
-            try {
-                response = JSON.parse(Buffer.concat(chunks));
-            } catch (e) {
-                return callback(e, null);
-            }
+        var rsp = parsed ? parsed.rsp : null;
+        if (!rsp || !rsp.hasOwnProperty('@attributes')) {
+            var error = new Error("Malformed Webpurify response")
+            error.response = parsed;
+            error.http_status = response.statusCode;
+            return callback(error, null);
+        }
 
-            var rsp = response ? response.rsp : null;
-            if (!rsp || !rsp.hasOwnProperty('@attributes')) {
-                var error = new Error("Malformed Webpurify response")
-                error.response = response;
-                error.http_status = res.statusCode;
-                callback(error, null);
-            }
-            else if (rsp.hasOwnProperty('err')) {
-                var err_attrs = rsp.err['@attributes'] || {msg: "Unknown Webpurify Error"};
-                var error = new Error(err_attrs.msg);
-                error.code = err_attrs.code;
-                callback(error, null);
-            }
-            else {
-                callback(null, WebPurify.prototype.strip(rsp));
-            }
-        });
+        if (rsp.hasOwnProperty('err')) {
+            var err_attrs = rsp.err['@attributes'] || {msg: "Unknown Webpurify Error"};
+            var error = new Error(err_attrs.msg);
+            error.code = err_attrs.code;
+            return callback(error, null);
+        }
+
+        callback(null, WebPurify.prototype.strip(rsp));
     });
-    req.on('error', function(error) {
-        callback(error, null);
-    });
-    req.end();
 
     return this;
 };
@@ -150,9 +168,9 @@ WebPurify.prototype.check = function(text, options, callback) {
     if (!(callback instanceof Function)) {
         throw new Error('Invalid Callback');
     }
-    
+
     var method = 'webpurify.live.check';
-    
+
     this.get({method:method,text:text}, options, function(err,res) {
         if (err) {
             callback(err, null);
@@ -181,9 +199,9 @@ WebPurify.prototype.checkCount = function(text, options, callback) {
     if (!(callback instanceof Function)) {
         throw new Error('Invalid Callback');
     }
-    
+
     var method = 'webpurify.live.checkcount';
-    
+
     this.get({method:method,text:text}, options, function(err,res) {
         if (err) {
             callback(err,null);
@@ -213,9 +231,9 @@ WebPurify.prototype.replace = function(text, replace_symbol, options, callback) 
     if (!(callback instanceof Function)) {
         throw new Error('Invalid Callback');
     }
-    
+
     var method = 'webpurify.live.replace';
-    
+
     this.get({method:method,text:text,replacesymbol:replace_symbol}, options, function(err,res) {
         if (err) {
             callback(err,null);
@@ -244,9 +262,9 @@ WebPurify.prototype.return = function(text, options, callback) {
     if (!(callback instanceof Function)) {
         throw new Error('Invalid Callback');
     }
-    
+
     var method = 'webpurify.live.return';
-    
+
     this.get({method:method,text:text}, options, function(err,res) {
         if (err) {
             callback(err,null);
@@ -277,9 +295,9 @@ WebPurify.prototype.addToBlacklist = function(word, deep_search, callback) {
         callback = deep_search;
         deep_search = null;
     }
-    
+
     var method = 'webpurify.live.addtoblacklist';
-    
+
     this.get({method:method,word:word,ds:deep_search}, function(err,res) {
         if (callback) {
             if (err) {
@@ -299,9 +317,9 @@ WebPurify.prototype.addToBlacklist = function(word, deep_search, callback) {
  * @param  {string}   word        The word to remove from the blacklist
  * @param  {Function} callback    The callback function
  */
-WebPurify.prototype.removeFromBlacklist = function(word, callback) {    
+WebPurify.prototype.removeFromBlacklist = function(word, callback) {
     var method = 'webpurify.live.removefromblacklist';
-    
+
     this.get({method:method,word:word}, function(err,res) {
         if (callback) {
             if (err) {
@@ -321,13 +339,13 @@ WebPurify.prototype.removeFromBlacklist = function(word, callback) {
  * @param  {Function} callback    The callback function
  * @throws {Error} Throws an error if callback does not exist or invalid.
  */
-WebPurify.prototype.getBlacklist = function(callback) {  
+WebPurify.prototype.getBlacklist = function(callback) {
     if (!(callback instanceof Function)) {
         throw new Error('Invalid Callback');
     }
-      
+
     var method = 'webpurify.live.getblacklist';
-    
+
     this.get({method:method}, function(err,res) {
         if (err) {
             callback(err,null);
@@ -353,7 +371,7 @@ WebPurify.prototype.getBlacklist = function(callback) {
  */
 WebPurify.prototype.addToWhitelist = function(word, callback) {
     var method = 'webpurify.live.addtowhitelist';
-    
+
     this.get({method:method,word:word}, function(err,res) {
         if (callback) {
             if (err) {
@@ -373,9 +391,9 @@ WebPurify.prototype.addToWhitelist = function(word, callback) {
  * @param  {string}   word        The word to remove from the whitelist
  * @param  {Function} callback    The callback function
  */
-WebPurify.prototype.removeFromWhitelist = function(word, callback) {    
+WebPurify.prototype.removeFromWhitelist = function(word, callback) {
     var method = 'webpurify.live.removefromwhitelist';
-    
+
     this.get({method:method,word:word}, function(err,res) {
         if (callback) {
             if (err) {
@@ -395,13 +413,13 @@ WebPurify.prototype.removeFromWhitelist = function(word, callback) {
  * @param  {Function} callback    The callback function
  * @throws {Error} Throws an error if callback does not exist or invalid.
  */
-WebPurify.prototype.getWhitelist = function(callback) {  
+WebPurify.prototype.getWhitelist = function(callback) {
     if (!(callback instanceof Function)) {
         throw new Error('Invalid Callback');
     }
-      
+
     var method = 'webpurify.live.getwhitelist';
-    
+
     this.get({method:method}, function(err,res) {
         if (err) {
             callback(err,null);
