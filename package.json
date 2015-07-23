@@ -12,5 +12,9 @@
     "api"
   ],
   "author": "Miles Zimmerman",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^5.8.3",
+    "jasmine": "^2.3.1"
+  }
 }
