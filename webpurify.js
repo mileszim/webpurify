@@ -24,12 +24,12 @@ export default class WebPurify {
     }
 
     // API Information
-    var endpoints = {
+    let endpoints = {
       us: 'api1.webpurify.com',
       eu: 'api1-eu.webpurify.com',
       ap: 'api1-ap.webpurify.com'
     };
-    var rest_path = '/services/rest/';
+    let rest_path = '/services/rest/';
 
     // Configured options
     this.options = {
@@ -52,35 +52,35 @@ export default class WebPurify {
 
   /**
    * Handles the HTTP/S requests
-   * @param {string}   host     The hostname for the request URL (ie. api1.webpurify.com)
-   * @param {string}   path     The path of the request (ie. /services/rest/)
-   * @param {string}   method   The method, either 'GET or 'PUT'
-   * @param {boolean}  ssl      True or false for using HTTPS or HTTP. If you are using enterprise API, you can set this to true.
-   * @param {Function} callback The callback function
+   * @param  {string}   host     The hostname for the request URL (ie. api1.webpurify.com)
+   * @param  {string}   path     The path of the request (ie. /services/rest/)
+   * @param  {string}   method   The method, either 'GET or 'PUT'
+   * @param  {boolean}  ssl      True or false for using HTTPS or HTTP. If you are using enterprise API, you can set this to true.
+   * @return {Promise}
    */
-  request(host, path, method, ssl, callback) {
-    var options = {
+  request(host, path, method, ssl) {
+    let options = {
       hostname: host,
       path: path,
       method: method
     };
-    var base_type = ssl ? http : https;
-    var req = base_type.request(options, function(res) {
-      var chunks = [];
-      res.on('data', chunks.push.bind(chunks));
-      res.on('end', function() {
-        try {
-          var parsed = JSON.parse(Buffer.concat(chunks));
-          callback(null, res, parsed);
-        } catch (e) {
-          return callback(e, null, null);
-        }
+    let base_type = ssl ? http : https;
+    return new Promise(function(resolve, reject) {
+      let req = base_type.request(options, function(res) {
+        let chunks = [];
+        res.on('data', chunks.push.bind(chunks));
+        res.on('end', function() {
+          try {
+            let parsed = JSON.parse(Buffer.concat(chunks));
+            return resolve(res, parsed);
+          } catch (e) {
+            return reject(e);
+          }
+        });
       });
+      req.on('error', (error) => reject(error));
+      req.end();
     });
-    req.on('error', function(error) {
-      callback(error, null, null);
-    });
-    req.end();
   }
 
 
@@ -88,47 +88,36 @@ export default class WebPurify {
    * Formats the request for the request function
    * @param  {Object}   params   The params object passed into the request
    * @param  {Object}   options  The optional parameters for the API request (can be left blank)
-   * @param  {Function} callback The callback function
-   * @throws {Error} Returns invalid callback error if callback is not a function.
+   * @return {Promise}
    */
-  get(params, options, callback) {
-    // Adjust or throw errors
-    if (options instanceof Function) {
-      callback = options;
-      options = null;
-    }
-    if (!(callback instanceof Function)) {
-      throw new Error('Invalid Callback');
-    }
-
+  get(params, options) {
     // form query parameters
-    var query = Object.assign(this.query_base, params);
+    let query = Object.assign(this.query_base, params);
     if (options !== null) query = Object.assign(query, options);
-    var path = url.format({pathname: this.request_base.path, query: query});
+    let path = url.format({pathname: this.request_base.path, query: query});
 
     // make request
-    this.request(this.request_base.host, path, 'GET', this.options.enterprise, function(error, response, parsed) {
-      if (error) return callback(error, null);
+    return new Promise(function(resolve, reject) {
+      this.request(this.request_base.host, path, 'GET', this.options.enterprise)
+      .then(function() {
+        let rsp = parsed ? parsed.rsp : null;
+        if (!rsp || !rsp.hasOwnProperty('@attributes')) {
+          let error = new Error("Malformed Webpurify response")
+          error.response = parsed;
+          error.http_status = response.statusCode;
+          return reject(error);
+        }
 
-      var rsp = parsed ? parsed.rsp : null;
-      if (!rsp || !rsp.hasOwnProperty('@attributes')) {
-        var error = new Error("Malformed Webpurify response")
-        error.response = parsed;
-        error.http_status = response.statusCode;
-        return callback(error, null);
-      }
+        if (rsp.hasOwnProperty('err')) {
+          let err_attrs = rsp.err['@attributes'] || { msg: "Unknown Webpurify Error" };
+          let error = new Error(err_attrs.msg);
+          error.code = err_attrs.code;
+          return reject(error);
+        }
 
-      if (rsp.hasOwnProperty('err')) {
-        var err_attrs = rsp.err['@attributes'] || {msg: "Unknown Webpurify Error"};
-        var error = new Error(err_attrs.msg);
-        error.code = err_attrs.code;
-        return callback(error, null);
-      }
-
-      callback(null, WebPurify.prototype.strip(rsp));
+        return resolve(WebPurify.prototype.strip(rsp));
+      })
     });
-
-    return this;
   }
 
 
@@ -149,277 +138,155 @@ export default class WebPurify {
 
 
   /**
-   * WebPurify API: Check
    * Checks the passed text for any profanity. If found, returns true, else false.
    * @param  {string}   text     The text to check for profanity
    * @param  {Object}   options  The optional API parameters
-   * @param  {Function} callback The callback function
-   * @throws {Error}    Throws an error if callback is not a function.
+   * @return {Promise}
    */
-  check(text, options, callback) {
-    // Adjust or throw errors
-    if (options instanceof Function) {
-      callback = options;
-      options = null;
-    }
-    if (!(callback instanceof Function)) {
-      throw new Error('Invalid Callback');
-    }
+  check(text, options) {
+    let method = 'webpurify.live.check';
+    let params = { method: method, text: text };
 
-    var method = 'webpurify.live.check';
-
-    this.get({method:method,text:text}, options, function(err,res) {
-      if (err) {
-        callback(err, null);
-      } else {
-        callback(null, res.found === '1');
-      }
+    return this.get(params, options).then((res) => {
+      return res.found === '1';
     });
   }
 
 
   /**
-   * WebPurify API: CheckCount
    * Checks the passed text for any profanity. If found, returns number of found words, else 0.
    * @param  {string}   text     The text to check for profanity
    * @param  {Object}   options  The optional API parameters
-   * @param  {Function} callback The callback function
-   * @throws {Error}    Throws an error if callback is not a function.
+   * @return {Promise}
    */
-  checkCount(text, options, callback) {
-    // Adjust or throw errors
-    if (options instanceof Function) {
-      callback = options;
-      options = null;
-    }
-    if (!(callback instanceof Function)) {
-      throw new Error('Invalid Callback');
-    }
+  checkCount(text, options) {
+    let method = 'webpurify.live.checkcount';
+    let params = { method: method, text: text};
 
-    var method = 'webpurify.live.checkcount';
-
-    this.get({method:method,text:text}, options, function(err,res) {
-      if (err) {
-        callback(err,null);
-      } else {
-        callback(null, parseInt(res.found, 10));
-      }
+    return this.get(params, options).then((res) => {
+      return parseInt(res.found, 10);
     });
   }
 
 
   /**
-   * WebPurify API: Replace
    * Checks the passed text for any profanity. If found, returns the text with profanity altered by symbol. Else 0.
    * @param  {string}   text           The text to check for profanity
    * @param  {string}   replace_symbol The symbol to replace profanity with (ie. '*')
    * @param  {Object}   options        The optional API parameters
-   * @param  {Function} callback       The callback function
-   * @throws {Error}    Throws an error if callback is not a function.
+   * @return {Promise}
    */
-  replace(text, replace_symbol, options, callback) {
-    // Adjust or throw errors
-    if (options instanceof Function) {
-      callback = options;
-      options = null;
-    }
-    if (!(callback instanceof Function)) {
-      throw new Error('Invalid Callback');
-    }
+  replace(text, replace_symbol, options) {
+    let method = 'webpurify.live.replace';
+    let params = { method: method, text: text, replacesymbol: replace_symbol };
 
-    var method = 'webpurify.live.replace';
-
-    this.get({method:method,text:text,replacesymbol:replace_symbol}, options, function(err,res) {
-      if (err) {
-        callback(err,null);
-      } else {
-        callback(null, res.text);
-      }
+    return this.get(params, options).then((res) => {
+      return res.text;
     });
   }
 
 
   /**
-   * WebPurify API: Return
    * Checks the passed text for any profanity. If found, returns an array of expletives.
    * @param  {string}   text           The text to check for profanity
    * @param  {Object}   options        The optional API parameters
-   * @param  {Function} callback       The callback function
-   * @throws {Error}    Throws an error if callback is not a function.
+   * @return {Promise}
    */
-  return(text, options, callback) {
-    // Adjust or throw errors
-    if (options instanceof Function) {
-      callback = options;
-      options = null;
-    }
-    if (!(callback instanceof Function)) {
-      throw new Error('Invalid Callback');
-    }
+  return(text, options) {
+    let method = 'webpurify.live.return';
+    let params = { method: method, text: text };
 
-    var method = 'webpurify.live.return';
-
-    this.get({method:method,text:text}, options, function(err,res) {
-      if (err) {
-        callback(err,null);
-      } else {
-        if (!res.expletive) {
-          callback(null, []);
-        } else if (res.expletive && typeof res.expletive==='string') {
-          callback(null, [res.expletive]);
-        } else {
-          callback(null, res.expletive);
-        }
-      }
+    return this.get(params, options).then((res) => {
+      return [].concat(res.expletive);
     });
   }
 
 
   /**
-   * WebPurify API: addToBlacklist
    * Add a word to the blacklist
    * @param  {string}   word        The word to add to the blacklist
    * @param  {string}   deep_search 1 if deepsearch, 0 or null if you don't care
-   * @param  {Function} callback    The callback function (optional)
+   * @return {Promise}
    */
-  addToBlacklist(word, deep_search, callback) {
-    // Adjust or throw errors
-    if (deep_search instanceof Function) {
-      callback = deep_search;
-      deep_search = null;
-    }
+  addToBlacklist(word, deep_search) {
+    let method = 'webpurify.live.addtoblacklist';
+    let params = { method: method, word: word, ds: deep_search };
 
-    var method = 'webpurify.live.addtoblacklist';
-
-    this.get({method:method,word:word,ds:deep_search}, function(err,res) {
-      if (callback) {
-        if (err) {
-          callback(err,null);
-        } else {
-          callback(null, res.success === '1');
-        }
-      }
+    return this.get(params).then((res) => {
+      return res.success === '1';
     });
   }
 
 
   /**
-   * WebPurify API: removeFromBlacklist
    * Remove a word from the blacklist
-   * @param  {string}   word        The word to remove from the blacklist
-   * @param  {Function} callback    The callback function
+   * @param  {string}   word  The word to remove from the blacklist
+   * @return {Promise}
    */
-  removeFromBlacklist(word, callback) {
-    var method = 'webpurify.live.removefromblacklist';
+  removeFromBlacklist(word) {
+    let method = 'webpurify.live.removefromblacklist';
+    let params = { method: method, word: word };
 
-    this.get({method:method,word:word}, function(err,res) {
-      if (callback) {
-        if (err) {
-          callback(err,null);
-        } else {
-          callback(null, res.success === '1');
-        }
-      }
+    return this.get(params).then((res) => {
+      return res.success === '1';
     });
   }
 
 
   /**
-   * WebPurify API: getBlacklist
    * Get the blacklist
-   * @param  {Function} callback    The callback function
-   * @throws {Error} Throws an error if callback does not exist or invalid.
+   * @return {Promise}
    */
-  getBlacklist(callback) {
-    if (!(callback instanceof Function)) {
-      throw new Error('Invalid Callback');
-    }
+  getBlacklist() {
+    let method = 'webpurify.live.getblacklist';
+    let params = { method: method };
 
-    var method = 'webpurify.live.getblacklist';
-
-    this.get({method:method}, function(err,res) {
-      if (err) {
-        callback(err,null);
-      } else {
-        if (!res.word) {
-          callback(null, []);
-        } else if (res.word && typeof res.word==='string') {
-          callback(null, [res.word]);
-        } else {
-          callback(null, res.word);
-        }
-      }
+    return this.get(params).then((res) => {
+      return [].concat(res.word);
     });
   }
 
 
   /**
-   * WebPurify API: addToWhitelist
    * Add a word to the whitelist
    * @param  {string}   word        The word to add to the whitelist
-   * @param  {Function} callback    The callback function (optional)
+   * @return {Promise}
    */
-  addToWhitelist(word, callback) {
-    var method = 'webpurify.live.addtowhitelist';
+  addToWhitelist(word) {
+    let method = 'webpurify.live.addtowhitelist';
+    let params = { method: method, word: word };
 
-    this.get({method:method,word:word}, function(err,res) {
-      if (callback) {
-        if (err) {
-          callback(err,null);
-        } else {
-          callback(null, res.success === '1');
-        }
-      }
+    return this.get(params).then((res) => {
+      return res.success === '1';
     });
   }
 
 
   /**
-   * WebPurify API: removeFromWhitelist
    * Remove a word from the whitelist
    * @param  {string}   word        The word to remove from the whitelist
-   * @param  {Function} callback    The callback function
+   * @return {Promise}
    */
-  removeFromWhitelist(word, callback) {
-    var method = 'webpurify.live.removefromwhitelist';
+  removeFromWhitelist(word) {
+    let method = 'webpurify.live.removefromwhitelist';
+    let params = { method: method, word: word };
 
-    this.get({method:method,word:word}, function(err,res) {
-      if (callback) {
-        if (err) {
-          callback(err,null);
-        } else {
-          callback(null, res.success === '1');
-        }
-      }
+    return this.get(params).then((res) => {
+      return res.success === '1';
     });
   }
 
 
   /**
-   * WebPurify API: getWhitelist
    * Get the whitelist
-   * @param  {Function} callback    The callback function
-   * @throws {Error} Throws an error if callback does not exist or invalid.
+   * @return {Promise}
    */
-  getWhitelist(callback) {
-    if (!(callback instanceof Function)) {
-      throw new Error('Invalid Callback');
-    }
+  getWhitelist() {
+    let method = 'webpurify.live.getwhitelist';
+    let params = { method: method };
 
-    var method = 'webpurify.live.getwhitelist';
-
-    this.get({method:method}, function(err,res) {
-      if (err) {
-        callback(err,null);
-      } else {
-        if (!res.word) {
-          callback(null, []);
-        } else if (res.word && typeof res.word==='string') {
-          callback(null, [res.word]);
-        } else {
-          callback(null, res.word);
-        }
-      }
+    return this.get(params).then((res) => {
+      return [].concat(res.word);
     });
   }
 }
