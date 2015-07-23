@@ -48,8 +48,9 @@ Commands
 Check a string of text for profanity. Returns true if profanity found, false if none.
 
 ```js
-wp.check('some profane text', function(err, profanity) {
-  if (profanity===true) {
+wp.check('some profane text')
+.then(profanity) {
+  if (profanity) {
     console.log('A bunch of sailors in here!');
   } else {
     console.log('This is a pure string');
@@ -63,7 +64,8 @@ wp.check('some profane text', function(err, profanity) {
 Check a string of text for profanity. Returns number of words if profanity found, 0 if none.
 
 ```js
-wp.checkCount('some profane text', function(err, profanity) {
+wp.checkCount('some profane text')
+.then(function(profanity) {
   if (profanity > 0) {
     console.log(profanity.toString() + ' sailors in here!');
   } else {
@@ -77,7 +79,8 @@ wp.checkCount('some profane text', function(err, profanity) {
 Check a string of text for profanity. Replaces any found profanity with a provided symbol, and returns the formatted string.
 
 ```js
-wp.replace('some profane text', '*', function(err, purified_text) {
+wp.replace('some profane text', '*')
+.then(function(purified_text) {
   console.log(purified_text);
 });
 ```
@@ -87,7 +90,8 @@ wp.replace('some profane text', '*', function(err, purified_text) {
 Check a string of text for profanity. If any found, returns an array of profane words. Else, returns empty array.
 
 ```js
-wp.return('some profane text', function(err, profanity) {
+wp.return('some profane text')
+.then(function(profanity) {
   for (word in profanity) {
     console.log(profanity[word]);
   }
@@ -106,7 +110,8 @@ var optional = {
   slink:  1     // treat urls like profanity
 };
 
-wp.check('some profane text', optional, function(error, profanity) {
+wp.check('some profane text', optional)
+.then(function(profanity) {
   console.log(profanity);
 });
 ```
@@ -116,8 +121,9 @@ wp.check('some profane text', optional, function(error, profanity) {
 Add a word to the blacklist.
 
 ```js
-wp.addToBlacklist('my_word', function(err, success) {
-  if (success===true) console.log('success!');
+wp.addToBlacklist('my_word')
+.then(function(success) {
+  if (success) console.log('success!');
 });
 ```
 
@@ -126,7 +132,7 @@ Can also be called without callback:
 ```js
 wp.addToBlacklist('my_word');
 ```
-    
+
 For Deep search, add optional parameter 1 after word:
 
 ```js
@@ -139,11 +145,12 @@ wp.addToBlacklist('my_word', 1);
 Remove a word from the blacklist.
 
 ```js
-wp.removeFromBlacklist('my_word', function(err, success) {
-  if (success===true) console.log('success!');
+wp.removeFromBlacklist('my_word')
+.then(function(success) {
+  if (success) console.log('success!');
 });
 ```
-    
+
 Can also be called without callback:
 
 ```js
@@ -155,7 +162,8 @@ wp.removeFromBlacklist('my_word');
 Get the blacklist as an array of words.
 
 ```js
-wp.getBlacklist(function(err, blacklist) {
+wp.getBlacklist()
+.then(function(blacklist) {
   for (word in blacklist) {
     console.log(blacklist[word]);
   }
@@ -168,8 +176,9 @@ wp.getBlacklist(function(err, blacklist) {
 Add a word to the whitelist.
 
 ```js
-wp.addToWhitelist('my_word', function(err, success) {
-  if (success===true) console.log('success!');
+wp.addToWhitelist('my_word')
+.then(function(success) {
+  if (success) console.log('success!');
 });
 ```
 
@@ -185,11 +194,12 @@ wp.addToWhitelist('my_word');
 Remove a word from the whitelist.
 
 ```js
-wp.removeFromWhitelist('my_word', function(err, success) {
-  if (success===true) console.log('success!');
+wp.removeFromWhitelist('my_word')
+.then(function(success) {
+  if (success) console.log('success!');
 });
 ```
-    
+
 Can also be called without callback:
 
 ```js
@@ -201,7 +211,8 @@ wp.removeFromWhitelist('my_word');
 Get the whitelist as an array of words.
 
 ```js
-wp.getWhitelist(function(err, whitelist) {
+wp.getWhitelist()
+.then(function(whitelist) {
   for (word in whitelist) {
     console.log(whitelist[word]);
   }
@@ -211,5 +222,7 @@ wp.getWhitelist(function(err, whitelist) {
 
 Status
 ------
+v1.0.0
 
-So far it mimics the WebPurify API as closely as possible. If you find bugs or want to contribute, please do, that would be amazing.
+ - The WebPurify module is now written in ES6, using babel + babel-runtim to convert into ES5.
+ - Now uses promises

@@ -32,8 +32,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-mocha-test');
 
-  // Tassks
-  grunt.registerTask('default', ['babel']);
+  // Tasks
   grunt.registerTask('test', ['mochaTest']);
+  grunt.registerTask('build', ['babel']);
+  grunt.registerTask('default', ['test', 'build']);
 
 };
