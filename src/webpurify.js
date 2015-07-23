@@ -72,9 +72,9 @@ export default class WebPurify {
         res.on('end', function() {
           try {
             let parsed = JSON.parse(Buffer.concat(chunks));
-            return resolve(res, parsed);
-          } catch (e) {
-            return reject(e);
+            return resolve(parsed);
+          } catch (error) {
+            return reject(error);
           }
         });
       });
@@ -99,7 +99,7 @@ export default class WebPurify {
     // make request
     return new Promise(function(resolve, reject) {
       this.request(this.request_base.host, path, 'GET', this.options.enterprise)
-      .then(function() {
+      .then(function(parsed) {
         let rsp = parsed ? parsed.rsp : null;
         if (!rsp || !rsp.hasOwnProperty('@attributes')) {
           let error = new Error("Malformed Webpurify response")
@@ -116,8 +116,8 @@ export default class WebPurify {
         }
 
         return resolve(WebPurify.prototype.strip(rsp));
-      })
-    });
+      });
+    }.bind(this));
   }
 
 
@@ -147,9 +147,7 @@ export default class WebPurify {
     let method = 'webpurify.live.check';
     let params = { method: method, text: text };
 
-    return this.get(params, options).then((res) => {
-      return res.found === '1';
-    });
+    return this.get(params, options).then(res => res.found === '1');
   }
 
 
@@ -163,9 +161,7 @@ export default class WebPurify {
     let method = 'webpurify.live.checkcount';
     let params = { method: method, text: text};
 
-    return this.get(params, options).then((res) => {
-      return parseInt(res.found, 10);
-    });
+    return this.get(params, options).then(res => parseInt(res.found, 10));
   }
 
 
@@ -180,9 +176,7 @@ export default class WebPurify {
     let method = 'webpurify.live.replace';
     let params = { method: method, text: text, replacesymbol: replace_symbol };
 
-    return this.get(params, options).then((res) => {
-      return res.text;
-    });
+    return this.get(params, options).then(res => res.text);
   }
 
 
@@ -197,7 +191,7 @@ export default class WebPurify {
     let params = { method: method, text: text };
 
     return this.get(params, options).then((res) => {
-      return [].concat(res.expletive);
+      return [].concat(res.expletive).filter(w => w instanceof String);
     });
   }
 
@@ -212,9 +206,7 @@ export default class WebPurify {
     let method = 'webpurify.live.addtoblacklist';
     let params = { method: method, word: word, ds: deep_search };
 
-    return this.get(params).then((res) => {
-      return res.success === '1';
-    });
+    return this.get(params).then(res => res.success === '1');
   }
 
 
@@ -227,9 +219,7 @@ export default class WebPurify {
     let method = 'webpurify.live.removefromblacklist';
     let params = { method: method, word: word };
 
-    return this.get(params).then((res) => {
-      return res.success === '1';
-    });
+    return this.get(params).then(res => res.success === '1');
   }
 
 
@@ -242,7 +232,7 @@ export default class WebPurify {
     let params = { method: method };
 
     return this.get(params).then((res) => {
-      return [].concat(res.word);
+      return [].concat(res.word).filter(w => w instanceof String);
     });
   }
 
@@ -256,9 +246,7 @@ export default class WebPurify {
     let method = 'webpurify.live.addtowhitelist';
     let params = { method: method, word: word };
 
-    return this.get(params).then((res) => {
-      return res.success === '1';
-    });
+    return this.get(params).then(res => res.success === '1');
   }
 
 
@@ -271,9 +259,7 @@ export default class WebPurify {
     let method = 'webpurify.live.removefromwhitelist';
     let params = { method: method, word: word };
 
-    return this.get(params).then((res) => {
-      return res.success === '1';
-    });
+    return this.get(params).then(res => res.success === '1');
   }
 
 
@@ -286,7 +272,7 @@ export default class WebPurify {
     let params = { method: method };
 
     return this.get(params).then((res) => {
-      return [].concat(res.word);
+      return [].concat(res.word).filter(w => w instanceof String);
     });
   }
 }

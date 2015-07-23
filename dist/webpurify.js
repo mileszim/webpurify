@@ -78,10 +78,10 @@ var WebPurify = (function () {
           res.on('data', chunks.push.bind(chunks));
           res.on('end', function () {
             try {
-              var _parsed = JSON.parse(Buffer.concat(chunks));
-              return resolve(res, _parsed);
-            } catch (e) {
-              return reject(e);
+              var parsed = JSON.parse(Buffer.concat(chunks));
+              return resolve(parsed);
+            } catch (error) {
+              return reject(error);
             }
           });
         });
@@ -98,8 +98,8 @@ var WebPurify = (function () {
       if (options !== null) query = _Object$assign(query, options);
       var path = _url2['default'].format({ pathname: this.request_base.path, query: query });
 
-      return new _Promise(function (resolve, reject) {
-        this.request(this.request_base.host, path, 'GET', this.options.enterprise).then(function () {
+      return new _Promise((function (resolve, reject) {
+        this.request(this.request_base.host, path, 'GET', this.options.enterprise).then(function (parsed) {
           var rsp = parsed ? parsed.rsp : null;
           if (!rsp || !rsp.hasOwnProperty('@attributes')) {
             var error = new Error("Malformed Webpurify response");
@@ -117,7 +117,7 @@ var WebPurify = (function () {
 
           return resolve(WebPurify.prototype.strip(rsp));
         });
-      });
+      }).bind(this));
     }
   }, {
     key: 'strip',
@@ -167,7 +167,9 @@ var WebPurify = (function () {
       var params = { method: method, text: text };
 
       return this.get(params, options).then(function (res) {
-        return [].concat(res.expletive);
+        return [].concat(res.expletive).filter(function (w) {
+          return w instanceof String;
+        });
       });
     }
   }, {
@@ -197,7 +199,9 @@ var WebPurify = (function () {
       var params = { method: method };
 
       return this.get(params).then(function (res) {
-        return [].concat(res.word);
+        return [].concat(res.word).filter(function (w) {
+          return w instanceof String;
+        });
       });
     }
   }, {
@@ -227,7 +231,9 @@ var WebPurify = (function () {
       var params = { method: method };
 
       return this.get(params).then(function (res) {
-        return [].concat(res.word);
+        return [].concat(res.word).filter(function (w) {
+          return w instanceof String;
+        });
       });
     }
   }]);

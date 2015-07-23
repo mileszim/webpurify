@@ -39,7 +39,6 @@ describe('WebPurify', function() {
 
 
   describe('#request', function() {
-    it('should accept a host, path, method, and optional ssl boolean');
     it('should issue a request');
     it('should return a promise');
     it('should resolve promise if request valid');
