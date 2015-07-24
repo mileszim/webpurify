@@ -138,7 +138,7 @@ describe('WebPurify', function() {
 
     it('should resolve promise if valid request & response', function() {
       var params = { some: 'fdsfsd' };
-      var wprequest = sinon.stub(wp, 'request').returns({
+      request = sinon.stub(wp, 'request').returns({
         then: function(cb) {
           cb({ rsp: { '@attributes': true, good: 'attribute' } });
         }
@@ -160,4 +160,16 @@ describe('WebPurify', function() {
       expect(wp.strip(response)).to.deep.equal({});
     });
   });
+
+
+  // describe('#check');
+  // describe('#checkCount');
+  // describe('#replace');
+  // describe('#return');
+  // describe('#addToBlacklist');
+  // describe('#removeFromBlacklist');
+  // describe('#getBlacklist');
+  // describe('#addToWhitelist');
+  // describe('#removeFromWhitelist');
+  // describe('#getWhitelist');
 });
