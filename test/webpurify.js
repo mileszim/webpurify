@@ -157,19 +157,187 @@ describe('WebPurify', function() {
         method: true,
         format: true
       };
-      expect(wp.strip(response)).to.deep.equal({});
+      return expect(wp.strip(response)).to.deep.equal({});
     });
   });
 
 
-  // describe('#check');
-  // describe('#checkCount');
-  // describe('#replace');
-  // describe('#return');
-  // describe('#addToBlacklist');
-  // describe('#removeFromBlacklist');
-  // describe('#getBlacklist');
-  // describe('#addToWhitelist');
-  // describe('#removeFromWhitelist');
-  // describe('#getWhitelist');
+  describe('#check', function() {
+    it('should return false if no profanity', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, found: '0' } });
+        }
+      });
+      var req = wp.check('no profanity');
+      expect(req).to.eventually.equal(false);
+    });
+
+    it('should return true if profanity', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, found: '1' } });
+        }
+      });
+      var req = wp.check('some profanity');
+      return expect(req).to.eventually.equal(true);
+    });
+  });
+
+
+  describe('#checkCount', function() {
+    it('should 0 if no profanity', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, found: '0' } });
+        }
+      });
+      var req = wp.checkCount('no profanity');
+      expect(req).to.eventually.equal(0);
+    });
+
+    it('should number of profane if profanity', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, found: '2' } });
+        }
+      });
+      var req = wp.checkCount('some profanity');
+      return expect(req).to.eventually.equal(2);
+    });
+  });
+
+
+  describe('#replace', function() {
+    it('should replace profanity with symbol', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, text: 'its *******' } });
+        }
+      });
+      var req = wp.replace('its profane', '*');
+      expect(req).to.eventually.equal('its *******');
+    });
+  });
+
+
+  describe('#return', function() {
+    it('should return an array of profanity', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, expletive: ['some', 'profanity'] } });
+        }
+      });
+      var req = wp.return('some profanity');
+      expect(req).to.eventually.equal(['some', 'profanity']);
+    });
+
+    it('should return an empty array if no profanity', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true } });
+        }
+      });
+      var req = wp.return('no profanity');
+      expect(req).to.eventually.equal([]);
+    });
+  });
+
+
+  describe('#addToBlacklist', function() {
+    it('should return true on success', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, success: 1 } });
+        }
+      });
+      var req = wp.addToBlacklist('its profane');
+      expect(req).to.eventually.equal(true);
+    });
+  });
+
+
+  describe('#removeFromBlacklist', function() {
+    it('should return true on success', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, success: 1 } });
+        }
+      });
+      var req = wp.removeFromBlacklist('its profane');
+      expect(req).to.eventually.equal(true);
+    });
+  });
+
+
+  describe('#getBlacklist', function() {
+    it('should return an array of profanity in list', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, word: ['some', 'profanity'] } });
+        }
+      });
+      var req = wp.getBlacklist();
+      expect(req).to.eventually.equal(['some', 'profanity']);
+    });
+
+    it('should return an empty array if no profanity', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true } });
+        }
+      });
+      var req = wp.getBlacklist();
+      expect(req).to.eventually.equal([]);
+    });
+  });
+
+
+  describe('#addToWhitelist', function() {
+    it('should return true on success', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, success: 1 } });
+        }
+      });
+      var req = wp.addToBlacklist('its profane');
+      expect(req).to.eventually.equal(true);
+    });
+  });
+
+
+  describe('#removeFromBlacklist', function() {
+    it('should return true on success', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, success: 1 } });
+        }
+      });
+      var req = wp.removeFromBlacklist('its profane');
+      expect(req).to.eventually.equal(true);
+    });
+  });
+
+
+  describe('#removeFromWhitelist', function() {
+    it('should return an array of profanity in list', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, word: ['some', 'profanity'] } });
+        }
+      });
+      var req = wp.getBlacklist();
+      expect(req).to.eventually.equal(['some', 'profanity']);
+    });
+
+    it('should return an empty array if no profanity', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true } });
+        }
+      });
+      var req = wp.getBlacklist();
+      expect(req).to.eventually.equal([]);
+    });
+  });
 });
