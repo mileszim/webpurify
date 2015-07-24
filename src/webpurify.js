@@ -104,7 +104,6 @@ export default class WebPurify {
         if (!rsp || !rsp.hasOwnProperty('@attributes')) {
           let error = new Error("Malformed Webpurify response")
           error.response = parsed;
-          error.http_status = response.statusCode;
           return reject(error);
         }
 

@@ -104,7 +104,6 @@ var WebPurify = (function () {
           if (!rsp || !rsp.hasOwnProperty('@attributes')) {
             var error = new Error("Malformed Webpurify response");
             error.response = parsed;
-            error.http_status = response.statusCode;
             return reject(error);
           }
 
