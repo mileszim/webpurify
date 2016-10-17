@@ -190,7 +190,7 @@ export default class WebPurify {
     let params = { method: method, text: text };
 
     return this.get(params, options).then((res) => {
-      return [].concat(res.expletive).filter(w => w instanceof String);
+      return [].concat(res.expletive).filter(w => typeof w === 'string');
     });
   }
 
@@ -231,7 +231,7 @@ export default class WebPurify {
     let params = { method: method };
 
     return this.get(params).then((res) => {
-      return [].concat(res.word).filter(w => w instanceof String);
+      return [].concat(res.word).filter(w => typeof w === 'string');
     });
   }
 
