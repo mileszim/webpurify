@@ -49,7 +49,7 @@ Check a string of text for profanity. Returns true if profanity found, false if 
 
 ```js
 wp.check('some profane text')
-.then(profanity) {
+.then((profanity) => {
   if (profanity) {
     console.log('A bunch of sailors in here!');
   } else {
