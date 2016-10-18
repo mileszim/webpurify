@@ -4,7 +4,8 @@
   "description": "This provides an easy module for interacting with the WebPurify API",
   "main": "dist/webpurify.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "build": "grunt build"
   },
   "repository": "https://github.com/mileszim/webpurify",
   "keywords": [
