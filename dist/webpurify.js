@@ -167,7 +167,7 @@ var WebPurify = (function () {
 
       return this.get(params, options).then(function (res) {
         return [].concat(res.expletive).filter(function (w) {
-          return w instanceof String;
+          return typeof w === 'string';
         });
       });
     }
@@ -199,7 +199,7 @@ var WebPurify = (function () {
 
       return this.get(params).then(function (res) {
         return [].concat(res.word).filter(function (w) {
-          return w instanceof String;
+          return typeof w === 'string';
         });
       });
     }
