@@ -1,6 +1,6 @@
 {
   "name": "webpurify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This provides an easy module for interacting with the WebPurify API",
   "main": "dist/webpurify.js",
   "scripts": {
