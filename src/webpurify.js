@@ -274,4 +274,60 @@ export default class WebPurify {
       return [].concat(res.word).filter(w => w instanceof String);
     });
   }
+
+  /**
+   * Checks the imgid for status of moderation.
+   * @param  {string}   imgid     The URL of the image
+   * @param  {Object}   options  The optional API parameters
+   * @return {Promise}
+   */
+  imgstatus(imgid, options) {
+    let method = 'webpurify.live.imgstatus';
+    // ACCEPTED PARAMS
+    // api_key (Required)
+    //   Your API application key.
+    // imgid (Required, if customimgid is not used)
+    //   Image id
+    // customimgid (Optional)
+    //   Custom Image id
+    // format (Optional)
+    //   Response format: xml or json. Defaults to xml.
+    let params = { method: method, imgid: imgid };
+    return this.get(params, options).then(res => res.status);
+  }
+
+  /**
+   * Checks the passed imageurl moderation. It will need a callback.
+   * @param  {string}   imgurl     The URL of the image
+   * @param  {Object}   options  The optional API parameters
+   * @return {Promise}
+   */
+  imgcheck(imgurl, options) {
+    let method = 'webpurify.live.imgcheck';
+    // ACCEPTED PARAMS
+    // imgurl (Required)
+    //   Full url to the image you would like moderated.
+    // format (Optional)
+    //   Response format: xml or json. Defaults to xml.
+    // customimgid (Optional)
+    //   A custom ID you wish to associate with the image
+    //   that will be carried through to the callback.
+    // callback (Optional)
+    //   You may also submit a URL encoded callback on
+    //   a per image basis: read more
+    let params = { method: method, imgurl: imgurl };
+    return this.get(params, options).then(res => res.imgid);
+  }
+
+  /**
+   * Checks the remaining submissions on licence for images.
+   * @return {Promise}
+   */
+  imgaccount() {
+    let method = 'webpurify.live.imgaccount';
+    let params = { method: method };
+    return this.get(params, {}).then(res => res.remaining);
+  }
+
+
 }

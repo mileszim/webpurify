@@ -235,6 +235,35 @@ var WebPurify = (function () {
         });
       });
     }
+  }, {
+    key: 'imgstatus',
+    value: function imgstatus(imgid, options) {
+      var method = 'webpurify.live.imgstatus';
+
+      var params = { method: method, imgid: imgid };
+      return this.get(params, options).then(function (res) {
+        return res.status;
+      });
+    }
+  }, {
+    key: 'imgcheck',
+    value: function imgcheck(imgurl, options) {
+      var method = 'webpurify.live.imgcheck';
+
+      var params = { method: method, imgurl: imgurl };
+      return this.get(params, options).then(function (res) {
+        return res.imgid;
+      });
+    }
+  }, {
+    key: 'imgaccount',
+    value: function imgaccount() {
+      var method = 'webpurify.live.imgaccount';
+      var params = { method: method };
+      return this.get(params, {}).then(function (res) {
+        return res.remaining;
+      });
+    }
   }]);
 
   return WebPurify;

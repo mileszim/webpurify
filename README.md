@@ -21,6 +21,10 @@ This module allows simple interaction with the WebPurify API within Node.js. For
 * [removeFromWhitelist](#removeFromWhitelist)
 * [getWhitelist](#getWhitelist)
 
+##### Image Moderation
+* [imgcheck](#imgcheck)
+* [imgstatus](#imgstatus)
+* [imgaccount](#imgaccount)
 
 Install & Initialize
 --------------------
@@ -219,6 +223,41 @@ wp.getWhitelist()
 });
 ```
 
+Image Moderation
+------
+
+<a name="imgcheck" />
+### imgcheck
+Use this method to submit an image to the moderation service. It will return an image ID that is used to return the results of the moderation to a callback function.
+
+```js
+wp.imgcheck('http://imageURL...')
+.then(function(imgid) {
+  // this imgid could be used to check the status later
+});
+```
+
+<a name="imgstatus" />
+### imgstatus
+Returns the moderation status of an image. Possible results can be: pending, approved, declined.
+
+```js
+wp.imgstatus('imgid')
+.then(function(status) {
+  // this is the status of your moderation
+});
+```
+
+<a name="imgaccount" />
+### imgaccount
+Check the number of image submissions remaining on your license.
+
+```js
+wp.imgaccount()
+.then(function(remaining) {
+  // this is how many subscriptions you have to use
+});
+```
 
 Status
 ------
