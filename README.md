@@ -30,9 +30,9 @@ Install & Initialize
 To initialize:
 
 ```js
-var WebPurify = require('webpurify');
+const WebPurify = require('webpurify');
 
-var wp = new WebPurify({
+const wp = new WebPurify({
     api_key: ENV['WEBPURIFY_API_KEY']
     //, endpoint:   'us'  // Optional, available choices: 'eu', 'ap'. Default: 'us'.
     //, enterprise: false // Optional, set to true if you are using the enterprise API, allows SSL
@@ -42,8 +42,7 @@ var wp = new WebPurify({
 Commands
 --------
 
-<a name="check" />
-### check
+### check ###
 
 Check a string of text for profanity. Returns true if profanity found, false if none.
 
@@ -58,8 +57,7 @@ wp.check('some profane text')
 });
 ```
 
-<a name="checkCount" />
-### checkCount
+### checkCount ###
 
 Check a string of text for profanity. Returns number of words if profanity found, 0 if none.
 
