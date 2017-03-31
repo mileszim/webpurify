@@ -3,20 +3,20 @@ WebPurify API for Node.js
 
 This module allows simple interaction with the WebPurify API within Node.js. For more information about WebPurify and the services it offers, check out http://webpurify.com/.
 
-### Commands
+### Commands ###
 
-##### Filters
+##### Filters #####
 * [check](#check)
 * [checkCount](#checkCount)
 * [replace](#replace)
 * [return](#return)
 
-##### Blacklist
+##### Blacklist #####
 * [addToBlacklist](#addToBlacklist)
 * [removeFromBlacklist](#removeFromBlacklist)
 * [getBlacklist](#getBlacklist)
 
-##### Whitelist
+##### Whitelist #####
 * [addToWhitelist](#addToWhitelist)
 * [removeFromWhitelist](#removeFromWhitelist)
 * [getWhitelist](#getWhitelist)
@@ -30,6 +30,10 @@ Install & Initialize
 To initialize:
 
 ```js
+// ES6
+import WebPurify from 'webpurify';
+
+// Otherwise
 const WebPurify = require('webpurify');
 
 const wp = new WebPurify({
@@ -48,7 +52,7 @@ Check a string of text for profanity. Returns true if profanity found, false if 
 
 ```js
 wp.check('some profane text')
-.then((profanity) => {
+.then(profanity => {
   if (profanity) {
     console.log('A bunch of sailors in here!');
   } else {
@@ -63,7 +67,7 @@ Check a string of text for profanity. Returns number of words if profanity found
 
 ```js
 wp.checkCount('some profane text')
-.then(function(profanity) {
+.then(profanity => {
   if (profanity > 0) {
     console.log(profanity.toString() + ' sailors in here!');
   } else {
@@ -77,8 +81,8 @@ Check a string of text for profanity. Replaces any found profanity with a provid
 
 ```js
 wp.replace('some profane text', '*')
-.then(function(purified_text) {
-  console.log(purified_text);
+.then(purifiedText => {
+  console.log(purifiedText);
 });
 ```
 
@@ -87,7 +91,7 @@ Check a string of text for profanity. If any found, returns an array of profane 
 
 ```js
 wp.return('some profane text')
-.then(function(profanity) {
+.then(profanity => {
   for (word in profanity) {
     console.log(profanity[word]);
   }
@@ -107,7 +111,7 @@ var optional = {
 };
 
 wp.check('some profane text', optional)
-.then(function(profanity) {
+.then(profanity => {
   console.log(profanity);
 });
 ```
@@ -117,8 +121,8 @@ Add a word to the blacklist.
 
 ```js
 wp.addToBlacklist('my_word')
-.then(function(success) {
-  if (success) console.log('success!');
+.then(success =? {
+  if (success) { console.log('success!'); }
 });
 ```
 
@@ -140,8 +144,8 @@ Remove a word from the blacklist.
 
 ```js
 wp.removeFromBlacklist('my_word')
-.then(function(success) {
-  if (success) console.log('success!');
+.then(success => {
+  if (success) { console.log('success!'); }
 });
 ```
 
@@ -156,7 +160,7 @@ Get the blacklist as an array of words.
 
 ```js
 wp.getBlacklist()
-.then(function(blacklist) {
+.then(blacklist => {
   for (word in blacklist) {
     console.log(blacklist[word]);
   }
@@ -169,8 +173,8 @@ Add a word to the whitelist.
 
 ```js
 wp.addToWhitelist('my_word')
-.then(function(success) {
-  if (success) console.log('success!');
+.then(success => {
+  if (success) { console.log('success!'); }
 });
 ```
 
@@ -186,8 +190,8 @@ Remove a word from the whitelist.
 
 ```js
 wp.removeFromWhitelist('my_word')
-.then(function(success) {
-  if (success) console.log('success!');
+.then(success => {
+  if (success) { console.log('success!'); }
 });
 ```
 
@@ -202,7 +206,7 @@ Get the whitelist as an array of words.
 
 ```js
 wp.getWhitelist()
-.then(function(whitelist) {
+.then(whitelist => {
   for (word in whitelist) {
     console.log(whitelist[word]);
   }
