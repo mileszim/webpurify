@@ -34,12 +34,12 @@ export default class WebPurify {
     // Configured options
     this.options = {
       api_key:    options.api_key,
-      endpoint:   options.endpoint   || 'us',
+      endpoint:   options.endpoint   || endpoints['us'],
       enterprise: options.enterprise || false
     };
 
     this.request_base = {
-      host: endpoints[this.options.endpoint],
+      host: this.options.endpoint,
       path: rest_path
     };
 
@@ -329,5 +329,70 @@ export default class WebPurify {
     return this.get(params, {}).then(res => res.remaining);
   }
 
+  /**
+   * Checks the passed imageurl moderation. It will need a callback.
+   * @param  {string}   imgurl     The URL of the image
+   * @param  {Object}   options  The optional API parameters
+   * @return {Promise}
+   */
+  aimImgcheck(imgurl, options) {
+    let method = 'webpurify.aim.imgcheck';
+    // ACCEPTED PARAMS
+    // imgurl (Required)
+    //   Full url to the image you would like moderated.
+    // format (Optional)
+    //   Response format: xml or json. Defaults to xml.
+    let params = { method: method, imgurl: imgurl };
+    return this.get(params, options).then(res => Number.parseFloat(res.nudity));
+  }
 
+  /**
+   * Check the number of AIM image submissions remaining on your license.
+   * @return {Promise}
+   */
+  aimImgaccount() {
+    let method = 'webpurify.aim.imgaccount';
+    let params = { method: method };
+    return this.get(params, {}).then(res => res.remaining);
+  }
+
+  /**
+   * Combine our Automated Intelligent Moderation system (AIM) and our Live
+   * moderators to create a powerful low cost solution.
+   *
+   * Images submitted to this method, are first sent to AIM and then sent to
+   * our live moderation team based on thresholds you set.
+   *
+   * I.E any image that is given a 50% or greater probability by AIM can then be
+   * sent to our human moderation team for further review.
+   *
+   * @param  {string}   imgurl     The URL of the image
+   * @param  {Object}   options  The optional API parameters
+   * @return {Promise}
+   */
+  hybridImgcheck(imgurl, options) {
+    let method = 'webpurify.hybrid.imgcheck';
+    // ACCEPTED PARAMS
+    // imgurl (Required)
+    //   Full url to the image you would like moderated.
+    // format (Optional)
+    //   Response format: xml or json. Defaults to xml.
+    // thresholdlt (Optional)
+    //   Set the lower threshold to pass the image to our live team
+    //   thresholdlt=50 would send all images that AIM gives a nudity
+    //   probability of less than 50 to our live team.
+    // thresholdgt (Optional)
+    //   Set the uypper threshold to pass the image to our live team
+    //   thresholdgt=70 would send all images that AIM gives a nudity
+    //   probability of greater than 70 to our live team.
+    // customimgid (Optional)
+    //   A custom ID you wish to associate with the image
+    //   that will be carried through to the callback.
+    // callback (Optional)
+    //   You may also submit a URL encoded callback on
+    //   a per image basis:
+    //   https://www.webpurify.com/image-moderation/documentation/results/#callback
+    let params = { method: method, imgurl: imgurl };
+    return this.get(params, options).then(res => Number.parseFloat(res.nudity));
+  }
 }
