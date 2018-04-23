@@ -8,6 +8,8 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
 
 var _Object$assign = require('babel-runtime/core-js/object/assign')['default'];
 
+var _Number$parseFloat = require('babel-runtime/core-js/number/parse-float')['default'];
+
 var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
 
 Object.defineProperty(exports, '__esModule', {
@@ -48,12 +50,12 @@ var WebPurify = (function () {
 
     this.options = {
       api_key: options.api_key,
-      endpoint: options.endpoint || 'us',
+      endpoint: options.endpoint || endpoints['us'],
       enterprise: options.enterprise || false
     };
 
     this.request_base = {
-      host: endpoints[this.options.endpoint],
+      host: this.options.endpoint,
       path: rest_path
     };
 
@@ -262,6 +264,35 @@ var WebPurify = (function () {
       var params = { method: method };
       return this.get(params, {}).then(function (res) {
         return res.remaining;
+      });
+    }
+  }, {
+    key: 'aimImgcheck',
+    value: function aimImgcheck(imgurl, options) {
+      var method = 'webpurify.aim.imgcheck';
+
+      var params = { method: method, imgurl: imgurl };
+      return this.get(params, options).then(function (res) {
+        return _Number$parseFloat(res.nudity);
+      });
+    }
+  }, {
+    key: 'aimImgaccount',
+    value: function aimImgaccount() {
+      var method = 'webpurify.aim.imgaccount';
+      var params = { method: method };
+      return this.get(params, {}).then(function (res) {
+        return res.remaining;
+      });
+    }
+  }, {
+    key: 'hybridImgcheck',
+    value: function hybridImgcheck(imgurl, options) {
+      var method = 'webpurify.hybrid.imgcheck';
+
+      var params = { method: method, imgurl: imgurl };
+      return this.get(params, options).then(function (res) {
+        return _Number$parseFloat(res.nudity);
       });
     }
   }]);
