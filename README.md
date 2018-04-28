@@ -21,6 +21,13 @@ This module allows simple interaction with the WebPurify API within Node.js. For
 * [removeFromWhitelist](#removeFromWhitelist)
 * [getWhitelist](#getWhitelist)
 
+##### Image Moderation
+* [imgcheck](#imgcheck)
+* [imgstatus](#imgstatus)
+* [imgaccount](#imgaccount)
+* [aimImgcheck](#aimImgcheck)
+* [aimImgaccount](#imgaccount)
+* [hybridImgcheck](#hybridImgcheck)
 
 Install & Initialize
 --------------------
@@ -213,6 +220,84 @@ wp.getWhitelist()
 });
 ```
 
+Image Moderation
+------
+
+<a name="imgcheck" />
+### imgcheck
+Use this method to submit an image to the moderation service. It will return an image ID that is used to return the results of the moderation to a callback function.
+
+```js
+wp.imgcheck('http://imageURL...')
+.then(function(imgid) {
+  // this imgid could be used to check the status later
+});
+```
+
+<a name="imgstatus" />
+### imgstatus
+Returns the moderation status of an image. Possible results can be: pending, approved, declined.
+
+```js
+wp.imgstatus('imgid')
+.then(function(status) {
+  // this is the status of your moderation
+});
+```
+
+<a name="imgaccount" />
+### imgaccount
+Check the number of image submissions remaining on your license.
+
+```js
+wp.imgaccount()
+.then(function(remaining) {
+  // this is how many subscriptions you have to use
+});
+```
+
+<a name="aimImgcheck" />
+### aimImgcheck
+Use this method to submit an image to the WebPurify Automated Intelligent Moderation (AIM) Service. A percentage probability that the submitted image contains nudity will be returned in real-time.
+
+```js
+wp.aimImgcheck('http://imageURL...')
+.then(function(nudity) {
+  if (nudity > 95) {
+      console.log('there\'s probably some nudity going on');
+  }
+});
+```
+
+<a name="aimImgaccount" />
+### imgaccount
+Check the number of AIM image submissions remaining on your license.
+
+```js
+wp.aimImgaccount()
+.then(function(remaining) {
+  // this is how many subscriptions you have to use
+});
+```
+
+<a name="hybridImgcheck" />
+### hybridImgcheck
+Combine our Automated Intelligent Moderation system (AIM) and our Live moderators to create a powerful low cost solution.
+
+Images submitted to this method, are first sent to AIM and then sent to our live moderation team based on thresholds you set.
+
+I.E any image that is given a 50% or greater probability by AIM can then be sent to our human moderation team for further review.
+
+```js
+wp.hybridImgcheck('http://imageURL...')
+.then(function(nudity) {
+  if (nudity > 55) {
+      console.log('Maybe there\'s nudity');
+
+      // use the customimgid parameter to poll for the live check
+  }
+});
+```
 
 Status
 ------

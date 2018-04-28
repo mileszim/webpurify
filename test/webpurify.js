@@ -340,4 +340,75 @@ describe('WebPurify', function() {
       expect(req).to.eventually.equal([]);
     });
   });
+
+
+
+  describe('#imgcheck', function() {
+    // imgurl (Required)
+    //   Full url to the image you would like moderated.
+    // format (Optional)
+    //   Response format: xml or json. Defaults to xml.
+    // customimgid (Optional)
+    //   A custom ID you wish to associate with the image
+    //   that will be carried through to the callback.
+    // callback (Optional)
+    //   You may also submit a URL encoded callback on
+    //   a per image basis: read more
+
+    it('should return imgid – the ID of the moderation process', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, imgid: '123' } });
+        }
+      });
+      var req = wp.imgcheck('imgURL');
+      return expect(req).to.eventually.equal('123');
+    });
+
+  });
+
+  describe('#imgstatus', function() {
+    // api_key (Required)
+    //   Your API application key.
+    // imgid (Required, if customimgid is not used)
+    //   Image id
+    // customimgid (Optional)
+    //   Custom Image id
+    // format (Optional)
+    //   Response format: xml or json. Defaults to xml.
+
+    it('should return the status – pending|approved|declined', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, status: 'approved' } });
+        }
+      });
+      var req = wp.imgstatus('imgID');
+      return expect(req).to.eventually.equal('approved');
+    });
+
+  });
+
+  describe('#imgaccount', function() {
+    // api_key (Required)
+    //   Your API application key.
+    // imgid (Required, if customimgid is not used)
+    //   Image id
+    // customimgid (Optional)
+    //   Custom Image id
+    // format (Optional)
+    //   Response format: xml or json. Defaults to xml.
+
+    it('should return the remaining image submissions on license', function() {
+      request = sinon.stub(wp, 'request').returns({
+        then: function(cb) {
+          cb({ rsp: { '@attributes': true, remaining: '151' } });
+        }
+      });
+      var req = wp.imgaccount();
+      return expect(req).to.eventually.equal('151');
+    });
+
+  });
+
 });
