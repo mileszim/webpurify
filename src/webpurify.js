@@ -1,6 +1,13 @@
-import http  from 'http';
+import http from 'http';
 import https from 'https';
-import url   from 'url';
+import url from 'url';
+
+const API_PATH = '/services/rest/';
+const API_HOSTS = {
+  us: 'api1.webpurify.com',
+  eu: 'api1-eu.webpurify.com',
+  ap: 'api1-ap.webpurify.com'
+};
 
 
 /**
@@ -23,29 +30,21 @@ export default class WebPurify {
       throw new Error('Invalid API Key');
     }
 
-    // API Information
-    let endpoints = {
-      us: 'api1.webpurify.com',
-      eu: 'api1-eu.webpurify.com',
-      ap: 'api1-ap.webpurify.com'
-    };
-    let rest_path = '/services/rest/';
-
     // Configured options
     this.options = {
-      api_key:    options.api_key,
-      endpoint:   options.endpoint   || endpoints['us'],
+      api_key: options.api_key,
+      endpoint: API_HOSTS[options.endpoint || 'us'],
       enterprise: options.enterprise || false
     };
 
     this.request_base = {
       host: this.options.endpoint,
-      path: rest_path
+      path: API_PATH
     };
 
     this.query_base = {
       api_key: this.options.api_key,
-      format:  'json'
+      format: 'json'
     };
   }
 

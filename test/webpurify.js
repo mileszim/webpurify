@@ -1,12 +1,12 @@
-var chai        = require("chai");
-var expect      = require('chai').expect;
-var should      = require('chai').should();
-var sinon       = require('sinon');
-var http        = require('http');
-var chaiap      = require("chai-as-promised");
+var chai = require("chai");
+var expect = require('chai').expect;
+var should = require('chai').should();
+var sinon = require('sinon');
+var http = require('http');
+var chaiap = require("chai-as-promised");
 var PassThrough = require('stream').PassThrough;
 
-var WebPurify   = require('../dist/webpurify');
+var WebPurify = require('../dist/webpurify');
 
 
 describe('WebPurify', function() {
@@ -16,8 +16,8 @@ describe('WebPurify', function() {
   chai.use(chaiap);
 
   beforeEach(function() {
-    wp      = new WebPurify({ api_key: 'sdfsdfsdf' });
-    wp_ssl  = new WebPurify({ api_key: 'sdfsdfsdf', enterprise: true });
+    wp = new WebPurify({ api_key: 'sdfsdfsdf' });
+    wp_ssl = new WebPurify({ api_key: 'sdfsdfsdf', enterprise: true });
     request = sinon.stub(http, 'request');
   });
 

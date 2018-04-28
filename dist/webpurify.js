@@ -1,20 +1,10 @@
 'use strict';
 
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _Promise = require('babel-runtime/core-js/promise')['default'];
-
-var _Object$assign = require('babel-runtime/core-js/object/assign')['default'];
-
-var _Number$parseFloat = require('babel-runtime/core-js/number/parse-float')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _http = require('http');
 
@@ -28,7 +18,18 @@ var _url = require('url');
 
 var _url2 = _interopRequireDefault(_url);
 
-var WebPurify = (function () {
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var API_PATH = '/services/rest/';
+var API_HOSTS = {
+  us: 'api1.webpurify.com',
+  eu: 'api1-eu.webpurify.com',
+  ap: 'api1-ap.webpurify.com'
+};
+
+var WebPurify = function () {
   function WebPurify(options) {
     _classCallCheck(this, WebPurify);
 
@@ -41,22 +42,15 @@ var WebPurify = (function () {
       throw new Error('Invalid API Key');
     }
 
-    var endpoints = {
-      us: 'api1.webpurify.com',
-      eu: 'api1-eu.webpurify.com',
-      ap: 'api1-ap.webpurify.com'
-    };
-    var rest_path = '/services/rest/';
-
     this.options = {
       api_key: options.api_key,
-      endpoint: options.endpoint || endpoints['us'],
+      endpoint: API_HOSTS[options.endpoint || 'us'],
       enterprise: options.enterprise || false
     };
 
     this.request_base = {
       host: this.options.endpoint,
-      path: rest_path
+      path: API_PATH
     };
 
     this.query_base = {
@@ -73,8 +67,8 @@ var WebPurify = (function () {
         path: path,
         method: method
       };
-      var base_type = ssl ? _http2['default'] : _https2['default'];
-      return new _Promise(function (resolve, reject) {
+      var base_type = ssl ? _http2.default : _https2.default;
+      return new Promise(function (resolve, reject) {
         var req = base_type.request(options, function (res) {
           var chunks = [];
           res.on('data', chunks.push.bind(chunks));
@@ -96,11 +90,11 @@ var WebPurify = (function () {
   }, {
     key: 'get',
     value: function get(params, options) {
-      var query = _Object$assign(this.query_base, params);
-      if (options !== null) query = _Object$assign(query, options);
-      var path = _url2['default'].format({ pathname: this.request_base.path, query: query });
+      var query = Object.assign(this.query_base, params);
+      if (options !== null) query = Object.assign(query, options);
+      var path = _url2.default.format({ pathname: this.request_base.path, query: query });
 
-      return new _Promise((function (resolve, reject) {
+      return new Promise(function (resolve, reject) {
         this.request(this.request_base.host, path, 'GET', this.options.enterprise).then(function (parsed) {
           var rsp = parsed ? parsed.rsp : null;
           if (!rsp || !rsp.hasOwnProperty('@attributes')) {
@@ -111,14 +105,14 @@ var WebPurify = (function () {
 
           if (rsp.hasOwnProperty('err')) {
             var err_attrs = rsp.err['@attributes'] || { msg: "Unknown Webpurify Error" };
-            var error = new Error(err_attrs.msg);
-            error.code = err_attrs.code;
-            return reject(error);
+            var _error = new Error(err_attrs.msg);
+            _error.code = err_attrs.code;
+            return reject(_error);
           }
 
           return resolve(WebPurify.prototype.strip(rsp));
         });
-      }).bind(this));
+      }.bind(this));
     }
   }, {
     key: 'strip',
@@ -273,7 +267,7 @@ var WebPurify = (function () {
 
       var params = { method: method, imgurl: imgurl };
       return this.get(params, options).then(function (res) {
-        return _Number$parseFloat(res.nudity);
+        return Number.parseFloat(res.nudity);
       });
     }
   }, {
@@ -292,13 +286,12 @@ var WebPurify = (function () {
 
       var params = { method: method, imgurl: imgurl };
       return this.get(params, options).then(function (res) {
-        return _Number$parseFloat(res.nudity);
+        return Number.parseFloat(res.nudity);
       });
     }
   }]);
 
   return WebPurify;
-})();
+}();
 
-exports['default'] = WebPurify;
-module.exports = exports['default'];
+exports.default = WebPurify;
