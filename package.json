@@ -23,5 +23,8 @@
     "mocha": "^5.1.1",
     "nock": "^9.2.5",
     "sinon": "^4.5.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0"
   }
 }
