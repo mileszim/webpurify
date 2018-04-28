@@ -20,6 +20,8 @@ var _url2 = _interopRequireDefault(_url);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var API_PATH = '/services/rest/';
@@ -32,8 +34,6 @@ var API_HOSTS = {
 var WebPurify = function () {
   function WebPurify(options) {
     _classCallCheck(this, WebPurify);
-
-    if (!(this instanceof WebPurify)) return new WebPurify(options);
 
     if (!(options instanceof Object)) {
       throw new Error('Invalid parameters');
@@ -67,15 +67,17 @@ var WebPurify = function () {
         path: path,
         method: method
       };
-      var base_type = ssl ? _http2.default : _https2.default;
+      var baseType = ssl ? _http2.default : _https2.default;
       return new Promise(function (resolve, reject) {
-        var req = base_type.request(options, function (res) {
-          var chunks = [];
-          res.on('data', chunks.push.bind(chunks));
+        var req = baseType.request(options, function (res) {
+          var buff = [];
+          res.on('data', function (chunk) {
+            return buff.push(chunk);
+          });
           res.on('end', function () {
             try {
-              var parsed = JSON.parse(Buffer.concat(chunks));
-              return resolve(parsed);
+              var _parsed = JSON.parse(buff.toString());
+              return resolve(_parsed);
             } catch (error) {
               return reject(error);
             }
@@ -89,31 +91,75 @@ var WebPurify = function () {
     }
   }, {
     key: 'get',
-    value: function get(params, options) {
-      var query = Object.assign(this.query_base, params);
-      if (options !== null) query = Object.assign(query, options);
-      var path = _url2.default.format({ pathname: this.request_base.path, query: query });
+    value: function () {
+      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(params) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-      return new Promise(function (resolve, reject) {
-        this.request(this.request_base.host, path, 'GET', this.options.enterprise).then(function (parsed) {
-          var rsp = parsed ? parsed.rsp : null;
-          if (!rsp || !rsp.hasOwnProperty('@attributes')) {
-            var error = new Error("Malformed Webpurify response");
-            error.response = parsed;
-            return reject(error);
+        var query, path, rsp, _parsed2, error, errAttrs, _error;
+
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                query = Object.assign(this.query_base, params, options);
+                path = _url2.default.format({ pathname: this.request_base.path, query });
+                rsp = null;
+                _context.prev = 3;
+                _context.next = 6;
+                return this.request(this.request_base.host, path, 'GET', this.options.enterprise);
+
+              case 6:
+                _parsed2 = _context.sent;
+
+                rsp = _parsed2 ? _parsed2.rsp : null;
+                _context.next = 13;
+                break;
+
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context['catch'](3);
+                return _context.abrupt('return', _context.t0);
+
+              case 13:
+                if (!(!rsp || !rsp.hasOwnProperty('@attributes'))) {
+                  _context.next = 17;
+                  break;
+                }
+
+                error = new Error("Malformed Webpurify response");
+
+                error.response = parsed;
+                return _context.abrupt('return', error);
+
+              case 17:
+                if (!rsp.hasOwnProperty('err')) {
+                  _context.next = 22;
+                  break;
+                }
+
+                errAttrs = rsp.err['@attributes'] || { msg: "Unknown Webpurify Error" };
+                _error = new Error(errAttrs.msg);
+
+                _error.code = errAttrs.code;
+                return _context.abrupt('return', _error);
+
+              case 22:
+                return _context.abrupt('return', this.strip(rsp));
+
+              case 23:
+              case 'end':
+                return _context.stop();
+            }
           }
+        }, _callee, this, [[3, 10]]);
+      }));
 
-          if (rsp.hasOwnProperty('err')) {
-            var err_attrs = rsp.err['@attributes'] || { msg: "Unknown Webpurify Error" };
-            var _error = new Error(err_attrs.msg);
-            _error.code = err_attrs.code;
-            return reject(_error);
-          }
+      function get(_x2) {
+        return _ref.apply(this, arguments);
+      }
 
-          return resolve(WebPurify.prototype.strip(rsp));
-        });
-      }.bind(this));
-    }
+      return get;
+    }()
   }, {
     key: 'strip',
     value: function strip(response) {
@@ -127,14 +173,33 @@ var WebPurify = function () {
     }
   }, {
     key: 'check',
-    value: function check(text, options) {
-      var method = 'webpurify.live.check';
-      var params = { method: method, text: text };
+    value: function () {
+      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(text, options) {
+        var method, params;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                method = 'webpurify.live.check';
+                params = { method, text };
+                return _context2.abrupt('return', this.get(params, options).then(function (res) {
+                  return res.found === '1';
+                }));
 
-      return this.get(params, options).then(function (res) {
-        return res.found === '1';
-      });
-    }
+              case 3:
+              case 'end':
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function check(_x3, _x4) {
+        return _ref2.apply(this, arguments);
+      }
+
+      return check;
+    }()
   }, {
     key: 'checkCount',
     value: function checkCount(text, options) {
@@ -169,9 +234,11 @@ var WebPurify = function () {
     }
   }, {
     key: 'addToBlacklist',
-    value: function addToBlacklist(word, deep_search) {
+    value: function addToBlacklist(word) {
+      var ds = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
       var method = 'webpurify.live.addtoblacklist';
-      var params = { method: method, word: word, ds: deep_search };
+      var params = { method, word, ds };
 
       return this.get(params).then(function (res) {
         return res.success === '1';

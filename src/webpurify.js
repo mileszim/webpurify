@@ -20,8 +20,6 @@ const API_HOSTS = {
  */
 export default class WebPurify {
   constructor(options) {
-    if (!(this instanceof WebPurify)) return new WebPurify(options);
-
     // Handle bad parameters
     if (!(options instanceof Object)) {
       throw new Error('Invalid parameters');
@@ -63,14 +61,14 @@ export default class WebPurify {
       path: path,
       method: method
     };
-    let base_type = ssl ? http : https;
-    return new Promise(function(resolve, reject) {
-      let req = base_type.request(options, function(res) {
-        let chunks = [];
-        res.on('data', chunks.push.bind(chunks));
-        res.on('end', function() {
+    const baseType = ssl ? http : https;
+    return new Promise((resolve, reject) => {
+      const req = baseType.request(options, (res) => {
+        const buff = [];
+        res.on('data', chunk => buff.push(chunk));
+        res.on('end', () => {
           try {
-            let parsed = JSON.parse(Buffer.concat(chunks));
+            let parsed = JSON.parse(buff.toString());
             return resolve(parsed);
           } catch (error) {
             return reject(error);
@@ -89,33 +87,35 @@ export default class WebPurify {
    * @param  {Object}   options  The optional parameters for the API request (can be left blank)
    * @return {Promise}
    */
-  get(params, options) {
+  async get(params, options = {}) {
     // form query parameters
-    let query = Object.assign(this.query_base, params);
-    if (options !== null) query = Object.assign(query, options);
-    let path = url.format({pathname: this.request_base.path, query: query});
+    let query = Object.assign(this.query_base, params, options);
+    const path = url.format({ pathname: this.request_base.path, query });
+
+    let rsp = null;
 
     // make request
-    return new Promise(function(resolve, reject) {
-      this.request(this.request_base.host, path, 'GET', this.options.enterprise)
-      .then(function(parsed) {
-        let rsp = parsed ? parsed.rsp : null;
-        if (!rsp || !rsp.hasOwnProperty('@attributes')) {
-          let error = new Error("Malformed Webpurify response")
-          error.response = parsed;
-          return reject(error);
-        }
+    try {
+      const parsed = await this.request(this.request_base.host, path, 'GET', this.options.enterprise);
+      rsp = parsed ? parsed.rsp : null;
+    } catch(error) {
+      return error;
+    }
 
-        if (rsp.hasOwnProperty('err')) {
-          let err_attrs = rsp.err['@attributes'] || { msg: "Unknown Webpurify Error" };
-          let error = new Error(err_attrs.msg);
-          error.code = err_attrs.code;
-          return reject(error);
-        }
+    if (!rsp || !rsp.hasOwnProperty('@attributes')) {
+      const error = new Error("Malformed Webpurify response");
+      error.response = parsed;
+      return error;
+    }
 
-        return resolve(WebPurify.prototype.strip(rsp));
-      });
-    }.bind(this));
+    if (rsp.hasOwnProperty('err')) {
+      const errAttrs = rsp.err['@attributes'] || { msg: "Unknown Webpurify Error" };
+      const error = new Error(errAttrs.msg);
+      error.code = errAttrs.code;
+      return error;
+    }
+
+    return this.strip(rsp);
   }
 
 
@@ -141,9 +141,9 @@ export default class WebPurify {
    * @param  {Object}   options  The optional API parameters
    * @return {Promise}
    */
-  check(text, options) {
-    let method = 'webpurify.live.check';
-    let params = { method: method, text: text };
+  async check(text, options) {
+    const method = 'webpurify.live.check';
+    const params = { method, text };
 
     return this.get(params, options).then(res => res.found === '1');
   }
@@ -200,9 +200,9 @@ export default class WebPurify {
    * @param  {string}   deep_search 1 if deepsearch, 0 or null if you don't care
    * @return {Promise}
    */
-  addToBlacklist(word, deep_search) {
+  addToBlacklist(word, ds = null) {
     let method = 'webpurify.live.addtoblacklist';
-    let params = { method: method, word: word, ds: deep_search };
+    let params = { method, word, ds };
 
     return this.get(params).then(res => res.success === '1');
   }

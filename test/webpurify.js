@@ -1,34 +1,42 @@
-var chai = require("chai");
-var expect = require('chai').expect;
-var should = require('chai').should();
-var sinon = require('sinon');
-var http = require('http');
-var chaiap = require("chai-as-promised");
-var PassThrough = require('stream').PassThrough;
+import chai, { expect, should } from 'chai';
+import sinon from 'sinon';
+import http from 'http';
+import chaiap from 'chai-as-promised';
+import nock from 'nock';
+import { PassThrough } from 'stream';
 
-var WebPurify = require('../dist/webpurify');
+import WebPurify from '../dist/webpurify';
 
 
 describe('WebPurify', function() {
   // Setup
-  var wp;
-  var request;
   chai.use(chaiap);
+  should();
+  nock.disableNetConnect();
 
-  beforeEach(function() {
-    wp = new WebPurify({ api_key: 'sdfsdfsdf' });
-    wp_ssl = new WebPurify({ api_key: 'sdfsdfsdf', enterprise: true });
-    request = sinon.stub(http, 'request');
+  before(function() {
+    this.wp = new WebPurify({ api_key: 'sdfsdfsdf' });
+    this.wp_ssl = new WebPurify({ api_key: 'sdfsdfsdf', enterprise: true });
   });
 
-  afterEach(function() {
-    http.request.restore();
+  beforeEach(function() {
+    this.wpScope = nock(/api1\.webpurify\.com/).get(/\/services\/rest\//).query({ method: 'some.method', text: 'blah' }).reply(200, {
+      "rsp": {
+        "@attributes": {
+          "stat": "ok"
+        },
+        "method": "some.method",
+        "format": "rest",
+        "found": "0",
+        "api_key": "1234567890"
+      }
+    });
   });
 
 
   // WebPurify
   it('should construct a new instance', function() {
-    expect(wp).to.be.instanceof(WebPurify);
+    expect(this.wp).to.be.instanceof(WebPurify);
   });
 
   it('should throw error when given bad parameters', function() {
@@ -42,109 +50,91 @@ describe('WebPurify', function() {
   });
 
   it('should configure options', function() {
-    expect(wp.options).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'api1.webpurify.com', enterprise: false });
-    expect(wp_ssl.options).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'api1.webpurify.com', enterprise: true });
+    expect(this.wp.options).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'api1.webpurify.com', enterprise: false });
+    expect(this.wp_ssl.options).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'api1.webpurify.com', enterprise: true });
   });
 
   it('should configure a request base', function() {
-    expect(wp.request_base).to.deep.equal({ host: 'api1.webpurify.com', path: '/services/rest/' });
+    expect(this.wp.request_base).to.deep.equal({ host: 'api1.webpurify.com', path: '/services/rest/' });
   });
 
   it('should configure a query base', function() {
-    expect(wp.query_base).to.deep.equal({ api_key: 'sdfsdfsdf', format: 'json' });
+    expect(this.wp.query_base).to.deep.equal({ api_key: 'sdfsdfsdf', format: 'json' });
   });
 
 
 
   // Methods
   describe('#request', function() {
-    var host   = 'test.com';
-    var path   = '/test';
-    var method = 'GET';
-    var ssl    = false;
+    beforeEach(function() {
+      this.simpleScope = nock(/test\.com/).get('/test').reply(200, { my: 'request' });
+      this.host = 'test.com';
+      this.path = '/test';
+      this.method = 'GET';
+      this.ssl = false;
+    });
 
-    it('should issue a request', function() {
-      var req = wp.request(host, path, method, ssl);
-      expect(request.calledOnce).to.be.true;
+    it('should issue a request', async function() {
+      var req = await this.wp.request(this.host, this.path, this.method, this.ssl);
+      expect(this.simpleScope.isDone()).to.be.true;
     });
 
     it('should return a promise', function() {
-      var req = wp.request(host, path, method, ssl);
+      var req = this.wp.request(this.host, this.path, this.method, this.ssl);
       expect(req.then).to.be.a('function');
       expect(req.catch).to.be.a('function');
     });
 
-    it('should resolve promise if request valid', function() {
-      var response = new PassThrough();
-      response.write(JSON.stringify({ my: 'request' }));
-      response.end();
-
-      request.callsArgWith(1, response).returns(new PassThrough());
-      var req = wp.request(host, path, method, ssl);
-      return expect(req).to.become({ my: 'request' });
+    it('should resolve promise if request valid', async function() {
+      const req = await this.wp.request(this.host, this.path, this.method, this.ssl);
+      expect(this.simpleScope.isDone()).to.be.true;
+      expect(req).to.deep.equal({ my: 'request' });
     });
 
     it('should reject promise if request invalid', function() {
-      var response = new PassThrough();
-      response.write('not json');
-      response.end();
-
-      request.callsArgWith(1, response).returns(new PassThrough());
-      var req = wp.request(host, path, method, ssl);
-      return expect(req).to.be.rejected;
+      this.simpleScope = nock(/test\.com/).get('/invalid').reply(500);
+      const req = this.wp.request(this.host, '/invalid', this.method, this.ssl);
+      expect(req).to.be.rejected;
     });
   });
 
-
   describe('#get', function() {
-    it('should issue a get request', function() {
-      var params = { some: 'params' };
-      var req = wp.get(params);
-      expect(request.calledOnce).to.be.true;
-      expect(request.firstCall.args[0].method).to.equal('GET');
+    it('should issue a get request', async function() {
+      var params = { method: 'some.method', text: 'blah' };
+      var req = await this.wp.get(params);
+      expect(req).to.not.be.empty;
     });
 
     it('should return a promise', function() {
-      var params = { some: 'params' };
-      var req = wp.get(params);
+      var params = { method: 'some.method', text: 'blah' };
+      var req = this.wp.get(params);
       expect(req.then).to.be.a('function');
       expect(req.catch).to.be.a('function');
     });
 
-    it('should reject promise if malformed response', function() {
-      var params = { some: 'fdsfsd' };
-      var wprequest = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ malformed: 'response' });
-        }
-      });
-      var req = wp.get(params);
-      return expect(req).to.be.rejectedWith(Error, /Malformed Webpurify response/);
+    it('should reject promise if malformed response', async function() {
+      var params = { method: 'some.method', text: 'malformed' };
+      var req = await this.wp.get(params);
+      expect(req).to.be.rejectedWith(Error, /Malformed Webpurify response/);
     });
 
     it('should reject promise if unknown error in request', function() {
-      var params = { some: 'fdsfsd' };
-      var wprequest = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: {
-              '@attributes': true,
-              err: 'a webpurify error'
-            } });
+      nock.removeInterceptor(this.wpScope);
+      this.wpScope = nock(/api1\.webpurify\.com/).get(/\/services\/rest\//).reply({ err: {
+        '@attributes': {
+          code: 100,
+          msg: "Invalid API Key"
         }
-      });
-      var req = wp.get(params);
+      }});
+      var params = { method: 'some.method', text: 'blah' };
+      var req = this.wp.get(params);
       return expect(req).to.be.rejectedWith(Error, /Unknown Webpurify Error/);
     });
 
-    it('should resolve promise if valid request & response', function() {
-      var params = { some: 'fdsfsd' };
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, good: 'attribute' } });
-        }
-      });
-      var req = wp.get(params);
-      return expect(req).to.eventually.have.property('good');
+    it('should resolve promise if valid request & response', async function() {
+      var params = { method: 'some.method', text: 'blah' };
+      var req = await this.wp.get(params);
+      expect(req).to.not.be.empty;
     });
   });
 
@@ -157,29 +147,19 @@ describe('WebPurify', function() {
         method: true,
         format: true
       };
-      return expect(wp.strip(response)).to.deep.equal({});
+      return expect(this.wp.strip(response)).to.deep.equal({});
     });
   });
 
 
   describe('#check', function() {
     it('should return false if no profanity', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, found: '0' } });
-        }
-      });
-      var req = wp.check('no profanity');
+      var req = this.wp.check('no profanity');
       expect(req).to.eventually.equal(false);
     });
 
     it('should return true if profanity', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, found: '1' } });
-        }
-      });
-      var req = wp.check('some profanity');
+      var req = this.wp.check('some profanity');
       return expect(req).to.eventually.equal(true);
     });
   });
@@ -187,22 +167,12 @@ describe('WebPurify', function() {
 
   describe('#checkCount', function() {
     it('should 0 if no profanity', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, found: '0' } });
-        }
-      });
-      var req = wp.checkCount('no profanity');
+      var req = this.wp.checkCount('no profanity');
       expect(req).to.eventually.equal(0);
     });
 
     it('should number of profane if profanity', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, found: '2' } });
-        }
-      });
-      var req = wp.checkCount('some profanity');
+      var req = this.wp.checkCount('some profanity');
       return expect(req).to.eventually.equal(2);
     });
   });
@@ -210,12 +180,7 @@ describe('WebPurify', function() {
 
   describe('#replace', function() {
     it('should replace profanity with symbol', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, text: 'its *******' } });
-        }
-      });
-      var req = wp.replace('its profane', '*');
+      var req = this.wp.replace('its profane', '*');
       expect(req).to.eventually.equal('its *******');
     });
   });
@@ -223,22 +188,12 @@ describe('WebPurify', function() {
 
   describe('#return', function() {
     it('should return an array of profanity', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, expletive: ['some', 'profanity'] } });
-        }
-      });
-      var req = wp.return('some profanity');
+      var req = this.wp.return('some profanity');
       expect(req).to.eventually.equal(['some', 'profanity']);
     });
 
     it('should return an empty array if no profanity', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true } });
-        }
-      });
-      var req = wp.return('no profanity');
+      var req = this.wp.return('no profanity');
       expect(req).to.eventually.equal([]);
     });
   });
@@ -246,12 +201,7 @@ describe('WebPurify', function() {
 
   describe('#addToBlacklist', function() {
     it('should return true on success', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, success: 1 } });
-        }
-      });
-      var req = wp.addToBlacklist('its profane');
+      var req = this.wp.addToBlacklist('its profane');
       expect(req).to.eventually.equal(true);
     });
   });
@@ -259,12 +209,7 @@ describe('WebPurify', function() {
 
   describe('#removeFromBlacklist', function() {
     it('should return true on success', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, success: 1 } });
-        }
-      });
-      var req = wp.removeFromBlacklist('its profane');
+      var req = this.wp.removeFromBlacklist('its profane');
       expect(req).to.eventually.equal(true);
     });
   });
@@ -272,22 +217,12 @@ describe('WebPurify', function() {
 
   describe('#getBlacklist', function() {
     it('should return an array of profanity in list', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, word: ['some', 'profanity'] } });
-        }
-      });
-      var req = wp.getBlacklist();
+      var req = this.wp.getBlacklist();
       expect(req).to.eventually.equal(['some', 'profanity']);
     });
 
     it('should return an empty array if no profanity', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true } });
-        }
-      });
-      var req = wp.getBlacklist();
+      var req = this.wp.getBlacklist();
       expect(req).to.eventually.equal([]);
     });
   });
@@ -295,12 +230,7 @@ describe('WebPurify', function() {
 
   describe('#addToWhitelist', function() {
     it('should return true on success', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, success: 1 } });
-        }
-      });
-      var req = wp.addToBlacklist('its profane');
+      var req = this.wp.addToBlacklist('its profane');
       expect(req).to.eventually.equal(true);
     });
   });
@@ -308,12 +238,7 @@ describe('WebPurify', function() {
 
   describe('#removeFromBlacklist', function() {
     it('should return true on success', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, success: 1 } });
-        }
-      });
-      var req = wp.removeFromBlacklist('its profane');
+      var req = this.wp.removeFromBlacklist('its profane');
       expect(req).to.eventually.equal(true);
     });
   });
@@ -321,22 +246,12 @@ describe('WebPurify', function() {
 
   describe('#removeFromWhitelist', function() {
     it('should return an array of profanity in list', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, word: ['some', 'profanity'] } });
-        }
-      });
-      var req = wp.getBlacklist();
+      var req = this.wp.getBlacklist();
       expect(req).to.eventually.equal(['some', 'profanity']);
     });
 
     it('should return an empty array if no profanity', function() {
-      request = sinon.stub(wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true } });
-        }
-      });
-      var req = wp.getBlacklist();
+      var req = this.wp.getBlacklist();
       expect(req).to.eventually.equal([]);
     });
   });
@@ -356,12 +271,12 @@ describe('WebPurify', function() {
     //   a per image basis: read more
 
     it('should return imgid – the ID of the moderation process', function() {
-      request = sinon.stub(wp, 'request').returns({
+      this.request = sinon.stub(this.wp, 'request').returns({
         then: function(cb) {
           cb({ rsp: { '@attributes': true, imgid: '123' } });
         }
       });
-      var req = wp.imgcheck('imgURL');
+      var req = this.wp.imgcheck('imgURL');
       return expect(req).to.eventually.equal('123');
     });
 
@@ -378,12 +293,12 @@ describe('WebPurify', function() {
     //   Response format: xml or json. Defaults to xml.
 
     it('should return the status – pending|approved|declined', function() {
-      request = sinon.stub(wp, 'request').returns({
+      this.request = sinon.stub(this.wp, 'request').returns({
         then: function(cb) {
           cb({ rsp: { '@attributes': true, status: 'approved' } });
         }
       });
-      var req = wp.imgstatus('imgID');
+      var req = this.wp.imgstatus('imgID');
       return expect(req).to.eventually.equal('approved');
     });
 
@@ -400,12 +315,12 @@ describe('WebPurify', function() {
     //   Response format: xml or json. Defaults to xml.
 
     it('should return the remaining image submissions on license', function() {
-      request = sinon.stub(wp, 'request').returns({
+      this.request = sinon.stub(this.wp, 'request').returns({
         then: function(cb) {
           cb({ rsp: { '@attributes': true, remaining: '151' } });
         }
       });
-      var req = wp.imgaccount();
+      var req = this.wp.imgaccount();
       return expect(req).to.eventually.equal('151');
     });
 
