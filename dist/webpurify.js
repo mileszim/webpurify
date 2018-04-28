@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-require('babel-polyfill');
-
 var _http = require('http');
 
 var _http2 = _interopRequireDefault(_http);
@@ -20,45 +18,24 @@ var _url = require('url');
 
 var _url2 = _interopRequireDefault(_url);
 
+var _configuration = require('./configuration');
+
+var _configuration2 = _interopRequireDefault(_configuration);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var API_PATH = '/services/rest/';
-var API_HOSTS = {
-  us: 'api1.webpurify.com',
-  eu: 'api1-eu.webpurify.com',
-  ap: 'api1-ap.webpurify.com'
-};
-
 var WebPurify = function () {
   function WebPurify(options) {
     _classCallCheck(this, WebPurify);
 
-    if (!(options instanceof Object)) {
-      throw new Error('Invalid parameters');
-    }
-    if (typeof options.api_key !== 'string') {
-      throw new Error('Invalid API Key');
-    }
-
-    this.options = {
-      api_key: options.api_key,
-      endpoint: API_HOSTS[options.endpoint || 'us'],
-      enterprise: options.enterprise || false
-    };
-
-    this.request_base = {
-      host: this.options.endpoint,
-      path: API_PATH
-    };
-
-    this.query_base = {
-      api_key: this.options.api_key,
-      format: 'json'
-    };
+    var configuration = new _configuration2.default(options);
+    this.config = configuration.config;
+    this.request_base = { host: this.config.endpoint, path: configuration.path };
+    this.query_base = { api_key: this.config.api_key, format: 'json' };
   }
 
   _createClass(WebPurify, [{
@@ -78,8 +55,8 @@ var WebPurify = function () {
           });
           res.on('end', function () {
             try {
-              var _parsed = JSON.parse(buff.toString());
-              return resolve(_parsed);
+              var parsed = JSON.parse(buff.toString());
+              return resolve(parsed);
             } catch (error) {
               return reject(error);
             }
@@ -97,7 +74,7 @@ var WebPurify = function () {
       var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(params) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-        var query, path, rsp, _parsed2, error, errAttrs, _error;
+        var query, path, rsp, parsed, error, errAttrs, _error;
 
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
@@ -106,36 +83,37 @@ var WebPurify = function () {
                 query = Object.assign(this.query_base, params, options);
                 path = _url2.default.format({ pathname: this.request_base.path, query });
                 rsp = null;
-                _context.prev = 3;
-                _context.next = 6;
-                return this.request(this.request_base.host, path, 'GET', this.options.enterprise);
+                parsed = void 0;
+                _context.prev = 4;
+                _context.next = 7;
+                return this.request(this.request_base.host, path, 'GET', this.config.enterprise);
 
-              case 6:
-                _parsed2 = _context.sent;
+              case 7:
+                parsed = _context.sent;
 
-                rsp = _parsed2 ? _parsed2.rsp : null;
-                _context.next = 13;
+                rsp = parsed ? parsed.rsp : null;
+                _context.next = 14;
                 break;
 
-              case 10:
-                _context.prev = 10;
-                _context.t0 = _context['catch'](3);
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context['catch'](4);
                 return _context.abrupt('return', _context.t0);
 
-              case 13:
+              case 14:
                 if (!(!rsp || !rsp.hasOwnProperty('@attributes'))) {
-                  _context.next = 17;
+                  _context.next = 18;
                   break;
                 }
 
                 error = new Error("Malformed Webpurify response");
 
                 error.response = parsed;
-                return _context.abrupt('return', error);
+                return _context.abrupt('return', Promise.reject(error));
 
-              case 17:
+              case 18:
                 if (!rsp.hasOwnProperty('err')) {
-                  _context.next = 22;
+                  _context.next = 23;
                   break;
                 }
 
@@ -143,17 +121,17 @@ var WebPurify = function () {
                 _error = new Error(errAttrs.msg);
 
                 _error.code = errAttrs.code;
-                return _context.abrupt('return', _error);
-
-              case 22:
-                return _context.abrupt('return', this.strip(rsp));
+                return _context.abrupt('return', Promise.reject(_error));
 
               case 23:
+                return _context.abrupt('return', this.strip(rsp));
+
+              case 24:
               case 'end':
                 return _context.stop();
             }
           }
-        }, _callee, this, [[3, 10]]);
+        }, _callee, this, [[4, 11]]);
       }));
 
       function get(_x2) {
@@ -177,23 +155,32 @@ var WebPurify = function () {
     key: 'check',
     value: function () {
       var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(text, options) {
-        var method, params;
+        var method, params, res;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 method = 'webpurify.live.check';
                 params = { method, text };
-                return _context2.abrupt('return', this.get(params, options).then(function (res) {
-                  return res.found === '1';
-                }));
+                _context2.prev = 2;
+                _context2.next = 5;
+                return this.get(params, options);
 
-              case 3:
+              case 5:
+                res = _context2.sent;
+                return _context2.abrupt('return', res.found === '1');
+
+              case 9:
+                _context2.prev = 9;
+                _context2.t0 = _context2['catch'](2);
+                return _context2.abrupt('return', _context2.t0);
+
+              case 12:
               case 'end':
                 return _context2.stop();
             }
           }
-        }, _callee2, this);
+        }, _callee2, this, [[2, 9]]);
       }));
 
       function check(_x3, _x4) {
@@ -204,14 +191,42 @@ var WebPurify = function () {
     }()
   }, {
     key: 'checkCount',
-    value: function checkCount(text, options) {
-      var method = 'webpurify.live.checkcount';
-      var params = { method: method, text: text };
+    value: function () {
+      var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(text, options) {
+        var method, params, res;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                method = 'webpurify.live.checkcount';
+                params = { method: method, text: text };
+                _context3.prev = 2;
+                _context3.next = 5;
+                return this.get(params, options);
 
-      return this.get(params, options).then(function (res) {
-        return parseInt(res.found, 10);
-      });
-    }
+              case 5:
+                res = _context3.sent;
+                return _context3.abrupt('return', parseInt(res.found, 10));
+
+              case 9:
+                _context3.prev = 9;
+                _context3.t0 = _context3['catch'](2);
+                return _context3.abrupt('return', _context3.t0);
+
+              case 12:
+              case 'end':
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[2, 9]]);
+      }));
+
+      function checkCount(_x5, _x6) {
+        return _ref3.apply(this, arguments);
+      }
+
+      return checkCount;
+    }()
   }, {
     key: 'replace',
     value: function replace(text, replace_symbol, options) {

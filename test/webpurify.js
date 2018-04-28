@@ -5,7 +5,7 @@ import chaiap from 'chai-as-promised';
 import nock from 'nock';
 import { PassThrough } from 'stream';
 
-import WebPurify from '../dist/webpurify';
+import WebPurify from '../dist';
 
 
 describe('WebPurify', function() {
@@ -14,23 +14,56 @@ describe('WebPurify', function() {
   should();
   nock.disableNetConnect();
 
+  const GENERIC_SCOPE = {
+    "rsp": {
+      "@attributes": {
+        "stat": "ok"
+      },
+      "method": "some.method",
+      "format": "rest",
+      "found": "0",
+      "api_key": "1234567890"
+    }
+  };
+  const MALFORMED_SCOPE = {
+    "rsp": {
+      "bad": "response"
+    }
+  };
+  const ERROR_SCOPE = {
+    "rsp": {
+      "@attributes": {
+        "stat": "fail"
+      },
+      "err": {
+        "unknown": "error",
+        "code": "1234"
+      }
+    }
+  };
+
   before(function() {
     this.wp = new WebPurify({ api_key: 'sdfsdfsdf' });
     this.wp_ssl = new WebPurify({ api_key: 'sdfsdfsdf', enterprise: true });
   });
 
   beforeEach(function() {
-    this.wpScope = nock(/api1\.webpurify\.com/).get(/\/services\/rest\//).query({ method: 'some.method', text: 'blah' }).reply(200, {
-      "rsp": {
-        "@attributes": {
-          "stat": "ok"
-        },
-        "method": "some.method",
-        "format": "rest",
-        "found": "0",
-        "api_key": "1234567890"
-      }
-    });
+    this.malformedScope = nock(/api1\.webpurify\.com/)
+      .get(/\/services\/rest\//)
+      .query(function(queryObject) {
+        return queryObject.method === 'error.malformed';
+      })
+      .reply(500, MALFORMED_SCOPE);
+    this.wpScope = nock(/api1\.webpurify\.com/)
+        .get(/\/services\/rest\//)
+        .query(function(queryObject) {
+          return queryObject.method === 'error.unknown';
+        })
+        .reply(500, ERROR_SCOPE);
+    this.wpScope = nock(/api1\.webpurify\.com/)
+      .get(/\/services\/rest\//)
+      .query(true)
+      .reply(200, GENERIC_SCOPE);
   });
 
 
@@ -41,17 +74,17 @@ describe('WebPurify', function() {
 
   it('should throw error when given bad parameters', function() {
     function throwError() { new WebPurify('fdsfs'); }
-    expect(throwError).to.throw(Error, /Invalid parameters/);
+    expect(throwError).to.throw(Error, /Invalid params - object required/);
   });
 
   it('should throw an error if not given an api key', function() {
     function throwError() { new WebPurify({}); }
-    expect(throwError).to.throw(Error, /Invalid API Key/);
+    expect(throwError).to.throw(Error, /api_key is a required parameter/);
   });
 
   it('should configure options', function() {
-    expect(this.wp.options).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'api1.webpurify.com', enterprise: false });
-    expect(this.wp_ssl.options).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'api1.webpurify.com', enterprise: true });
+    expect(this.wp.config).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'api1.webpurify.com', enterprise: false });
+    expect(this.wp_ssl.config).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'api1.webpurify.com', enterprise: true });
   });
 
   it('should configure a request base', function() {
@@ -112,23 +145,16 @@ describe('WebPurify', function() {
       expect(req.catch).to.be.a('function');
     });
 
-    it('should reject promise if malformed response', async function() {
-      var params = { method: 'some.method', text: 'malformed' };
-      var req = await this.wp.get(params);
+    it('should reject promise if malformed response', function() {
+      var params = { method: 'error.malformed', text: 'blah' };
+      var req = this.wp.get(params);
       expect(req).to.be.rejectedWith(Error, /Malformed Webpurify response/);
     });
 
     it('should reject promise if unknown error in request', function() {
-      nock.removeInterceptor(this.wpScope);
-      this.wpScope = nock(/api1\.webpurify\.com/).get(/\/services\/rest\//).reply({ err: {
-        '@attributes': {
-          code: 100,
-          msg: "Invalid API Key"
-        }
-      }});
-      var params = { method: 'some.method', text: 'blah' };
+      var params = { method: 'error.unknown', text: 'blah' };
       var req = this.wp.get(params);
-      return expect(req).to.be.rejectedWith(Error, /Unknown Webpurify Error/);
+      expect(req).to.be.rejectedWith(Error, /Unknown Webpurify Error/);
     });
 
     it('should resolve promise if valid request & response', async function() {
@@ -141,7 +167,7 @@ describe('WebPurify', function() {
 
   describe('#strip', function() {
     it('should strip response of attributes, api_key, method, and format', function() {
-      var response = {
+      const response = {
         "@attributes": true,
         api_key: true,
         method: true,

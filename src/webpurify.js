@@ -1,51 +1,28 @@
-import "babel-polyfill";
-
 import http from 'http';
 import https from 'https';
 import url from 'url';
 
-const API_PATH = '/services/rest/';
-const API_HOSTS = {
-  us: 'api1.webpurify.com',
-  eu: 'api1-eu.webpurify.com',
-  ap: 'api1-ap.webpurify.com'
-};
-
+import Configuration from './configuration';
 
 /**
  * WebPurify NPM Module
  * A Node NPM module for interacting with the WebPurify API
- * @param {Object} options The options object, passed in on initialization. This defines
- *   several master paramaters handling the connection and interaction with the API.
- * @throws {Error} Throws an error if parameters are invalid.
- * @throws {Error} Throws an error if API key is missing.
- */
+*/
 export default class WebPurify {
+  /**
+   * @param {Object} options - Pass configuration options here, or declare them in their respective ENV variables.
+   * @param {Object} options.api_key - WebPurify API Key. ENV variable (takes precedence): WEBPURIFY_API_KEY
+   * @param {Object} options.endpoint - Available: 'us', 'eu', 'ap'. Default: 'us'. ENV variable: WEBPURIFY_ENDPOINT
+   * @param {Object} options.enterprise - Available: true, false. Default: false. ENV varable: WEBPURIFY_ENTERPRISE
+   * @throws {Error} Throws an error if parameters are invalid.
+   * @throws {Error} Throws an error if API key is missing.
+   * @returns {WebPurify} A WebPurify instance.
+   */
   constructor(options) {
-    // Handle bad parameters
-    if (!(options instanceof Object)) {
-      throw new Error('Invalid parameters');
-    }
-    if (typeof options.api_key !== 'string') {
-      throw new Error('Invalid API Key');
-    }
-
-    // Configured options
-    this.options = {
-      api_key: options.api_key,
-      endpoint: API_HOSTS[options.endpoint || 'us'],
-      enterprise: options.enterprise || false
-    };
-
-    this.request_base = {
-      host: this.options.endpoint,
-      path: API_PATH
-    };
-
-    this.query_base = {
-      api_key: this.options.api_key,
-      format: 'json'
-    };
+    const configuration = new Configuration(options);
+    this.config = configuration.config;
+    this.request_base = { host: this.config.endpoint, path: configuration.path };
+    this.query_base = { api_key: this.config.api_key, format: 'json' };
   }
 
 
@@ -95,10 +72,11 @@ export default class WebPurify {
     const path = url.format({ pathname: this.request_base.path, query });
 
     let rsp = null;
+    let parsed;
 
     // make request
     try {
-      const parsed = await this.request(this.request_base.host, path, 'GET', this.options.enterprise);
+      parsed = await this.request(this.request_base.host, path, 'GET', this.config.enterprise);
       rsp = parsed ? parsed.rsp : null;
     } catch(error) {
       return error;
@@ -107,14 +85,14 @@ export default class WebPurify {
     if (!rsp || !rsp.hasOwnProperty('@attributes')) {
       const error = new Error("Malformed Webpurify response");
       error.response = parsed;
-      return error;
+      return Promise.reject(error);
     }
 
     if (rsp.hasOwnProperty('err')) {
       const errAttrs = rsp.err['@attributes'] || { msg: "Unknown Webpurify Error" };
       const error = new Error(errAttrs.msg);
       error.code = errAttrs.code;
-      return error;
+      return Promise.reject(error);
     }
 
     return this.strip(rsp);
@@ -147,7 +125,12 @@ export default class WebPurify {
     const method = 'webpurify.live.check';
     const params = { method, text };
 
-    return this.get(params, options).then(res => res.found === '1');
+    try {
+      const res = await this.get(params, options);
+      return res.found === '1';
+    } catch(error) {
+      return error;
+    }
   }
 
 
@@ -157,11 +140,16 @@ export default class WebPurify {
    * @param  {Object}   options  The optional API parameters
    * @return {Promise}
    */
-  checkCount(text, options) {
+  async checkCount(text, options) {
     let method = 'webpurify.live.checkcount';
-    let params = { method: method, text: text};
+    let params = { method: method, text: text };
 
-    return this.get(params, options).then(res => parseInt(res.found, 10));
+    try {
+      const res = await this.get(params, options);
+      return parseInt(res.found, 10);
+    } catch(error) {
+      return error;
+    }
   }
 
 
