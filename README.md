@@ -1,5 +1,5 @@
-WebPurify API for Node.js
-=========================
+# WebPurify API for Node.js #
+[![npm version](https://badge.fury.io/js/webpurify.svg)](https://badge.fury.io/js/webpurify) [![Build Status](https://travis-ci.org/mileszim/webpurify.svg?branch=master)](https://travis-ci.org/mileszim/webpurify)
 
 This module allows simple interaction with the WebPurify API within Node.js. For more information about WebPurify and the services it offers, check out http://webpurify.com/.
 
@@ -29,8 +29,7 @@ This module allows simple interaction with the WebPurify API within Node.js. For
 * [aimImgaccount](#imgaccount)
 * [hybridImgcheck](#hybridImgcheck)
 
-Install & Initialize
---------------------
+# Install & Initialize #
 
 `npm install webpurify`
 
@@ -298,10 +297,3 @@ wp.hybridImgcheck('http://imageURL...')
   }
 });
 ```
-
-Status
-------
-v1.0.0
-
- - The WebPurify module is now written in ES6, using babel + babel-runtim to convert into ES5.
- - Now uses promises
