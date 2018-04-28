@@ -42,8 +42,8 @@ describe('WebPurify', function() {
   });
 
   it('should configure options', function() {
-    expect(wp.options).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'us', enterprise: false });
-    expect(wp_ssl.options).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'us', enterprise: true });
+    expect(wp.options).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'api1.webpurify.com', enterprise: false });
+    expect(wp_ssl.options).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'api1.webpurify.com', enterprise: true });
   });
 
   it('should configure a request base', function() {

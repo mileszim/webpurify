@@ -8,9 +8,9 @@ node_js:
   - "8"
   - "9"
   - "10"
-before_install: npm install -g grunt-cli
-install: npm install
-before_script: grunt build
+install:
+  - if [ $TRAVIS_NODE_VERSION = "0.12" ]; then npm install; else yarn; fi
+before_script: npm run-script build
 script: npm test
 notifications:
   email: false
