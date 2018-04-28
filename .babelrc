@@ -1,9 +1,7 @@
 {
   "presets": [["env", {
     "targets": {
-      "node": [
-        "0.12"
-      ]
+      "node": ["4.0"]
     }
   }]],
   "comments": false,
