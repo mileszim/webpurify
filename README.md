@@ -7,27 +7,27 @@ This module allows simple interaction with the WebPurify API within Node.js. For
 
 ##### Filters #####
 * [check](#check)
-* [checkCount](#checkCount)
+* [checkCount](#checkcount)
 * [replace](#replace)
 * [return](#return)
 
 ##### Blacklist #####
-* [addToBlacklist](#addToBlacklist)
-* [removeFromBlacklist](#removeFromBlacklist)
-* [getBlacklist](#getBlacklist)
+* [addToBlacklist](#addtoblacklist)
+* [removeFromBlacklist](#removefromblacklist)
+* [getBlacklist](#getblacklist)
 
 ##### Whitelist #####
-* [addToWhitelist](#addToWhitelist)
-* [removeFromWhitelist](#removeFromWhitelist)
+* [addToWhitelist](#addtowhitelist)
+* [removeFromWhitelist](#removefromwhitelist)
 * [getWhitelist](#getWhitelist)
 
 ##### Image Moderation #####
-* [imgCheck](#imgCheck)
-* [imgStatus](#imgStatus)
-* [imgAccount](#imgAccount)
-* [aimImgCheck](#aimImgCheck)
-* [aimImgAccount](#aimImgAccount)
-* [hybridImgCheck](#hybridImgCheck)
+* [imgCheck](#imgcheck)
+* [imgStatus](#imgstatus)
+* [imgAccount](#imgaccount)
+* [aimImgCheck](#aimimgCheck)
+* [aimImgAccount](#aimimgAccount)
+* [hybridImgCheck](#hybridimgCheck)
 
 # Install & Initialize #
 
