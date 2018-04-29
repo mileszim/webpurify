@@ -9,10 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var API_PATH = '/services/rest/';
-var API_HOSTS = {
+var API_HOSTS = exports.API_HOSTS = {
   us: 'api1.webpurify.com',
   eu: 'api1-eu.webpurify.com',
-  ap: 'api1-ap.webpurify.com'
+  ap: 'api1-ap.webpurify.com',
+  im: 'im-api1.webpurify.com',
+  vid: 'vid-api1.webpurify.com'
 };
 
 var ENV = {

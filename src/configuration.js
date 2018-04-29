@@ -1,8 +1,10 @@
 const API_PATH = '/services/rest/';
-const API_HOSTS = {
+export const API_HOSTS = {
   us: 'api1.webpurify.com',
   eu: 'api1-eu.webpurify.com',
-  ap: 'api1-ap.webpurify.com'
+  ap: 'api1-ap.webpurify.com',
+  im: 'im-api1.webpurify.com',
+  vid: 'vid-api1.webpurify.com'
 };
 
 // ENV params

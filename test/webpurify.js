@@ -8,39 +8,52 @@ import { PassThrough } from 'stream';
 import WebPurify from '../dist';
 
 
+const GENERIC_SCOPE = {
+  "rsp": {
+    "@attributes": {
+      "stat": "ok"
+    },
+    "method": "some.method",
+    "format": "rest",
+    "found": "0",
+    "api_key": "1234567890"
+  }
+};
+const MALFORMED_SCOPE = {
+  "rsp": {
+    "bad": "response"
+  }
+};
+const ERROR_SCOPE = {
+  "rsp": {
+    "@attributes": {
+      "stat": "fail"
+    },
+    "err": {
+      "unknown": "error",
+      "code": "1234"
+    }
+  }
+};
+
+function generateResponse(method = "some.method", mergeOptions = {}, code = 200) {
+  let resScope = Object.assign({}, GENERIC_SCOPE);
+  resScope["rsp"]["method"] = method;
+  Object.entries(mergeOptions).forEach(e => resScope["rsp"][e[0]] = e[1]);
+
+  return nock(/[\w\-]{1,8}\.webpurify\.com/)
+    .get(/\/services\/rest\//)
+    .query(function(queryObject) {
+      return queryObject.method === method;
+    })
+    .reply(code, resScope);
+}
+
 describe('WebPurify', function() {
   // Setup
   chai.use(chaiap);
   should();
   nock.disableNetConnect();
-
-  const GENERIC_SCOPE = {
-    "rsp": {
-      "@attributes": {
-        "stat": "ok"
-      },
-      "method": "some.method",
-      "format": "rest",
-      "found": "0",
-      "api_key": "1234567890"
-    }
-  };
-  const MALFORMED_SCOPE = {
-    "rsp": {
-      "bad": "response"
-    }
-  };
-  const ERROR_SCOPE = {
-    "rsp": {
-      "@attributes": {
-        "stat": "fail"
-      },
-      "err": {
-        "unknown": "error",
-        "code": "1234"
-      }
-    }
-  };
 
   before(function() {
     this.wp = new WebPurify({ api_key: 'sdfsdfsdf' });
@@ -54,7 +67,7 @@ describe('WebPurify', function() {
         return queryObject.method === 'error.malformed';
       })
       .reply(500, MALFORMED_SCOPE);
-    this.wpScope = nock(/api1\.webpurify\.com/)
+    this.errorScope = nock(/api1\.webpurify\.com/)
         .get(/\/services\/rest\//)
         .query(function(queryObject) {
           return queryObject.method === 'error.unknown';
@@ -113,7 +126,7 @@ describe('WebPurify', function() {
     });
 
     it('should return a promise', function() {
-      var req = this.wp.request(this.host, this.path, this.method, this.ssl);
+      const req = this.wp.request(this.host, this.path, this.method, this.ssl);
       expect(req.then).to.be.a('function');
       expect(req.catch).to.be.a('function');
     });
@@ -133,33 +146,33 @@ describe('WebPurify', function() {
 
   describe('#get', function() {
     it('should issue a get request', async function() {
-      var params = { method: 'some.method', text: 'blah' };
+      const params = { method: 'some.method', text: 'blah' };
       var req = await this.wp.get(params);
       expect(req).to.not.be.empty;
     });
 
     it('should return a promise', function() {
-      var params = { method: 'some.method', text: 'blah' };
-      var req = this.wp.get(params);
+      const params = { method: 'some.method', text: 'blah' };
+      const req = this.wp.get(params);
       expect(req.then).to.be.a('function');
       expect(req.catch).to.be.a('function');
     });
 
     it('should reject promise if malformed response', function() {
-      var params = { method: 'error.malformed', text: 'blah' };
-      var req = this.wp.get(params);
+      const params = { method: 'error.malformed', text: 'blah' };
+      const req = this.wp.get(params);
       expect(req).to.be.rejectedWith(Error, /Malformed Webpurify response/);
     });
 
     it('should reject promise if unknown error in request', function() {
-      var params = { method: 'error.unknown', text: 'blah' };
-      var req = this.wp.get(params);
+      const params = { method: 'error.unknown', text: 'blah' };
+      const req = this.wp.get(params);
       expect(req).to.be.rejectedWith(Error, /Unknown Webpurify Error/);
     });
 
     it('should resolve promise if valid request & response', async function() {
-      var params = { method: 'some.method', text: 'blah' };
-      var req = await this.wp.get(params);
+      const params = { method: 'some.method', text: 'blah' };
+      const req = await this.wp.get(params);
       expect(req).to.not.be.empty;
     });
   });
@@ -180,33 +193,37 @@ describe('WebPurify', function() {
 
   describe('#check', function() {
     it('should return false if no profanity', function() {
-      var req = this.wp.check('no profanity');
+      const req = this.wp.check('no profanity');
       expect(req).to.eventually.equal(false);
     });
 
     it('should return true if profanity', function() {
-      var req = this.wp.check('some profanity');
-      return expect(req).to.eventually.equal(true);
+      const newNock = generateResponse('webpurify.live.check', { found: '1' });
+      const req = this.wp.check('some profanity');
+      expect(req).to.eventually.equal(true);
     });
   });
 
 
   describe('#checkCount', function() {
     it('should 0 if no profanity', function() {
-      var req = this.wp.checkCount('no profanity');
+      const newNock = generateResponse('webpurify.live.checkcount', { found: '0' });
+      const req = this.wp.checkCount('no profanity');
       expect(req).to.eventually.equal(0);
     });
 
     it('should number of profane if profanity', function() {
-      var req = this.wp.checkCount('some profanity');
-      return expect(req).to.eventually.equal(2);
+      const newNock = generateResponse('webpurify.live.checkcount', { found: '2' });
+      const req = this.wp.checkCount('some profanity');
+      expect(req).to.eventually.equal(2);
     });
   });
 
 
   describe('#replace', function() {
     it('should replace profanity with symbol', function() {
-      var req = this.wp.replace('its profane', '*');
+      const newNock = generateResponse('webpurify.live.replace', { text: 'its *******' });
+      const req = this.wp.replace('its profane', '*');
       expect(req).to.eventually.equal('its *******');
     });
   });
@@ -214,12 +231,14 @@ describe('WebPurify', function() {
 
   describe('#return', function() {
     it('should return an array of profanity', function() {
-      var req = this.wp.return('some profanity');
+      const newNock = generateResponse('webpurify.live.return', { expletive: ['some', 'profanity'] });
+      const req = this.wp.return('some profanity');
       expect(req).to.eventually.equal(['some', 'profanity']);
     });
 
     it('should return an empty array if no profanity', function() {
-      var req = this.wp.return('no profanity');
+      const newNock = generateResponse('webpurify.live.return', { expletive: [] });
+      const req = this.wp.return('no profanity');
       expect(req).to.eventually.equal([]);
     });
   });
@@ -227,7 +246,8 @@ describe('WebPurify', function() {
 
   describe('#addToBlacklist', function() {
     it('should return true on success', function() {
-      var req = this.wp.addToBlacklist('its profane');
+      const newNock = generateResponse('webpurify.live.addtoblacklist', { success: '1' });
+      const req = this.wp.addToBlacklist('its profane');
       expect(req).to.eventually.equal(true);
     });
   });
@@ -235,7 +255,8 @@ describe('WebPurify', function() {
 
   describe('#removeFromBlacklist', function() {
     it('should return true on success', function() {
-      var req = this.wp.removeFromBlacklist('its profane');
+      const newNock = generateResponse('webpurify.live.removefromblacklist', { success: '1' });
+      const req = this.wp.removeFromBlacklist('its profane');
       expect(req).to.eventually.equal(true);
     });
   });
@@ -243,12 +264,14 @@ describe('WebPurify', function() {
 
   describe('#getBlacklist', function() {
     it('should return an array of profanity in list', function() {
-      var req = this.wp.getBlacklist();
+      const newNock = generateResponse('webpurify.live.getblacklist', { word: ['some', 'profanity'] });
+      const req = this.wp.getBlacklist();
       expect(req).to.eventually.equal(['some', 'profanity']);
     });
 
     it('should return an empty array if no profanity', function() {
-      var req = this.wp.getBlacklist();
+      const newNock = generateResponse('webpurify.live.getblacklist', {});
+      const req = this.wp.getBlacklist();
       expect(req).to.eventually.equal([]);
     });
   });
@@ -256,35 +279,39 @@ describe('WebPurify', function() {
 
   describe('#addToWhitelist', function() {
     it('should return true on success', function() {
-      var req = this.wp.addToBlacklist('its profane');
-      expect(req).to.eventually.equal(true);
-    });
-  });
-
-
-  describe('#removeFromBlacklist', function() {
-    it('should return true on success', function() {
-      var req = this.wp.removeFromBlacklist('its profane');
+      const newNock = generateResponse('webpurify.live.addtowhitelist', { success: '1' });
+      const req = this.wp.addToWhitelist('its profane');
       expect(req).to.eventually.equal(true);
     });
   });
 
 
   describe('#removeFromWhitelist', function() {
+    it('should return true on success', function() {
+      const newNock = generateResponse('webpurify.live.removefromwhitelist', { success: '1' });
+      const req = this.wp.removeFromWhitelist('its profane');
+      expect(req).to.eventually.equal(true);
+    });
+  });
+
+
+  describe('#getWhiteList', function() {
     it('should return an array of profanity in list', function() {
-      var req = this.wp.getBlacklist();
-      expect(req).to.eventually.equal(['some', 'profanity']);
+      const newNock = generateResponse('webpurify.live.getwhitelist', { word: ['some', 'cleanliness'] });
+      const req = this.wp.getWhitelist();
+      expect(req).to.eventually.equal(['some', 'cleanliness']);
     });
 
     it('should return an empty array if no profanity', function() {
-      var req = this.wp.getBlacklist();
+      const newNock = generateResponse('webpurify.live.getwhitelist', {});
+      const req = this.wp.getWhitelist();
       expect(req).to.eventually.equal([]);
     });
   });
 
 
 
-  describe('#imgcheck', function() {
+  describe('#imgCheck', function() {
     // imgurl (Required)
     //   Full url to the image you would like moderated.
     // format (Optional)
@@ -297,18 +324,14 @@ describe('WebPurify', function() {
     //   a per image basis: read more
 
     it('should return imgid – the ID of the moderation process', function() {
-      this.request = sinon.stub(this.wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, imgid: '123' } });
-        }
-      });
-      var req = this.wp.imgcheck('imgURL');
-      return expect(req).to.eventually.equal('123');
+      const newNock = generateResponse('webpurify.live.imgcheck', { imgid: '123' });
+      const req = this.wp.imgCheck('imgURL');
+      expect(req).to.eventually.equal('123');
     });
 
   });
 
-  describe('#imgstatus', function() {
+  describe('#imgStatus', function() {
     // api_key (Required)
     //   Your API application key.
     // imgid (Required, if customimgid is not used)
@@ -319,18 +342,14 @@ describe('WebPurify', function() {
     //   Response format: xml or json. Defaults to xml.
 
     it('should return the status – pending|approved|declined', function() {
-      this.request = sinon.stub(this.wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, status: 'approved' } });
-        }
-      });
-      var req = this.wp.imgstatus('imgID');
-      return expect(req).to.eventually.equal('approved');
+      const newNock = generateResponse('webpurify.live.imgstatus', { status: 'approved' });
+      const req = this.wp.imgStatus('imgID');
+      expect(req).to.eventually.equal('approved');
     });
 
   });
 
-  describe('#imgaccount', function() {
+  describe('#imgAccount', function() {
     // api_key (Required)
     //   Your API application key.
     // imgid (Required, if customimgid is not used)
@@ -341,13 +360,9 @@ describe('WebPurify', function() {
     //   Response format: xml or json. Defaults to xml.
 
     it('should return the remaining image submissions on license', function() {
-      this.request = sinon.stub(this.wp, 'request').returns({
-        then: function(cb) {
-          cb({ rsp: { '@attributes': true, remaining: '151' } });
-        }
-      });
-      var req = this.wp.imgaccount();
-      return expect(req).to.eventually.equal('151');
+      const newNock = generateResponse('webpurify.life.imgaccount', { remaining: '151' });
+      const req = this.wp.imgAccount();
+      expect(req).to.eventually.equal('151');
     });
 
   });
