@@ -28,10 +28,10 @@ export default class WebPurify {
 
   /**
    * Handles the HTTP/S requests
-   * @param  {string}   host     The hostname for the request URL (ie. api1.webpurify.com)
-   * @param  {string}   path     The path of the request (ie. /services/rest/)
-   * @param  {string}   method   The method, either 'GET or 'PUT'
-   * @param  {boolean}  ssl      True or false for using HTTPS or HTTP. If you are using enterprise API, you can set this to true.
+   * @param {string} host - The hostname for the request URL (ie. api1.webpurify.com)
+   * @param {string} path - The path of the request (ie. /services/rest/)
+   * @param {string} method - The method, either 'GET or 'PUT'
+   * @param {boolean} ssl - True or false for using HTTPS or HTTP. If you are using enterprise API, you can set this to true.
    * @return {Promise}
    */
   request(host, path, method, ssl) {
@@ -62,8 +62,8 @@ export default class WebPurify {
 
   /**
    * Formats the request for the request function
-   * @param  {Object}   params   The params object passed into the request
-   * @param  {Object}   options  The optional parameters for the API request (can be left blank)
+   * @param {Object} params - The params object passed into the request
+   * @param {Object} options - The optional parameters for the API request (can be left blank)
    * @return {Promise}
    */
   async get(params, options = {}, host = this.request_base.host) {
@@ -373,7 +373,7 @@ export default class WebPurify {
    * @param  {Object}   options  The optional API parameters
    * @return {Promise}
    */
-  async aimImgcheck(imgurl, options) {
+  async aimImgCheck(imgurl, options) {
     let method = 'webpurify.aim.imgcheck';
     let params = { method, imgurl };
     // ACCEPTED PARAMS
@@ -418,7 +418,7 @@ export default class WebPurify {
    * @param  {Object}   options  The optional API parameters
    * @return {Promise}
    */
-  async hybridImgcheck(imgurl, options) {
+  async hybridImgCheck(imgurl, options) {
     let method = 'webpurify.hybrid.imgcheck';
     let params = { method, imgurl };
     // ACCEPTED PARAMS
