@@ -7,27 +7,27 @@ This module allows simple interaction with the WebPurify API within Node.js. For
 
 ##### Filters #####
 * [check](#check)
-* [checkCount](#checkCount)
+* [checkCount](#checkcount)
 * [replace](#replace)
 * [return](#return)
 
 ##### Blacklist #####
-* [addToBlacklist](#addToBlacklist)
-* [removeFromBlacklist](#removeFromBlacklist)
-* [getBlacklist](#getBlacklist)
+* [addToBlacklist](#addtoblacklist)
+* [removeFromBlacklist](#removefromblacklist)
+* [getBlacklist](#getblacklist)
 
 ##### Whitelist #####
-* [addToWhitelist](#addToWhitelist)
-* [removeFromWhitelist](#removeFromWhitelist)
+* [addToWhitelist](#addtowhitelist)
+* [removeFromWhitelist](#removefromwhitelist)
 * [getWhitelist](#getWhitelist)
 
-##### Image Moderation
-* [imgcheck](#imgcheck)
-* [imgstatus](#imgstatus)
-* [imgaccount](#imgaccount)
-* [aimImgcheck](#aimImgcheck)
-* [aimImgaccount](#imgaccount)
-* [hybridImgcheck](#hybridImgcheck)
+##### Image Moderation #####
+* [imgCheck](#imgcheck)
+* [imgStatus](#imgstatus)
+* [imgAccount](#imgaccount)
+* [aimImgCheck](#aimimgCheck)
+* [aimImgAccount](#aimimgAccount)
+* [hybridImgCheck](#hybridimgCheck)
 
 # Install & Initialize #
 
@@ -49,8 +49,7 @@ const wp = new WebPurify({
 });
 ```
 
-Commands
---------
+# Commands #
 
 ### check ###
 
@@ -127,7 +126,7 @@ Add a word to the blacklist.
 
 ```js
 wp.addToBlacklist('my_word')
-.then(success =? {
+.then(success => {
   if (success) { console.log('success!'); }
 });
 ```
@@ -219,68 +218,61 @@ wp.getWhitelist()
 });
 ```
 
-Image Moderation
-------
+## Image Moderation ##
 
-<a name="imgcheck" />
-### imgcheck
+### imgCheck ###
 Use this method to submit an image to the moderation service. It will return an image ID that is used to return the results of the moderation to a callback function.
 
 ```js
-wp.imgcheck('http://imageURL...')
-.then(function(imgid) {
+wp.imgCheck('http://imageURL...')
+.then((imgid) => {
   // this imgid could be used to check the status later
 });
 ```
 
-<a name="imgstatus" />
-### imgstatus
+### imgStatus ###
 Returns the moderation status of an image. Possible results can be: pending, approved, declined.
 
 ```js
-wp.imgstatus('imgid')
-.then(function(status) {
+wp.imgStatus('imgid')
+.then((status) => {
   // this is the status of your moderation
 });
 ```
 
-<a name="imgaccount" />
-### imgaccount
+### imgAccount ###
 Check the number of image submissions remaining on your license.
 
 ```js
-wp.imgaccount()
-.then(function(remaining) {
+wp.imgAccount()
+.then((remaining) => {
   // this is how many subscriptions you have to use
 });
 ```
 
-<a name="aimImgcheck" />
-### aimImgcheck
+### aimImgCheck ###
 Use this method to submit an image to the WebPurify Automated Intelligent Moderation (AIM) Service. A percentage probability that the submitted image contains nudity will be returned in real-time.
 
 ```js
-wp.aimImgcheck('http://imageURL...')
-.then(function(nudity) {
+wp.aimImgCheck('http://imageURL...')
+.then((nudity) => {
   if (nudity > 95) {
       console.log('there\'s probably some nudity going on');
   }
 });
 ```
 
-<a name="aimImgaccount" />
-### imgaccount
+### aimImgAccount ###
 Check the number of AIM image submissions remaining on your license.
 
 ```js
-wp.aimImgaccount()
-.then(function(remaining) {
+wp.aimImgAccount()
+.then((remaining) => {
   // this is how many subscriptions you have to use
 });
 ```
 
-<a name="hybridImgcheck" />
-### hybridImgcheck
+### hybridImgCheck ###
 Combine our Automated Intelligent Moderation system (AIM) and our Live moderators to create a powerful low cost solution.
 
 Images submitted to this method, are first sent to AIM and then sent to our live moderation team based on thresholds you set.
@@ -288,8 +280,8 @@ Images submitted to this method, are first sent to AIM and then sent to our live
 I.E any image that is given a 50% or greater probability by AIM can then be sent to our human moderation team for further review.
 
 ```js
-wp.hybridImgcheck('http://imageURL...')
-.then(function(nudity) {
+wp.hybridImgCheck('http://imageURL...')
+.then((nudity) => {
   if (nudity > 55) {
       console.log('Maybe there\'s nudity');
 

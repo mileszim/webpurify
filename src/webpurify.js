@@ -1,61 +1,37 @@
-import http  from 'http';
+import http from 'http';
 import https from 'https';
-import url   from 'url';
+import url from 'url';
 
+import Configuration, { API_HOSTS } from './configuration';
 
 /**
  * WebPurify NPM Module
  * A Node NPM module for interacting with the WebPurify API
- * @param {Object} options The options object, passed in on initialization. This defines
- *   several master paramaters handling the connection and interaction with the API.
- * @throws {Error} Throws an error if parameters are invalid.
- * @throws {Error} Throws an error if API key is missing.
- */
+*/
 export default class WebPurify {
+  /**
+   * @param {Object} options - Pass configuration options here, or declare them in their respective ENV variables.
+   * @param {Object} options.api_key - WebPurify API Key. ENV variable (takes precedence): WEBPURIFY_API_KEY
+   * @param {Object} options.endpoint - Available: 'us', 'eu', 'ap'. Default: 'us'. ENV variable: WEBPURIFY_ENDPOINT
+   * @param {Object} options.enterprise - Available: true, false. Default: false. ENV varable: WEBPURIFY_ENTERPRISE
+   * @throws {Error} Throws an error if parameters are invalid.
+   * @throws {Error} Throws an error if API key is missing.
+   * @returns {WebPurify} A WebPurify instance.
+   */
   constructor(options) {
-    if (!(this instanceof WebPurify)) return new WebPurify(options);
-
-    // Handle bad parameters
-    if (!(options instanceof Object)) {
-      throw new Error('Invalid parameters');
-    }
-    if (typeof options.api_key !== 'string') {
-      throw new Error('Invalid API Key');
-    }
-
-    // API Information
-    let endpoints = {
-      us: 'api1.webpurify.com',
-      eu: 'api1-eu.webpurify.com',
-      ap: 'api1-ap.webpurify.com'
-    };
-    let rest_path = '/services/rest/';
-
-    // Configured options
-    this.options = {
-      api_key:    options.api_key,
-      endpoint:   options.endpoint   || endpoints['us'],
-      enterprise: options.enterprise || false
-    };
-
-    this.request_base = {
-      host: this.options.endpoint,
-      path: rest_path
-    };
-
-    this.query_base = {
-      api_key: this.options.api_key,
-      format:  'json'
-    };
+    const configuration = new Configuration(options);
+    this.config = configuration.config;
+    this.request_base = { host: this.config.endpoint, path: configuration.path };
+    this.query_base = { api_key: this.config.api_key, format: 'json' };
   }
 
 
   /**
    * Handles the HTTP/S requests
-   * @param  {string}   host     The hostname for the request URL (ie. api1.webpurify.com)
-   * @param  {string}   path     The path of the request (ie. /services/rest/)
-   * @param  {string}   method   The method, either 'GET or 'PUT'
-   * @param  {boolean}  ssl      True or false for using HTTPS or HTTP. If you are using enterprise API, you can set this to true.
+   * @param {string} host - The hostname for the request URL (ie. api1.webpurify.com)
+   * @param {string} path - The path of the request (ie. /services/rest/)
+   * @param {string} method - The method, either 'GET or 'PUT'
+   * @param {boolean} ssl - True or false for using HTTPS or HTTP. If you are using enterprise API, you can set this to true.
    * @return {Promise}
    */
   request(host, path, method, ssl) {
@@ -64,14 +40,14 @@ export default class WebPurify {
       path: path,
       method: method
     };
-    let base_type = ssl ? http : https;
-    return new Promise(function(resolve, reject) {
-      let req = base_type.request(options, function(res) {
-        let chunks = [];
-        res.on('data', chunks.push.bind(chunks));
-        res.on('end', function() {
+    const baseType = ssl ? http : https;
+    return new Promise((resolve, reject) => {
+      const req = baseType.request(options, (res) => {
+        const buff = [];
+        res.on('data', chunk => buff.push(chunk));
+        res.on('end', () => {
           try {
-            let parsed = JSON.parse(Buffer.concat(chunks));
+            let parsed = JSON.parse(buff.toString());
             return resolve(parsed);
           } catch (error) {
             return reject(error);
@@ -86,37 +62,40 @@ export default class WebPurify {
 
   /**
    * Formats the request for the request function
-   * @param  {Object}   params   The params object passed into the request
-   * @param  {Object}   options  The optional parameters for the API request (can be left blank)
+   * @param {Object} params - The params object passed into the request
+   * @param {Object} options - The optional parameters for the API request (can be left blank)
    * @return {Promise}
    */
-  get(params, options) {
+  async get(params, options = {}, host = this.request_base.host) {
     // form query parameters
-    let query = Object.assign(this.query_base, params);
-    if (options !== null) query = Object.assign(query, options);
-    let path = url.format({pathname: this.request_base.path, query: query});
+    let query = Object.assign(this.query_base, params, options);
+    const path = url.format({ pathname: this.request_base.path, query });
+
+    let rsp = null;
+    let parsed;
 
     // make request
-    return new Promise(function(resolve, reject) {
-      this.request(this.request_base.host, path, 'GET', this.options.enterprise)
-      .then(function(parsed) {
-        let rsp = parsed ? parsed.rsp : null;
-        if (!rsp || !rsp.hasOwnProperty('@attributes')) {
-          let error = new Error("Malformed Webpurify response")
-          error.response = parsed;
-          return reject(error);
-        }
+    try {
+      parsed = await this.request(host, path, 'GET', this.config.enterprise);
+      rsp = parsed ? parsed.rsp : null;
+    } catch(error) {
+      return error;
+    }
 
-        if (rsp.hasOwnProperty('err')) {
-          let err_attrs = rsp.err['@attributes'] || { msg: "Unknown Webpurify Error" };
-          let error = new Error(err_attrs.msg);
-          error.code = err_attrs.code;
-          return reject(error);
-        }
+    if (!rsp || !rsp.hasOwnProperty('@attributes')) {
+      const error = new Error("Malformed Webpurify response");
+      error.response = parsed;
+      return Promise.reject(error);
+    }
 
-        return resolve(WebPurify.prototype.strip(rsp));
-      });
-    }.bind(this));
+    if (rsp.hasOwnProperty('err')) {
+      const errAttrs = rsp.err['@attributes'] || { msg: "Unknown Webpurify Error" };
+      const error = new Error(errAttrs.msg);
+      error.code = errAttrs.code;
+      return Promise.reject(error);
+    }
+
+    return this.strip(rsp);
   }
 
 
@@ -142,11 +121,16 @@ export default class WebPurify {
    * @param  {Object}   options  The optional API parameters
    * @return {Promise}
    */
-  check(text, options) {
-    let method = 'webpurify.live.check';
-    let params = { method: method, text: text };
+  async check(text, options) {
+    const method = 'webpurify.live.check';
+    const params = { method, text };
 
-    return this.get(params, options).then(res => res.found === '1');
+    try {
+      const res = await this.get(params, options);
+      return res.found === '1';
+    } catch(error) {
+      return error;
+    }
   }
 
 
@@ -156,42 +140,55 @@ export default class WebPurify {
    * @param  {Object}   options  The optional API parameters
    * @return {Promise}
    */
-  checkCount(text, options) {
+  async checkCount(text, options) {
     let method = 'webpurify.live.checkcount';
-    let params = { method: method, text: text};
+    let params = { method, text };
 
-    return this.get(params, options).then(res => parseInt(res.found, 10));
+    try {
+      const res = await this.get(params, options);
+      return parseInt(res.found, 10);
+    } catch(error) {
+      return error;
+    }
   }
 
 
   /**
    * Checks the passed text for any profanity. If found, returns the text with profanity altered by symbol. Else 0.
-   * @param  {string}   text           The text to check for profanity
-   * @param  {string}   replace_symbol The symbol to replace profanity with (ie. '*')
-   * @param  {Object}   options        The optional API parameters
+   * @param  {string} text - The text to check for profanity
+   * @param  {string} replacesymbol - The symbol to replace profanity with (ie. '*')
+   * @param  {Object} options - The optional API parameters
    * @return {Promise}
    */
-  replace(text, replace_symbol, options) {
+  async replace(text, replacesymbol, options) {
     let method = 'webpurify.live.replace';
-    let params = { method: method, text: text, replacesymbol: replace_symbol };
+    let params = { method, text, replacesymbol };
 
-    return this.get(params, options).then(res => res.text);
+    try {
+      const res = await this.get(params, options);
+      return res.text;
+    } catch(error) {
+      return error;
+    }
   }
 
 
   /**
    * Checks the passed text for any profanity. If found, returns an array of expletives.
-   * @param  {string}   text           The text to check for profanity
-   * @param  {Object}   options        The optional API parameters
+   * @param {string} text - The text to check for profanity
+   * @param {Object} options - The optional API parameters
    * @return {Promise}
    */
-  return(text, options) {
+  async return(text, options) {
     let method = 'webpurify.live.return';
-    let params = { method: method, text: text };
+    let params = { method, text };
 
-    return this.get(params, options).then((res) => {
+    try {
+      const res = await this.get(params, options);
       return [].concat(res.expletive).filter(w => typeof w === 'string');
-    });
+    } catch(error) {
+      return error;
+    }
   }
 
 
@@ -201,11 +198,16 @@ export default class WebPurify {
    * @param  {string}   deep_search 1 if deepsearch, 0 or null if you don't care
    * @return {Promise}
    */
-  addToBlacklist(word, deep_search) {
+  async addToBlacklist(word, ds = null) {
     let method = 'webpurify.live.addtoblacklist';
-    let params = { method: method, word: word, ds: deep_search };
+    let params = { method, word, ds };
 
-    return this.get(params).then(res => res.success === '1');
+    try {
+      const res = await this.get(params);
+      return res.success === '1';
+    } catch(error) {
+      return error;
+    }
   }
 
 
@@ -214,11 +216,16 @@ export default class WebPurify {
    * @param  {string}   word  The word to remove from the blacklist
    * @return {Promise}
    */
-  removeFromBlacklist(word) {
+  async removeFromBlacklist(word) {
     let method = 'webpurify.live.removefromblacklist';
-    let params = { method: method, word: word };
+    let params = { method, word };
 
-    return this.get(params).then(res => res.success === '1');
+    try {
+      const res = await this.get(params);
+      return res.success === '1';
+    } catch(error) {
+      return error;
+    }
   }
 
 
@@ -226,13 +233,16 @@ export default class WebPurify {
    * Get the blacklist
    * @return {Promise}
    */
-  getBlacklist() {
+  async getBlacklist() {
     let method = 'webpurify.live.getblacklist';
-    let params = { method: method };
+    let params = { method };
 
-    return this.get(params).then((res) => {
+    try {
+      const res = await this.get(params, options);
       return [].concat(res.word).filter(w => typeof w === 'string');
-    });
+    } catch(error) {
+      return error;
+    }
   }
 
 
@@ -241,11 +251,16 @@ export default class WebPurify {
    * @param  {string}   word        The word to add to the whitelist
    * @return {Promise}
    */
-  addToWhitelist(word) {
+  async addToWhitelist(word) {
     let method = 'webpurify.live.addtowhitelist';
-    let params = { method: method, word: word };
+    let params = { method, word };
 
-    return this.get(params).then(res => res.success === '1');
+    try {
+      const res = await this.get(params);
+      return res.success === '1';
+    } catch(error) {
+      return error;
+    }
   }
 
 
@@ -254,11 +269,16 @@ export default class WebPurify {
    * @param  {string}   word        The word to remove from the whitelist
    * @return {Promise}
    */
-  removeFromWhitelist(word) {
+  async removeFromWhitelist(word) {
     let method = 'webpurify.live.removefromwhitelist';
-    let params = { method: method, word: word };
+    let params = { method, word };
 
-    return this.get(params).then(res => res.success === '1');
+    try {
+      const res = await this.get(params);
+      return res.success === '1';
+    } catch(error) {
+      return error;
+    }
   }
 
 
@@ -266,23 +286,27 @@ export default class WebPurify {
    * Get the whitelist
    * @return {Promise}
    */
-  getWhitelist() {
+  async getWhitelist() {
     let method = 'webpurify.live.getwhitelist';
-    let params = { method: method };
+    let params = { method };
 
-    return this.get(params).then((res) => {
-      return [].concat(res.word).filter(w => w instanceof String);
-    });
+    try {
+      const res = await this.get(params, options);
+      return [].concat(res.word).filter(w => typeof w === 'string');
+    } catch(error) {
+      return error;
+    }
   }
 
   /**
    * Checks the imgid for status of moderation.
-   * @param  {string}   imgid     The URL of the image
-   * @param  {Object}   options  The optional API parameters
+   * @param {string} imgid - The URL of the image
+   * @param {Object} options - The optional API parameters
    * @return {Promise}
    */
-  imgstatus(imgid, options) {
+  async imgStatus(imgid, options = {}) {
     let method = 'webpurify.live.imgstatus';
+    let params = { method, imgid };
     // ACCEPTED PARAMS
     // api_key (Required)
     //   Your API application key.
@@ -292,8 +316,12 @@ export default class WebPurify {
     //   Custom Image id
     // format (Optional)
     //   Response format: xml or json. Defaults to xml.
-    let params = { method: method, imgid: imgid };
-    return this.get(params, options).then(res => res.status);
+    try {
+      const res = await this.get(params, options, API_HOSTS['im']);
+      return res.status;
+    } catch(error) {
+      return error;
+    }
   }
 
   /**
@@ -302,8 +330,9 @@ export default class WebPurify {
    * @param  {Object}   options  The optional API parameters
    * @return {Promise}
    */
-  imgcheck(imgurl, options) {
+  async imgCheck(imgurl, options) {
     let method = 'webpurify.live.imgcheck';
+    let params = { method, imgurl };
     // ACCEPTED PARAMS
     // imgurl (Required)
     //   Full url to the image you would like moderated.
@@ -315,18 +344,27 @@ export default class WebPurify {
     // callback (Optional)
     //   You may also submit a URL encoded callback on
     //   a per image basis: read more
-    let params = { method: method, imgurl: imgurl };
-    return this.get(params, options).then(res => res.imgid);
+    try {
+      const res = await this.get(params, options, API_HOSTS['im']);
+      return res.imgid;
+    } catch(error) {
+      return error;
+    }
   }
 
   /**
    * Checks the remaining submissions on licence for images.
    * @return {Promise}
    */
-  imgaccount() {
+  async imgAccount() {
     let method = 'webpurify.live.imgaccount';
-    let params = { method: method };
-    return this.get(params, {}).then(res => res.remaining);
+    let params = { method };
+    try {
+      const res = await this.get(params, options, API_HOSTS['im']);
+      return res.remaining;
+    } catch(error) {
+      return error;
+    }
   }
 
   /**
@@ -335,25 +373,35 @@ export default class WebPurify {
    * @param  {Object}   options  The optional API parameters
    * @return {Promise}
    */
-  aimImgcheck(imgurl, options) {
+  async aimImgCheck(imgurl, options) {
     let method = 'webpurify.aim.imgcheck';
+    let params = { method, imgurl };
     // ACCEPTED PARAMS
     // imgurl (Required)
     //   Full url to the image you would like moderated.
     // format (Optional)
     //   Response format: xml or json. Defaults to xml.
-    let params = { method: method, imgurl: imgurl };
-    return this.get(params, options).then(res => Number.parseFloat(res.nudity));
+    try {
+      const res = await this.get(params, options);
+      return Number.parseFloat(res.nudity);
+    } catch(error) {
+      return error;
+    }
   }
 
   /**
    * Check the number of AIM image submissions remaining on your license.
    * @return {Promise}
    */
-  aimImgaccount() {
+  async aimImgAccount() {
     let method = 'webpurify.aim.imgaccount';
-    let params = { method: method };
-    return this.get(params, {}).then(res => res.remaining);
+    let params = { method };
+    try {
+      const res = await this.get(params, options, API_HOSTS['im']);
+      return res.remaining;
+    } catch(error) {
+      return error;
+    }
   }
 
   /**
@@ -370,8 +418,9 @@ export default class WebPurify {
    * @param  {Object}   options  The optional API parameters
    * @return {Promise}
    */
-  hybridImgcheck(imgurl, options) {
+  async hybridImgCheck(imgurl, options) {
     let method = 'webpurify.hybrid.imgcheck';
+    let params = { method, imgurl };
     // ACCEPTED PARAMS
     // imgurl (Required)
     //   Full url to the image you would like moderated.
@@ -392,7 +441,11 @@ export default class WebPurify {
     //   You may also submit a URL encoded callback on
     //   a per image basis:
     //   https://www.webpurify.com/image-moderation/documentation/results/#callback
-    let params = { method: method, imgurl: imgurl };
-    return this.get(params, options).then(res => Number.parseFloat(res.nudity));
+    try {
+      const res = await this.get(params, options, API_HOSTS['im']);
+      return Number.parseFloat(res.nudity);
+    } catch(error) {
+      return error;
+    }
   }
 }
