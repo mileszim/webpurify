@@ -3,7 +3,6 @@ import sinon from 'sinon';
 import http from 'http';
 import chaiap from 'chai-as-promised';
 import nock from 'nock';
-import { PassThrough } from 'stream';
 
 import WebPurify from '../dist';
 

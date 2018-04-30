@@ -1,9 +1,9 @@
 {
-  "presets": [["env", {
-    "targets": {
-      "node": ["4.0"]
-    }
-  }]],
+  "presets": [
+    ["env", {
+      "targets": { "node": "current" } }
+    ]
+  ],
   "comments": false,
   "minified": false
 }
