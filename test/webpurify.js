@@ -95,16 +95,16 @@ describe('WebPurify', function() {
   });
 
   it('should configure options', function() {
-    expect(this.wp.config).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'api1.webpurify.com', enterprise: false });
-    expect(this.wp_ssl.config).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'api1.webpurify.com', enterprise: true });
+    expect(this.wp._config).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'api1.webpurify.com', enterprise: false });
+    expect(this.wp_ssl._config).to.deep.equal({ api_key: 'sdfsdfsdf', endpoint: 'api1.webpurify.com', enterprise: true });
   });
 
   it('should configure a request base', function() {
-    expect(this.wp.request_base).to.deep.equal({ host: 'api1.webpurify.com', path: '/services/rest/' });
+    expect(this.wp._request_base).to.deep.equal({ host: 'api1.webpurify.com', path: '/services/rest/' });
   });
 
   it('should configure a query base', function() {
-    expect(this.wp.query_base).to.deep.equal({ api_key: 'sdfsdfsdf', format: 'json' });
+    expect(this.wp._query_base).to.deep.equal({ api_key: 'sdfsdfsdf', format: 'json' });
   });
 
 

@@ -21,7 +21,7 @@ export default class WebPurify {
   constructor(options) {
     const configuration = new Configuration(options);
     this._config = configuration.config;
-    this._request_base = { host: this._config.endpoint, path: this._config.path };
+    this._request_base = { host: this._config.endpoint, path: configuration.path };
     this._query_base = { api_key: this._config.api_key, format: 'json' };
   }
 
@@ -77,7 +77,7 @@ export default class WebPurify {
 
     // make request
     try {
-      parsed = await this.request(host, path, 'GET', this.config.enterprise);
+      parsed = await this.request(host, path, 'GET', this._config.enterprise);
       rsp = parsed ? parsed.rsp : null;
     } catch(error) {
       return error;
@@ -102,7 +102,7 @@ export default class WebPurify {
 
   /**
    * Strips the WebPurify JSON response to be useful
-   * @param  {Object} response The response JSON to be stripped
+   * @param {Object} response - The response JSON to be stripped
    * @return {Object} The stripped response
    */
   strip(response) {
@@ -118,14 +118,18 @@ export default class WebPurify {
 
   /**
    * Checks the passed text for any profanity. If found, returns true, else false.
-   * @param  {string}   text     The text to check for profanity
-   * @param  {Object}   options  The optional API parameters
+   * @param {string} text - The text to check for profanity
+   * @param {Object} [options] - The optional API parameters
+   * @param {Object} [options.lang] - The 2 letter language code for the text you are submitting
+   * @param {Object} [options.semail] - Treat email addresses like profanity. set = 1
+   * @param {Object} [options.sphone] - Treat phone numbers like profanity. set = 1
+   * @param {Object} [options.slink] - Treat urls like profanity. set = 1
+   * @param {Object} [options.rsp] - To include our response time in the result. set = 1
    * @return {Promise}
    */
   async check(text, options) {
     const method = 'webpurify.live.check';
     const params = { method, text };
-
     try {
       const res = await this.get(params, options);
       return res.found === '1';
@@ -137,8 +141,13 @@ export default class WebPurify {
 
   /**
    * Checks the passed text for any profanity. If found, returns number of found words, else 0.
-   * @param  {string}   text     The text to check for profanity
-   * @param  {Object}   options  The optional API parameters
+   * @param {string} text - The text to check for profanity
+   * @param {Object} [options] - The optional API parameters
+   * @param {Object} [options.lang] - The 2 letter language code for the text you are submitting
+   * @param {Object} [options.semail] - Treat email addresses like profanity. set = 1
+   * @param {Object} [options.sphone] - Treat phone numbers like profanity. set = 1
+   * @param {Object} [options.slink] - Treat urls like profanity. set = 1
+   * @param {Object} [options.rsp] - To include our response time in the result. set = 1
    * @return {Promise}
    */
   async checkCount(text, options) {
@@ -156,15 +165,19 @@ export default class WebPurify {
 
   /**
    * Checks the passed text for any profanity. If found, returns the text with profanity altered by symbol. Else 0.
-   * @param  {string} text - The text to check for profanity
-   * @param  {string} replacesymbol - The symbol to replace profanity with (ie. '*')
-   * @param  {Object} options - The optional API parameters
+   * @param {string} text - The text to check for profanity
+   * @param {string} replacesymbol - The symbol to replace profanity with (ie. '*')
+   * @param {Object} [options] - The optional API parameters
+   * @param {Object} [options.lang] - The 2 letter language code for the text you are submitting
+   * @param {Object} [options.semail] - Treat email addresses like profanity. set = 1
+   * @param {Object} [options.sphone] - Treat phone numbers like profanity. set = 1
+   * @param {Object} [options.slink] - Treat urls like profanity. set = 1
+   * @param {Object} [options.rsp] - To include our response time in the result. set = 1
    * @return {Promise}
    */
   async replace(text, replacesymbol, options) {
     let method = 'webpurify.live.replace';
     let params = { method, text, replacesymbol };
-
     try {
       const res = await this.get(params, options);
       return res.text;
@@ -177,13 +190,17 @@ export default class WebPurify {
   /**
    * Checks the passed text for any profanity. If found, returns an array of expletives.
    * @param {string} text - The text to check for profanity
-   * @param {Object} options - The optional API parameters
+   * @param {Object} [options] - The optional API parameters
+   * @param {Object} [options.lang] - The 2 letter language code for the text you are submitting
+   * @param {Object} [options.semail] - Treat email addresses like profanity. set = 1
+   * @param {Object} [options.sphone] - Treat phone numbers like profanity. set = 1
+   * @param {Object} [options.slink] - Treat urls like profanity. set = 1
+   * @param {Object} [options.rsp] - To include our response time in the result. set = 1
    * @return {Promise}
    */
   async return(text, options) {
     let method = 'webpurify.live.return';
     let params = { method, text };
-
     try {
       const res = await this.get(params, options);
       return [].concat(res.expletive).filter(w => typeof w === 'string');
@@ -196,13 +213,12 @@ export default class WebPurify {
   /**
    * Add a word to the blacklist
    * @param {string} word - The word to add to the blacklist
-   * @param {string} ds - 1 if deepsearch, 0 or null if you don't care
+   * @param {string} [ds=0] - 1 if deepsearch, 0 or null if you don't care
    * @return {Promise}
    */
-  async addToBlacklist(word, ds = null) {
+  async addToBlacklist(word, ds = 0) {
     let method = 'webpurify.live.addtoblacklist';
     let params = { method, word, ds };
-
     try {
       const res = await this.get(params);
       return res.success === '1';
@@ -220,7 +236,6 @@ export default class WebPurify {
   async removeFromBlacklist(word) {
     let method = 'webpurify.live.removefromblacklist';
     let params = { method, word };
-
     try {
       const res = await this.get(params);
       return res.success === '1';
@@ -232,12 +247,12 @@ export default class WebPurify {
 
   /**
    * Get the blacklist
+   * @param {string} [ds=0] - Set equal to 1 to show which of the blacklist items have “deep search” turned on.
    * @return {Promise}
    */
-  async getBlacklist() {
+  async getBlacklist(ds = 0) {
     let method = 'webpurify.live.getblacklist';
     let params = { method };
-
     try {
       const res = await this.get(params, options);
       return [].concat(res.word).filter(w => typeof w === 'string');
@@ -250,12 +265,12 @@ export default class WebPurify {
   /**
    * Add a word to the whitelist
    * @param {string} word - The word to add to the whitelist
+   * @param {string} [ds=0] - 1 if deepsearch, 0 or null if you don't care
    * @return {Promise}
    */
-  async addToWhitelist(word) {
+  async addToWhitelist(word, ds = 0) {
     let method = 'webpurify.live.addtowhitelist';
     let params = { method, word };
-
     try {
       const res = await this.get(params);
       return res.success === '1';
@@ -273,7 +288,6 @@ export default class WebPurify {
   async removeFromWhitelist(word) {
     let method = 'webpurify.live.removefromwhitelist';
     let params = { method, word };
-
     try {
       const res = await this.get(params);
       return res.success === '1';
@@ -285,12 +299,12 @@ export default class WebPurify {
 
   /**
    * Get the whitelist
+   * @param {string} [ds=0] - Set equal to 1 to show which of the blacklist items have “deep search” turned on.
    * @return {Promise}
    */
-  async getWhitelist() {
+  async getWhitelist(ds = 0) {
     let method = 'webpurify.live.getwhitelist';
     let params = { method };
-
     try {
       const res = await this.get(params, options);
       return [].concat(res.word).filter(w => typeof w === 'string');
