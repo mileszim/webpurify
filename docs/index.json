@@ -831,7 +831,7 @@
     "__docId__": 63,
     "kind": "file",
     "name": "src/webpurify.js",
-    "content": "import http from 'http';\nimport https from 'https';\nimport url from 'url';\n\nimport Configuration, { API_HOSTS } from './configuration';\n\n/**\n * WebPurify NPM Module\n * A Node NPM module for interacting with the WebPurify API\n*/\nexport default class WebPurify {\n  /**\n   * @param {Object} options - Pass configuration options here, or declare them in their respective ENV variables.\n   * @param {Object} options.api_key - WebPurify API Key. ENV variable (takes precedence): WEBPURIFY_API_KEY\n   * @param {Object} options.endpoint - Available: 'us', 'eu', 'ap'. Default: 'us'. ENV variable: WEBPURIFY_ENDPOINT\n   * @param {Object} options.enterprise - Available: true, false. Default: false. ENV varable: WEBPURIFY_ENTERPRISE\n   * @throws {Error} Throws an error if parameters are invalid.\n   * @throws {Error} Throws an error if API key is missing.\n   * @returns {WebPurify} A WebPurify instance.\n   */\n  constructor(options) {\n    const configuration = new Configuration(options);\n    this._config = configuration.config;\n    this._request_base = { host: this._config.endpoint, path: this._config.path };\n    this._query_base = { api_key: this._config.api_key, format: 'json' };\n  }\n\n\n  /**\n   * Handles the HTTP/S requests\n   * @param {string} host - The hostname for the request URL (ie. api1.webpurify.com)\n   * @param {string} path - The path of the request (ie. /services/rest/)\n   * @param {string} method - The method, either 'GET or 'PUT'\n   * @param {boolean} ssl - True or false for using HTTPS or HTTP. If you are using enterprise API, you can set this to true.\n   * @return {Promise}\n   */\n  request(host, path, method, ssl) {\n    let options = {\n      hostname: host,\n      path: path,\n      method: method\n    };\n    const baseType = ssl ? http : https;\n    return new Promise((resolve, reject) => {\n      const req = baseType.request(options, (res) => {\n        const buff = [];\n        res.on('data', chunk => buff.push(chunk));\n        res.on('end', () => {\n          try {\n            let parsed = JSON.parse(buff.toString());\n            return resolve(parsed);\n          } catch (error) {\n            return reject(error);\n          }\n        });\n      });\n      req.on('error', (error) => reject(error));\n      req.end();\n    });\n  }\n\n\n  /**\n   * Formats the request for the request function\n   * @param {Object} params - The params object passed into the request\n   * @param {Object} [options={}] - The optional parameters for the API request\n   * @param {Object} [host=this._request_base.host] - Optional request host\n   * @return {Promise}\n   */\n  async get(params, options = {}, host = this._request_base.host) {\n    // form query parameters\n    let query = Object.assign(this._query_base, params, options);\n    const path = url.format({ pathname: this._request_base.path, query });\n\n    let rsp = null;\n    let parsed;\n\n    // make request\n    try {\n      parsed = await this.request(host, path, 'GET', this.config.enterprise);\n      rsp = parsed ? parsed.rsp : null;\n    } catch(error) {\n      return error;\n    }\n\n    if (!rsp || !rsp.hasOwnProperty('@attributes')) {\n      const error = new Error(\"Malformed Webpurify response\");\n      error.response = parsed;\n      return Promise.reject(error);\n    }\n\n    if (rsp.hasOwnProperty('err')) {\n      const errAttrs = rsp.err['@attributes'] || { msg: \"Unknown Webpurify Error\" };\n      const error = new Error(errAttrs.msg);\n      error.code = errAttrs.code;\n      return Promise.reject(error);\n    }\n\n    return this.strip(rsp);\n  }\n\n\n  /**\n   * Strips the WebPurify JSON response to be useful\n   * @param  {Object} response The response JSON to be stripped\n   * @return {Object} The stripped response\n   */\n  strip(response) {\n    if (response) {\n      delete response['@attributes'];\n      delete response.api_key;\n      delete response.method;\n      delete response.format;\n    }\n    return response;\n  }\n\n\n  /**\n   * Checks the passed text for any profanity. If found, returns true, else false.\n   * @param  {string}   text     The text to check for profanity\n   * @param  {Object}   options  The optional API parameters\n   * @return {Promise}\n   */\n  async check(text, options) {\n    const method = 'webpurify.live.check';\n    const params = { method, text };\n\n    try {\n      const res = await this.get(params, options);\n      return res.found === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Checks the passed text for any profanity. If found, returns number of found words, else 0.\n   * @param  {string}   text     The text to check for profanity\n   * @param  {Object}   options  The optional API parameters\n   * @return {Promise}\n   */\n  async checkCount(text, options) {\n    let method = 'webpurify.live.checkcount';\n    let params = { method, text };\n\n    try {\n      const res = await this.get(params, options);\n      return parseInt(res.found, 10);\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Checks the passed text for any profanity. If found, returns the text with profanity altered by symbol. Else 0.\n   * @param  {string} text - The text to check for profanity\n   * @param  {string} replacesymbol - The symbol to replace profanity with (ie. '*')\n   * @param  {Object} options - The optional API parameters\n   * @return {Promise}\n   */\n  async replace(text, replacesymbol, options) {\n    let method = 'webpurify.live.replace';\n    let params = { method, text, replacesymbol };\n\n    try {\n      const res = await this.get(params, options);\n      return res.text;\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Checks the passed text for any profanity. If found, returns an array of expletives.\n   * @param {string} text - The text to check for profanity\n   * @param {Object} options - The optional API parameters\n   * @return {Promise}\n   */\n  async return(text, options) {\n    let method = 'webpurify.live.return';\n    let params = { method, text };\n\n    try {\n      const res = await this.get(params, options);\n      return [].concat(res.expletive).filter(w => typeof w === 'string');\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Add a word to the blacklist\n   * @param {string} word - The word to add to the blacklist\n   * @param {string} ds - 1 if deepsearch, 0 or null if you don't care\n   * @return {Promise}\n   */\n  async addToBlacklist(word, ds = null) {\n    let method = 'webpurify.live.addtoblacklist';\n    let params = { method, word, ds };\n\n    try {\n      const res = await this.get(params);\n      return res.success === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Remove a word from the blacklist\n   * @param {string} word - The word to remove from the blacklist\n   * @return {Promise}\n   */\n  async removeFromBlacklist(word) {\n    let method = 'webpurify.live.removefromblacklist';\n    let params = { method, word };\n\n    try {\n      const res = await this.get(params);\n      return res.success === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Get the blacklist\n   * @return {Promise}\n   */\n  async getBlacklist() {\n    let method = 'webpurify.live.getblacklist';\n    let params = { method };\n\n    try {\n      const res = await this.get(params, options);\n      return [].concat(res.word).filter(w => typeof w === 'string');\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Add a word to the whitelist\n   * @param {string} word - The word to add to the whitelist\n   * @return {Promise}\n   */\n  async addToWhitelist(word) {\n    let method = 'webpurify.live.addtowhitelist';\n    let params = { method, word };\n\n    try {\n      const res = await this.get(params);\n      return res.success === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Remove a word from the whitelist\n   * @param {string} word - The word to remove from the whitelist\n   * @return {Promise}\n   */\n  async removeFromWhitelist(word) {\n    let method = 'webpurify.live.removefromwhitelist';\n    let params = { method, word };\n\n    try {\n      const res = await this.get(params);\n      return res.success === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Get the whitelist\n   * @return {Promise}\n   */\n  async getWhitelist() {\n    let method = 'webpurify.live.getwhitelist';\n    let params = { method };\n\n    try {\n      const res = await this.get(params, options);\n      return [].concat(res.word).filter(w => typeof w === 'string');\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Checks the imgid for status of moderation.\n   * @param {string} imgid - The URL of the image\n   * @param {Object} [options] - The optional API parameters\n   * @param {Object} [options.customimgid] - A custom ID you wish to associate with the image that will be carried through to the callback\n   * @return {Promise}\n   */\n  async imgStatus(imgid, options = {}) {\n    let method = 'webpurify.live.imgstatus';\n    let params = { method, imgid };\n    try {\n      const res = await this.get(params, options, API_HOSTS['im']);\n      return res.status;\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Checks the passed imageurl moderation. It will need a callback.\n   * @param {string} imgurl - Full url to the image you would like moderated.\n   * @param {Object} [options] - The optional API parameters\n   * @param {Object} [options.customimgid] - A custom ID you wish to associate with the image that will be carried through to the callback\n   * @param {Object} [options.callback] - You may also submit a URL encoded callback on a per image basis\n   * @param {Object} [options.snstopic] - SNS Topic name. To use AWS SNS to receive results\n   * @param {object} [options.photodna] - Set = 1 to check images for matches against known child exploitation hash datasets – You must activate PhotoDNA for your API Key in your admin console.\n   * @return {Promise}\n   */\n  async imgCheck(imgurl, options) {\n    let method = 'webpurify.live.imgcheck';\n    let params = { method, imgurl };\n    try {\n      const res = await this.get(params, options, API_HOSTS['im']);\n      return res.imgid;\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Checks the remaining submissions on licence for images.\n   * @return {Promise}\n   */\n  async imgAccount() {\n    let method = 'webpurify.live.imgaccount';\n    let params = { method };\n    try {\n      const res = await this.get(params, null, API_HOSTS['im']);\n      return res.remaining;\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Checks the passed imageurl moderation. It will need a callback.\n   * @param {string} imgurl - The URL of the image\n   * @return {Promise}\n   */\n  async aimImgCheck(imgurl) {\n    let method = 'webpurify.aim.imgcheck';\n    let params = { method, imgurl };\n    try {\n      const res = await this.get(params, null, API_HOSTS['im']);\n      return Number.parseFloat(res.nudity);\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Check the number of AIM image submissions remaining on your license.\n   * @return {Promise}\n   */\n  async aimImgAccount() {\n    let method = 'webpurify.aim.imgaccount';\n    let params = { method };\n    try {\n      const res = await this.get(params, null, API_HOSTS['im']);\n      return res.remaining;\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Combine our Automated Intelligent Moderation system (AIM) and our Live\n   * moderators to create a powerful low cost solution.\n   *\n   * Images submitted to this method, are first sent to AIM and then sent to\n   * our live moderation team based on thresholds you set.\n   *\n   * I.E any image that is given a 50% or greater probability by AIM can then be\n   * sent to our human moderation team for further review.\n   *\n   * @param {string} imgurl - The URL of the image\n   * @param {Object} [options] - The optional API parameters\n   * @param {Object} [options.thresholdlt] - Set the lower threshold to pass the image to our live team. E.g. thresholdlt=50 would send all images that AIM gives a nudity probability of less than 50 to our live team.\n   * @param {Object} [options.thresholdgt] - Set the upper threshold to pass the image to our live team. E.g. thresholdgt=70 would send all images that AIM gives a nudity probability of greater than 70 to our live team.\n   * @param {Object} [options.customimgid] - A custom ID you wish to associate with the image that will be carried through to the callback\n   * @param {Object} [options.callback] - You may also submit a URL encoded callback on a per image basis\n   * @return {Promise}\n   */\n  async hybridImgCheck(imgurl, options) {\n    let method = 'webpurify.hybrid.imgcheck';\n    let params = { method, imgurl };\n    try {\n      const res = await this.get(params, options, API_HOSTS['im']);\n      return Number.parseFloat(res.nudity);\n    } catch(error) {\n      return error;\n    }\n  }\n}\n",
+    "content": "import http from 'http';\nimport https from 'https';\nimport url from 'url';\n\nimport Configuration, { API_HOSTS } from './configuration';\n\n/**\n * WebPurify NPM Module\n * A Node NPM module for interacting with the WebPurify API\n*/\nexport default class WebPurify {\n  /**\n   * @param {Object} options - Pass configuration options here, or declare them in their respective ENV variables.\n   * @param {Object} options.api_key - WebPurify API Key. ENV variable (takes precedence): WEBPURIFY_API_KEY\n   * @param {Object} options.endpoint - Available: 'us', 'eu', 'ap'. Default: 'us'. ENV variable: WEBPURIFY_ENDPOINT\n   * @param {Object} options.enterprise - Available: true, false. Default: false. ENV varable: WEBPURIFY_ENTERPRISE\n   * @throws {Error} Throws an error if parameters are invalid.\n   * @throws {Error} Throws an error if API key is missing.\n   * @returns {WebPurify} A WebPurify instance.\n   */\n  constructor(options) {\n    const configuration = new Configuration(options);\n    this._config = configuration.config;\n    this._request_base = { host: this._config.endpoint, path: configuration.path };\n    this._query_base = { api_key: this._config.api_key, format: 'json' };\n  }\n\n\n  /**\n   * Handles the HTTP/S requests\n   * @param {string} host - The hostname for the request URL (ie. api1.webpurify.com)\n   * @param {string} path - The path of the request (ie. /services/rest/)\n   * @param {string} method - The method, either 'GET or 'PUT'\n   * @param {boolean} ssl - True or false for using HTTPS or HTTP. If you are using enterprise API, you can set this to true.\n   * @return {Promise}\n   */\n  request(host, path, method, ssl) {\n    let options = {\n      hostname: host,\n      path: path,\n      method: method\n    };\n    const baseType = ssl ? http : https;\n    return new Promise((resolve, reject) => {\n      const req = baseType.request(options, (res) => {\n        const buff = [];\n        res.on('data', chunk => buff.push(chunk));\n        res.on('end', () => {\n          try {\n            let parsed = JSON.parse(buff.toString());\n            return resolve(parsed);\n          } catch (error) {\n            return reject(error);\n          }\n        });\n      });\n      req.on('error', (error) => reject(error));\n      req.end();\n    });\n  }\n\n\n  /**\n   * Formats the request for the request function\n   * @param {Object} params - The params object passed into the request\n   * @param {Object} [options={}] - The optional parameters for the API request\n   * @param {Object} [host=this._request_base.host] - Optional request host\n   * @return {Promise}\n   */\n  async get(params, options = {}, host = this._request_base.host) {\n    // form query parameters\n    let query = Object.assign(this._query_base, params, options);\n    const path = url.format({ pathname: this._request_base.path, query });\n\n    let rsp = null;\n    let parsed;\n\n    // make request\n    try {\n      parsed = await this.request(host, path, 'GET', this._config.enterprise);\n      rsp = parsed ? parsed.rsp : null;\n    } catch(error) {\n      return error;\n    }\n\n    if (!rsp || !rsp.hasOwnProperty('@attributes')) {\n      const error = new Error(\"Malformed Webpurify response\");\n      error.response = parsed;\n      return Promise.reject(error);\n    }\n\n    if (rsp.hasOwnProperty('err')) {\n      const errAttrs = rsp.err['@attributes'] || { msg: \"Unknown Webpurify Error\" };\n      const error = new Error(errAttrs.msg);\n      error.code = errAttrs.code;\n      return Promise.reject(error);\n    }\n\n    return this.strip(rsp);\n  }\n\n\n  /**\n   * Strips the WebPurify JSON response to be useful\n   * @param {Object} response - The response JSON to be stripped\n   * @return {Object} The stripped response\n   */\n  strip(response) {\n    if (response) {\n      delete response['@attributes'];\n      delete response.api_key;\n      delete response.method;\n      delete response.format;\n    }\n    return response;\n  }\n\n\n  /**\n   * Checks the passed text for any profanity. If found, returns true, else false.\n   * @param {string} text - The text to check for profanity\n   * @param {Object} [options] - The optional API parameters\n   * @param {Object} [options.lang] - The 2 letter language code for the text you are submitting\n   * @param {Object} [options.semail] - Treat email addresses like profanity. set = 1\n   * @param {Object} [options.sphone] - Treat phone numbers like profanity. set = 1\n   * @param {Object} [options.slink] - Treat urls like profanity. set = 1\n   * @param {Object} [options.rsp] - To include our response time in the result. set = 1\n   * @return {Promise}\n   */\n  async check(text, options) {\n    const method = 'webpurify.live.check';\n    const params = { method, text };\n    try {\n      const res = await this.get(params, options);\n      return res.found === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Checks the passed text for any profanity. If found, returns number of found words, else 0.\n   * @param {string} text - The text to check for profanity\n   * @param {Object} [options] - The optional API parameters\n   * @param {Object} [options.lang] - The 2 letter language code for the text you are submitting\n   * @param {Object} [options.semail] - Treat email addresses like profanity. set = 1\n   * @param {Object} [options.sphone] - Treat phone numbers like profanity. set = 1\n   * @param {Object} [options.slink] - Treat urls like profanity. set = 1\n   * @param {Object} [options.rsp] - To include our response time in the result. set = 1\n   * @return {Promise}\n   */\n  async checkCount(text, options) {\n    let method = 'webpurify.live.checkcount';\n    let params = { method, text };\n\n    try {\n      const res = await this.get(params, options);\n      return parseInt(res.found, 10);\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Checks the passed text for any profanity. If found, returns the text with profanity altered by symbol. Else 0.\n   * @param {string} text - The text to check for profanity\n   * @param {string} replacesymbol - The symbol to replace profanity with (ie. '*')\n   * @param {Object} [options] - The optional API parameters\n   * @param {Object} [options.lang] - The 2 letter language code for the text you are submitting\n   * @param {Object} [options.semail] - Treat email addresses like profanity. set = 1\n   * @param {Object} [options.sphone] - Treat phone numbers like profanity. set = 1\n   * @param {Object} [options.slink] - Treat urls like profanity. set = 1\n   * @param {Object} [options.rsp] - To include our response time in the result. set = 1\n   * @return {Promise}\n   */\n  async replace(text, replacesymbol, options) {\n    let method = 'webpurify.live.replace';\n    let params = { method, text, replacesymbol };\n    try {\n      const res = await this.get(params, options);\n      return res.text;\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Checks the passed text for any profanity. If found, returns an array of expletives.\n   * @param {string} text - The text to check for profanity\n   * @param {Object} [options] - The optional API parameters\n   * @param {Object} [options.lang] - The 2 letter language code for the text you are submitting\n   * @param {Object} [options.semail] - Treat email addresses like profanity. set = 1\n   * @param {Object} [options.sphone] - Treat phone numbers like profanity. set = 1\n   * @param {Object} [options.slink] - Treat urls like profanity. set = 1\n   * @param {Object} [options.rsp] - To include our response time in the result. set = 1\n   * @return {Promise}\n   */\n  async return(text, options) {\n    let method = 'webpurify.live.return';\n    let params = { method, text };\n    try {\n      const res = await this.get(params, options);\n      return [].concat(res.expletive).filter(w => typeof w === 'string');\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Add a word to the blacklist\n   * @param {string} word - The word to add to the blacklist\n   * @param {string} [ds=0] - 1 if deepsearch, 0 or null if you don't care\n   * @return {Promise}\n   */\n  async addToBlacklist(word, ds = 0) {\n    let method = 'webpurify.live.addtoblacklist';\n    let params = { method, word, ds };\n    try {\n      const res = await this.get(params);\n      return res.success === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Remove a word from the blacklist\n   * @param {string} word - The word to remove from the blacklist\n   * @return {Promise}\n   */\n  async removeFromBlacklist(word) {\n    let method = 'webpurify.live.removefromblacklist';\n    let params = { method, word };\n    try {\n      const res = await this.get(params);\n      return res.success === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Get the blacklist\n   * @param {string} [ds=0] - Set equal to 1 to show which of the blacklist items have “deep search” turned on.\n   * @return {Promise}\n   */\n  async getBlacklist(ds = 0) {\n    let method = 'webpurify.live.getblacklist';\n    let params = { method };\n    try {\n      const res = await this.get(params, options);\n      return [].concat(res.word).filter(w => typeof w === 'string');\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Add a word to the whitelist\n   * @param {string} word - The word to add to the whitelist\n   * @param {string} [ds=0] - 1 if deepsearch, 0 or null if you don't care\n   * @return {Promise}\n   */\n  async addToWhitelist(word, ds = 0) {\n    let method = 'webpurify.live.addtowhitelist';\n    let params = { method, word };\n    try {\n      const res = await this.get(params);\n      return res.success === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Remove a word from the whitelist\n   * @param {string} word - The word to remove from the whitelist\n   * @return {Promise}\n   */\n  async removeFromWhitelist(word) {\n    let method = 'webpurify.live.removefromwhitelist';\n    let params = { method, word };\n    try {\n      const res = await this.get(params);\n      return res.success === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Get the whitelist\n   * @param {string} [ds=0] - Set equal to 1 to show which of the blacklist items have “deep search” turned on.\n   * @return {Promise}\n   */\n  async getWhitelist(ds = 0) {\n    let method = 'webpurify.live.getwhitelist';\n    let params = { method };\n    try {\n      const res = await this.get(params, options);\n      return [].concat(res.word).filter(w => typeof w === 'string');\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Checks the imgid for status of moderation.\n   * @param {string} imgid - The URL of the image\n   * @param {Object} [options] - The optional API parameters\n   * @param {Object} [options.customimgid] - A custom ID you wish to associate with the image that will be carried through to the callback\n   * @return {Promise}\n   */\n  async imgStatus(imgid, options = {}) {\n    let method = 'webpurify.live.imgstatus';\n    let params = { method, imgid };\n    try {\n      const res = await this.get(params, options, API_HOSTS['im']);\n      return res.status;\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Checks the passed imageurl moderation. It will need a callback.\n   * @param {string} imgurl - Full url to the image you would like moderated.\n   * @param {Object} [options] - The optional API parameters\n   * @param {Object} [options.customimgid] - A custom ID you wish to associate with the image that will be carried through to the callback\n   * @param {Object} [options.callback] - You may also submit a URL encoded callback on a per image basis\n   * @param {Object} [options.snstopic] - SNS Topic name. To use AWS SNS to receive results\n   * @param {object} [options.photodna] - Set = 1 to check images for matches against known child exploitation hash datasets – You must activate PhotoDNA for your API Key in your admin console.\n   * @return {Promise}\n   */\n  async imgCheck(imgurl, options) {\n    let method = 'webpurify.live.imgcheck';\n    let params = { method, imgurl };\n    try {\n      const res = await this.get(params, options, API_HOSTS['im']);\n      return res.imgid;\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Checks the remaining submissions on licence for images.\n   * @return {Promise}\n   */\n  async imgAccount() {\n    let method = 'webpurify.live.imgaccount';\n    let params = { method };\n    try {\n      const res = await this.get(params, null, API_HOSTS['im']);\n      return res.remaining;\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Checks the passed imageurl moderation. It will need a callback.\n   * @param {string} imgurl - The URL of the image\n   * @return {Promise}\n   */\n  async aimImgCheck(imgurl) {\n    let method = 'webpurify.aim.imgcheck';\n    let params = { method, imgurl };\n    try {\n      const res = await this.get(params, null, API_HOSTS['im']);\n      return Number.parseFloat(res.nudity);\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Check the number of AIM image submissions remaining on your license.\n   * @return {Promise}\n   */\n  async aimImgAccount() {\n    let method = 'webpurify.aim.imgaccount';\n    let params = { method };\n    try {\n      const res = await this.get(params, null, API_HOSTS['im']);\n      return res.remaining;\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Combine our Automated Intelligent Moderation system (AIM) and our Live\n   * moderators to create a powerful low cost solution.\n   *\n   * Images submitted to this method, are first sent to AIM and then sent to\n   * our live moderation team based on thresholds you set.\n   *\n   * I.E any image that is given a 50% or greater probability by AIM can then be\n   * sent to our human moderation team for further review.\n   *\n   * @param {string} imgurl - The URL of the image\n   * @param {Object} [options] - The optional API parameters\n   * @param {Object} [options.thresholdlt] - Set the lower threshold to pass the image to our live team. E.g. thresholdlt=50 would send all images that AIM gives a nudity probability of less than 50 to our live team.\n   * @param {Object} [options.thresholdgt] - Set the upper threshold to pass the image to our live team. E.g. thresholdgt=70 would send all images that AIM gives a nudity probability of greater than 70 to our live team.\n   * @param {Object} [options.customimgid] - A custom ID you wish to associate with the image that will be carried through to the callback\n   * @param {Object} [options.callback] - You may also submit a URL encoded callback on a per image basis\n   * @return {Promise}\n   */\n  async hybridImgCheck(imgurl, options) {\n    let method = 'webpurify.hybrid.imgcheck';\n    let params = { method, imgurl };\n    try {\n      const res = await this.get(params, options, API_HOSTS['im']);\n      return Number.parseFloat(res.nudity);\n    } catch(error) {\n      return error;\n    }\n  }\n}\n",
     "static": true,
     "longname": "/Users/miles/Projects/webpurify/src/webpurify.js",
     "access": "public",
@@ -1151,7 +1151,7 @@
     "longname": "src/webpurify.js~WebPurify#check",
     "access": "public",
     "description": "Checks the passed text for any profanity. If found, returns true, else false.",
-    "lineNumber": 125,
+    "lineNumber": 130,
     "params": [
       {
         "nullable": null,
@@ -1169,9 +1169,59 @@
           "Object"
         ],
         "spread": false,
-        "optional": false,
+        "optional": true,
         "name": "options",
         "description": "The optional API parameters"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.lang",
+        "description": "The 2 letter language code for the text you are submitting"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.semail",
+        "description": "Treat email addresses like profanity. set = 1"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.sphone",
+        "description": "Treat phone numbers like profanity. set = 1"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.slink",
+        "description": "Treat urls like profanity. set = 1"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.rsp",
+        "description": "To include our response time in the result. set = 1"
       }
     ],
     "return": {
@@ -1194,7 +1244,7 @@
     "longname": "src/webpurify.js~WebPurify#checkCount",
     "access": "public",
     "description": "Checks the passed text for any profanity. If found, returns number of found words, else 0.",
-    "lineNumber": 144,
+    "lineNumber": 153,
     "params": [
       {
         "nullable": null,
@@ -1212,9 +1262,59 @@
           "Object"
         ],
         "spread": false,
-        "optional": false,
+        "optional": true,
         "name": "options",
         "description": "The optional API parameters"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.lang",
+        "description": "The 2 letter language code for the text you are submitting"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.semail",
+        "description": "Treat email addresses like profanity. set = 1"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.sphone",
+        "description": "Treat phone numbers like profanity. set = 1"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.slink",
+        "description": "Treat urls like profanity. set = 1"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.rsp",
+        "description": "To include our response time in the result. set = 1"
       }
     ],
     "return": {
@@ -1237,7 +1337,7 @@
     "longname": "src/webpurify.js~WebPurify#replace",
     "access": "public",
     "description": "Checks the passed text for any profanity. If found, returns the text with profanity altered by symbol. Else 0.",
-    "lineNumber": 164,
+    "lineNumber": 178,
     "params": [
       {
         "nullable": null,
@@ -1265,9 +1365,59 @@
           "Object"
         ],
         "spread": false,
-        "optional": false,
+        "optional": true,
         "name": "options",
         "description": "The optional API parameters"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.lang",
+        "description": "The 2 letter language code for the text you are submitting"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.semail",
+        "description": "Treat email addresses like profanity. set = 1"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.sphone",
+        "description": "Treat phone numbers like profanity. set = 1"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.slink",
+        "description": "Treat urls like profanity. set = 1"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.rsp",
+        "description": "To include our response time in the result. set = 1"
       }
     ],
     "return": {
@@ -1290,7 +1440,7 @@
     "longname": "src/webpurify.js~WebPurify#return",
     "access": "public",
     "description": "Checks the passed text for any profanity. If found, returns an array of expletives.",
-    "lineNumber": 183,
+    "lineNumber": 201,
     "params": [
       {
         "nullable": null,
@@ -1308,9 +1458,59 @@
           "Object"
         ],
         "spread": false,
-        "optional": false,
+        "optional": true,
         "name": "options",
         "description": "The optional API parameters"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.lang",
+        "description": "The 2 letter language code for the text you are submitting"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.semail",
+        "description": "Treat email addresses like profanity. set = 1"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.sphone",
+        "description": "Treat phone numbers like profanity. set = 1"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.slink",
+        "description": "Treat urls like profanity. set = 1"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.rsp",
+        "description": "To include our response time in the result. set = 1"
       }
     ],
     "return": {
@@ -1333,7 +1533,7 @@
     "longname": "src/webpurify.js~WebPurify#addToBlacklist",
     "access": "public",
     "description": "Add a word to the blacklist",
-    "lineNumber": 202,
+    "lineNumber": 219,
     "params": [
       {
         "nullable": null,
@@ -1351,7 +1551,9 @@
           "string"
         ],
         "spread": false,
-        "optional": false,
+        "optional": true,
+        "defaultValue": "0",
+        "defaultRaw": 0,
         "name": "ds",
         "description": "1 if deepsearch, 0 or null if you don't care"
       }
@@ -1376,7 +1578,7 @@
     "longname": "src/webpurify.js~WebPurify#removeFromBlacklist",
     "access": "public",
     "description": "Remove a word from the blacklist",
-    "lineNumber": 220,
+    "lineNumber": 236,
     "params": [
       {
         "nullable": null,
@@ -1409,7 +1611,21 @@
     "longname": "src/webpurify.js~WebPurify#getBlacklist",
     "access": "public",
     "description": "Get the blacklist",
-    "lineNumber": 237,
+    "lineNumber": 253,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "0",
+        "defaultRaw": 0,
+        "name": "ds",
+        "description": "Set equal to 1 to show which of the blacklist items have “deep search” turned on."
+      }
+    ],
     "return": {
       "nullable": null,
       "types": [
@@ -1417,8 +1633,7 @@
       ],
       "spread": false,
       "description": ""
-    },
-    "params": []
+    }
   },
   {
     "__docId__": 79,
@@ -1431,7 +1646,7 @@
     "longname": "src/webpurify.js~WebPurify#addToWhitelist",
     "access": "public",
     "description": "Add a word to the whitelist",
-    "lineNumber": 255,
+    "lineNumber": 271,
     "params": [
       {
         "nullable": null,
@@ -1442,6 +1657,18 @@
         "optional": false,
         "name": "word",
         "description": "The word to add to the whitelist"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "0",
+        "defaultRaw": 0,
+        "name": "ds",
+        "description": "1 if deepsearch, 0 or null if you don't care"
       }
     ],
     "return": {
@@ -1464,7 +1691,7 @@
     "longname": "src/webpurify.js~WebPurify#removeFromWhitelist",
     "access": "public",
     "description": "Remove a word from the whitelist",
-    "lineNumber": 273,
+    "lineNumber": 288,
     "params": [
       {
         "nullable": null,
@@ -1497,7 +1724,21 @@
     "longname": "src/webpurify.js~WebPurify#getWhitelist",
     "access": "public",
     "description": "Get the whitelist",
-    "lineNumber": 290,
+    "lineNumber": 305,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "0",
+        "defaultRaw": 0,
+        "name": "ds",
+        "description": "Set equal to 1 to show which of the blacklist items have “deep search” turned on."
+      }
+    ],
     "return": {
       "nullable": null,
       "types": [
@@ -1505,8 +1746,7 @@
       ],
       "spread": false,
       "description": ""
-    },
-    "params": []
+    }
   },
   {
     "__docId__": 82,
@@ -1519,7 +1759,7 @@
     "longname": "src/webpurify.js~WebPurify#imgStatus",
     "access": "public",
     "description": "Checks the imgid for status of moderation.",
-    "lineNumber": 309,
+    "lineNumber": 323,
     "params": [
       {
         "nullable": null,
@@ -1572,7 +1812,7 @@
     "longname": "src/webpurify.js~WebPurify#imgCheck",
     "access": "public",
     "description": "Checks the passed imageurl moderation. It will need a callback.",
-    "lineNumber": 330,
+    "lineNumber": 344,
     "params": [
       {
         "nullable": null,
@@ -1655,7 +1895,7 @@
     "longname": "src/webpurify.js~WebPurify#imgAccount",
     "access": "public",
     "description": "Checks the remaining submissions on licence for images.",
-    "lineNumber": 345,
+    "lineNumber": 359,
     "return": {
       "nullable": null,
       "types": [
@@ -1677,7 +1917,7 @@
     "longname": "src/webpurify.js~WebPurify#aimImgCheck",
     "access": "public",
     "description": "Checks the passed imageurl moderation. It will need a callback.",
-    "lineNumber": 361,
+    "lineNumber": 375,
     "params": [
       {
         "nullable": null,
@@ -1710,7 +1950,7 @@
     "longname": "src/webpurify.js~WebPurify#aimImgAccount",
     "access": "public",
     "description": "Check the number of AIM image submissions remaining on your license.",
-    "lineNumber": 376,
+    "lineNumber": 390,
     "return": {
       "nullable": null,
       "types": [
@@ -1732,7 +1972,7 @@
     "longname": "src/webpurify.js~WebPurify#hybridImgCheck",
     "access": "public",
     "description": "Combine our Automated Intelligent Moderation system (AIM) and our Live\nmoderators to create a powerful low cost solution.\n\nImages submitted to this method, are first sent to AIM and then sent to\nour live moderation team based on thresholds you set.\n\nI.E any image that is given a 50% or greater probability by AIM can then be\nsent to our human moderation team for further review.",
-    "lineNumber": 405,
+    "lineNumber": 419,
     "params": [
       {
         "nullable": null,
