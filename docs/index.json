@@ -1,0 +1,1823 @@
+[
+  {
+    "__docId__": 1,
+    "kind": "external",
+    "name": "Infinity",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Infinity",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 2,
+    "kind": "external",
+    "name": "NaN",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~NaN",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 3,
+    "kind": "external",
+    "name": "undefined",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~undefined",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 4,
+    "kind": "external",
+    "name": "null",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~null",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 5,
+    "kind": "external",
+    "name": "Object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Object",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 6,
+    "kind": "external",
+    "name": "object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~object",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 7,
+    "kind": "external",
+    "name": "Function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Function",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 8,
+    "kind": "external",
+    "name": "function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~function",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 9,
+    "kind": "external",
+    "name": "Boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Boolean",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 10,
+    "kind": "external",
+    "name": "boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~boolean",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 11,
+    "kind": "external",
+    "name": "Symbol",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Symbol",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 12,
+    "kind": "external",
+    "name": "Error",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Error",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 13,
+    "kind": "external",
+    "name": "EvalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~EvalError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 14,
+    "kind": "external",
+    "name": "InternalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~InternalError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 15,
+    "kind": "external",
+    "name": "RangeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~RangeError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 16,
+    "kind": "external",
+    "name": "ReferenceError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~ReferenceError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 17,
+    "kind": "external",
+    "name": "SyntaxError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~SyntaxError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 18,
+    "kind": "external",
+    "name": "TypeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~TypeError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 19,
+    "kind": "external",
+    "name": "URIError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~URIError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 20,
+    "kind": "external",
+    "name": "Number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Number",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 21,
+    "kind": "external",
+    "name": "number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~number",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 22,
+    "kind": "external",
+    "name": "Date",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Date",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 23,
+    "kind": "external",
+    "name": "String",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~String",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 24,
+    "kind": "external",
+    "name": "string",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~string",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 25,
+    "kind": "external",
+    "name": "RegExp",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~RegExp",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 26,
+    "kind": "external",
+    "name": "Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 27,
+    "kind": "external",
+    "name": "Int8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Int8Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 28,
+    "kind": "external",
+    "name": "Uint8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Uint8Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 29,
+    "kind": "external",
+    "name": "Uint8ClampedArray",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Uint8ClampedArray",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 30,
+    "kind": "external",
+    "name": "Int16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Int16Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 31,
+    "kind": "external",
+    "name": "Uint16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Uint16Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 32,
+    "kind": "external",
+    "name": "Int32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Int32Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 33,
+    "kind": "external",
+    "name": "Uint32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Uint32Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 34,
+    "kind": "external",
+    "name": "Float32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Float32Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 35,
+    "kind": "external",
+    "name": "Float64Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Float64Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 36,
+    "kind": "external",
+    "name": "Map",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Map",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 37,
+    "kind": "external",
+    "name": "Set",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Set",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 38,
+    "kind": "external",
+    "name": "WeakMap",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~WeakMap",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 39,
+    "kind": "external",
+    "name": "WeakSet",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~WeakSet",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 40,
+    "kind": "external",
+    "name": "ArrayBuffer",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~ArrayBuffer",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 41,
+    "kind": "external",
+    "name": "DataView",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~DataView",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 42,
+    "kind": "external",
+    "name": "JSON",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~JSON",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 43,
+    "kind": "external",
+    "name": "Promise",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Promise",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 44,
+    "kind": "external",
+    "name": "Generator",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Generator",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 45,
+    "kind": "external",
+    "name": "GeneratorFunction",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~GeneratorFunction",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 46,
+    "kind": "external",
+    "name": "Reflect",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Reflect",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 47,
+    "kind": "external",
+    "name": "Proxy",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Proxy",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 48,
+    "kind": "file",
+    "name": "src/configuration.js",
+    "content": "const API_PATH = '/services/rest/';\nexport const API_HOSTS = {\n  us: 'api1.webpurify.com',\n  eu: 'api1-eu.webpurify.com',\n  ap: 'api1-ap.webpurify.com',\n  im: 'im-api1.webpurify.com',\n  vid: 'vid-api1.webpurify.com'\n};\n\n// ENV params\nconst ENV = {\n  api_key: process.env.WEBPURIFY_API_KEY,\n  endpoint: process.env.WEBPURIFY_ENDPOINT,\n  enterprise: process.env.WEBPURIFY_ENTERPRISE\n};\n\nconst DEFAULT_PARAMS = {\n  endpoint: 'us',\n  enterprise: false\n};\n\nexport default class Configuration {\n  constructor(params = {}) {\n    if (!(params instanceof Object)) {\n      throw new Error('Invalid params - object required');\n    }\n    this.params = params;\n  }\n\n  get config() {\n    if (!this._options) {\n      this._config = {\n        api_key: this.api_key,\n        endpoint: this.endpoint,\n        enterprise: this.enterprise\n      };\n    }\n    return this._config;\n  }\n\n  get api_key() {\n    const key = ENV.WEBPURIFY_API_KEY || this.params.api_key;\n    if (!key) { throw new Error('api_key is a required parameter'); }\n    if (typeof key !== 'string') { throw new Error('param.api_key must be of type string'); }\n    return key;\n  }\n\n  get endpoint() {\n    const hosts = Object.keys(API_HOSTS);\n    const params_endpoint = hosts.includes(this.params.endpoint) || this.params.endpoint;\n    const env_endpoint = hosts.includes(ENV.endpoint) || ENV.endpoint;\n    return API_HOSTS[params_endpoint || env_endpoint || DEFAULT_PARAMS.endpoint];\n  }\n\n  get enterprise() {\n    const bools = ['true', 'false'];\n    const params_enterprise = (this.params.enterprise && bools.includes(this.params.enterprise.toString())) || this.params.enterprise;\n    const env_enterprise = (ENV.enterprise && bools.includes(ENV.enterprise.toString())) || ENV.enterprise;\n    return params_enterprise || env_enterprise || DEFAULT_PARAMS.enterprise;\n  }\n\n  get path() {\n    return API_PATH;\n  }\n}\n",
+    "static": true,
+    "longname": "/Users/miles/Projects/webpurify/src/configuration.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 49,
+    "kind": "variable",
+    "name": "API_PATH",
+    "memberof": "src/configuration.js",
+    "static": true,
+    "longname": "src/configuration.js~API_PATH",
+    "access": "public",
+    "export": false,
+    "importPath": "webpurify/src/configuration.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 1,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 50,
+    "kind": "variable",
+    "name": "API_HOSTS",
+    "memberof": "src/configuration.js",
+    "static": true,
+    "longname": "src/configuration.js~API_HOSTS",
+    "access": "public",
+    "export": true,
+    "importPath": "webpurify/src/configuration.js",
+    "importStyle": "{API_HOSTS}",
+    "description": null,
+    "lineNumber": 2,
+    "undocument": true,
+    "type": {
+      "types": [
+        "{\"us\": string, \"eu\": string, \"ap\": string, \"im\": string, \"vid\": string}"
+      ]
+    }
+  },
+  {
+    "__docId__": 51,
+    "kind": "variable",
+    "name": "ENV",
+    "memberof": "src/configuration.js",
+    "static": true,
+    "longname": "src/configuration.js~ENV",
+    "access": "public",
+    "export": false,
+    "importPath": "webpurify/src/configuration.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 11,
+    "undocument": true,
+    "type": {
+      "types": [
+        "{\"api_key\": *, \"endpoint\": *, \"enterprise\": *}"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 52,
+    "kind": "variable",
+    "name": "DEFAULT_PARAMS",
+    "memberof": "src/configuration.js",
+    "static": true,
+    "longname": "src/configuration.js~DEFAULT_PARAMS",
+    "access": "public",
+    "export": false,
+    "importPath": "webpurify/src/configuration.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 17,
+    "undocument": true,
+    "type": {
+      "types": [
+        "{\"endpoint\": string, \"enterprise\": *}"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 53,
+    "kind": "class",
+    "name": "Configuration",
+    "memberof": "src/configuration.js",
+    "static": true,
+    "longname": "src/configuration.js~Configuration",
+    "access": "public",
+    "export": true,
+    "importPath": "webpurify/src/configuration.js",
+    "importStyle": "Configuration",
+    "description": null,
+    "lineNumber": 22,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 54,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/configuration.js~Configuration",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/configuration.js~Configuration#constructor",
+    "access": "public",
+    "description": null,
+    "lineNumber": 23,
+    "undocument": true
+  },
+  {
+    "__docId__": 55,
+    "kind": "member",
+    "name": "params",
+    "memberof": "src/configuration.js~Configuration",
+    "static": false,
+    "longname": "src/configuration.js~Configuration#params",
+    "access": "public",
+    "description": null,
+    "lineNumber": 27,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 56,
+    "kind": "get",
+    "name": "config",
+    "memberof": "src/configuration.js~Configuration",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/configuration.js~Configuration#config",
+    "access": "public",
+    "description": null,
+    "lineNumber": 30,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 57,
+    "kind": "member",
+    "name": "_config",
+    "memberof": "src/configuration.js~Configuration",
+    "static": false,
+    "longname": "src/configuration.js~Configuration#_config",
+    "access": "private",
+    "description": null,
+    "lineNumber": 32,
+    "undocument": true,
+    "type": {
+      "types": [
+        "{\"api_key\": *, \"endpoint\": *, \"enterprise\": *}"
+      ]
+    }
+  },
+  {
+    "__docId__": 58,
+    "kind": "get",
+    "name": "api_key",
+    "memberof": "src/configuration.js~Configuration",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/configuration.js~Configuration#api_key",
+    "access": "public",
+    "description": null,
+    "lineNumber": 41,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 59,
+    "kind": "get",
+    "name": "endpoint",
+    "memberof": "src/configuration.js~Configuration",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/configuration.js~Configuration#endpoint",
+    "access": "public",
+    "description": null,
+    "lineNumber": 48,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 60,
+    "kind": "get",
+    "name": "enterprise",
+    "memberof": "src/configuration.js~Configuration",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/configuration.js~Configuration#enterprise",
+    "access": "public",
+    "description": null,
+    "lineNumber": 55,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 61,
+    "kind": "get",
+    "name": "path",
+    "memberof": "src/configuration.js~Configuration",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/configuration.js~Configuration#path",
+    "access": "public",
+    "description": null,
+    "lineNumber": 62,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 62,
+    "kind": "file",
+    "name": "src/index.js",
+    "content": "import \"babel-polyfill\";\n\nimport WebPurify from './webpurify';\nexport default WebPurify;\n",
+    "static": true,
+    "longname": "/Users/miles/Projects/webpurify/src/index.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 63,
+    "kind": "file",
+    "name": "src/webpurify.js",
+    "content": "import http from 'http';\nimport https from 'https';\nimport url from 'url';\n\nimport Configuration, { API_HOSTS } from './configuration';\n\n/**\n * WebPurify NPM Module\n * A Node NPM module for interacting with the WebPurify API\n*/\nexport default class WebPurify {\n  /**\n   * @param {Object} options - Pass configuration options here, or declare them in their respective ENV variables.\n   * @param {Object} options.api_key - WebPurify API Key. ENV variable (takes precedence): WEBPURIFY_API_KEY\n   * @param {Object} options.endpoint - Available: 'us', 'eu', 'ap'. Default: 'us'. ENV variable: WEBPURIFY_ENDPOINT\n   * @param {Object} options.enterprise - Available: true, false. Default: false. ENV varable: WEBPURIFY_ENTERPRISE\n   * @throws {Error} Throws an error if parameters are invalid.\n   * @throws {Error} Throws an error if API key is missing.\n   * @returns {WebPurify} A WebPurify instance.\n   */\n  constructor(options) {\n    const configuration = new Configuration(options);\n    this._config = configuration.config;\n    this._request_base = { host: this._config.endpoint, path: this._config.path };\n    this._query_base = { api_key: this._config.api_key, format: 'json' };\n  }\n\n\n  /**\n   * Handles the HTTP/S requests\n   * @param {string} host - The hostname for the request URL (ie. api1.webpurify.com)\n   * @param {string} path - The path of the request (ie. /services/rest/)\n   * @param {string} method - The method, either 'GET or 'PUT'\n   * @param {boolean} ssl - True or false for using HTTPS or HTTP. If you are using enterprise API, you can set this to true.\n   * @return {Promise}\n   */\n  request(host, path, method, ssl) {\n    let options = {\n      hostname: host,\n      path: path,\n      method: method\n    };\n    const baseType = ssl ? http : https;\n    return new Promise((resolve, reject) => {\n      const req = baseType.request(options, (res) => {\n        const buff = [];\n        res.on('data', chunk => buff.push(chunk));\n        res.on('end', () => {\n          try {\n            let parsed = JSON.parse(buff.toString());\n            return resolve(parsed);\n          } catch (error) {\n            return reject(error);\n          }\n        });\n      });\n      req.on('error', (error) => reject(error));\n      req.end();\n    });\n  }\n\n\n  /**\n   * Formats the request for the request function\n   * @param {Object} params - The params object passed into the request\n   * @param {Object} [options={}] - The optional parameters for the API request\n   * @param {Object} [host=this._request_base.host] - Optional request host\n   * @return {Promise}\n   */\n  async get(params, options = {}, host = this._request_base.host) {\n    // form query parameters\n    let query = Object.assign(this._query_base, params, options);\n    const path = url.format({ pathname: this._request_base.path, query });\n\n    let rsp = null;\n    let parsed;\n\n    // make request\n    try {\n      parsed = await this.request(host, path, 'GET', this.config.enterprise);\n      rsp = parsed ? parsed.rsp : null;\n    } catch(error) {\n      return error;\n    }\n\n    if (!rsp || !rsp.hasOwnProperty('@attributes')) {\n      const error = new Error(\"Malformed Webpurify response\");\n      error.response = parsed;\n      return Promise.reject(error);\n    }\n\n    if (rsp.hasOwnProperty('err')) {\n      const errAttrs = rsp.err['@attributes'] || { msg: \"Unknown Webpurify Error\" };\n      const error = new Error(errAttrs.msg);\n      error.code = errAttrs.code;\n      return Promise.reject(error);\n    }\n\n    return this.strip(rsp);\n  }\n\n\n  /**\n   * Strips the WebPurify JSON response to be useful\n   * @param  {Object} response The response JSON to be stripped\n   * @return {Object} The stripped response\n   */\n  strip(response) {\n    if (response) {\n      delete response['@attributes'];\n      delete response.api_key;\n      delete response.method;\n      delete response.format;\n    }\n    return response;\n  }\n\n\n  /**\n   * Checks the passed text for any profanity. If found, returns true, else false.\n   * @param  {string}   text     The text to check for profanity\n   * @param  {Object}   options  The optional API parameters\n   * @return {Promise}\n   */\n  async check(text, options) {\n    const method = 'webpurify.live.check';\n    const params = { method, text };\n\n    try {\n      const res = await this.get(params, options);\n      return res.found === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Checks the passed text for any profanity. If found, returns number of found words, else 0.\n   * @param  {string}   text     The text to check for profanity\n   * @param  {Object}   options  The optional API parameters\n   * @return {Promise}\n   */\n  async checkCount(text, options) {\n    let method = 'webpurify.live.checkcount';\n    let params = { method, text };\n\n    try {\n      const res = await this.get(params, options);\n      return parseInt(res.found, 10);\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Checks the passed text for any profanity. If found, returns the text with profanity altered by symbol. Else 0.\n   * @param  {string} text - The text to check for profanity\n   * @param  {string} replacesymbol - The symbol to replace profanity with (ie. '*')\n   * @param  {Object} options - The optional API parameters\n   * @return {Promise}\n   */\n  async replace(text, replacesymbol, options) {\n    let method = 'webpurify.live.replace';\n    let params = { method, text, replacesymbol };\n\n    try {\n      const res = await this.get(params, options);\n      return res.text;\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Checks the passed text for any profanity. If found, returns an array of expletives.\n   * @param {string} text - The text to check for profanity\n   * @param {Object} options - The optional API parameters\n   * @return {Promise}\n   */\n  async return(text, options) {\n    let method = 'webpurify.live.return';\n    let params = { method, text };\n\n    try {\n      const res = await this.get(params, options);\n      return [].concat(res.expletive).filter(w => typeof w === 'string');\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Add a word to the blacklist\n   * @param {string} word - The word to add to the blacklist\n   * @param {string} ds - 1 if deepsearch, 0 or null if you don't care\n   * @return {Promise}\n   */\n  async addToBlacklist(word, ds = null) {\n    let method = 'webpurify.live.addtoblacklist';\n    let params = { method, word, ds };\n\n    try {\n      const res = await this.get(params);\n      return res.success === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Remove a word from the blacklist\n   * @param {string} word - The word to remove from the blacklist\n   * @return {Promise}\n   */\n  async removeFromBlacklist(word) {\n    let method = 'webpurify.live.removefromblacklist';\n    let params = { method, word };\n\n    try {\n      const res = await this.get(params);\n      return res.success === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Get the blacklist\n   * @return {Promise}\n   */\n  async getBlacklist() {\n    let method = 'webpurify.live.getblacklist';\n    let params = { method };\n\n    try {\n      const res = await this.get(params, options);\n      return [].concat(res.word).filter(w => typeof w === 'string');\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Add a word to the whitelist\n   * @param {string} word - The word to add to the whitelist\n   * @return {Promise}\n   */\n  async addToWhitelist(word) {\n    let method = 'webpurify.live.addtowhitelist';\n    let params = { method, word };\n\n    try {\n      const res = await this.get(params);\n      return res.success === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Remove a word from the whitelist\n   * @param {string} word - The word to remove from the whitelist\n   * @return {Promise}\n   */\n  async removeFromWhitelist(word) {\n    let method = 'webpurify.live.removefromwhitelist';\n    let params = { method, word };\n\n    try {\n      const res = await this.get(params);\n      return res.success === '1';\n    } catch(error) {\n      return error;\n    }\n  }\n\n\n  /**\n   * Get the whitelist\n   * @return {Promise}\n   */\n  async getWhitelist() {\n    let method = 'webpurify.live.getwhitelist';\n    let params = { method };\n\n    try {\n      const res = await this.get(params, options);\n      return [].concat(res.word).filter(w => typeof w === 'string');\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Checks the imgid for status of moderation.\n   * @param {string} imgid - The URL of the image\n   * @param {Object} [options] - The optional API parameters\n   * @param {Object} [options.customimgid] - A custom ID you wish to associate with the image that will be carried through to the callback\n   * @return {Promise}\n   */\n  async imgStatus(imgid, options = {}) {\n    let method = 'webpurify.live.imgstatus';\n    let params = { method, imgid };\n    try {\n      const res = await this.get(params, options, API_HOSTS['im']);\n      return res.status;\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Checks the passed imageurl moderation. It will need a callback.\n   * @param {string} imgurl - Full url to the image you would like moderated.\n   * @param {Object} [options] - The optional API parameters\n   * @param {Object} [options.customimgid] - A custom ID you wish to associate with the image that will be carried through to the callback\n   * @param {Object} [options.callback] - You may also submit a URL encoded callback on a per image basis\n   * @param {Object} [options.snstopic] - SNS Topic name. To use AWS SNS to receive results\n   * @param {object} [options.photodna] - Set = 1 to check images for matches against known child exploitation hash datasets – You must activate PhotoDNA for your API Key in your admin console.\n   * @return {Promise}\n   */\n  async imgCheck(imgurl, options) {\n    let method = 'webpurify.live.imgcheck';\n    let params = { method, imgurl };\n    try {\n      const res = await this.get(params, options, API_HOSTS['im']);\n      return res.imgid;\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Checks the remaining submissions on licence for images.\n   * @return {Promise}\n   */\n  async imgAccount() {\n    let method = 'webpurify.live.imgaccount';\n    let params = { method };\n    try {\n      const res = await this.get(params, null, API_HOSTS['im']);\n      return res.remaining;\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Checks the passed imageurl moderation. It will need a callback.\n   * @param {string} imgurl - The URL of the image\n   * @return {Promise}\n   */\n  async aimImgCheck(imgurl) {\n    let method = 'webpurify.aim.imgcheck';\n    let params = { method, imgurl };\n    try {\n      const res = await this.get(params, null, API_HOSTS['im']);\n      return Number.parseFloat(res.nudity);\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Check the number of AIM image submissions remaining on your license.\n   * @return {Promise}\n   */\n  async aimImgAccount() {\n    let method = 'webpurify.aim.imgaccount';\n    let params = { method };\n    try {\n      const res = await this.get(params, null, API_HOSTS['im']);\n      return res.remaining;\n    } catch(error) {\n      return error;\n    }\n  }\n\n  /**\n   * Combine our Automated Intelligent Moderation system (AIM) and our Live\n   * moderators to create a powerful low cost solution.\n   *\n   * Images submitted to this method, are first sent to AIM and then sent to\n   * our live moderation team based on thresholds you set.\n   *\n   * I.E any image that is given a 50% or greater probability by AIM can then be\n   * sent to our human moderation team for further review.\n   *\n   * @param {string} imgurl - The URL of the image\n   * @param {Object} [options] - The optional API parameters\n   * @param {Object} [options.thresholdlt] - Set the lower threshold to pass the image to our live team. E.g. thresholdlt=50 would send all images that AIM gives a nudity probability of less than 50 to our live team.\n   * @param {Object} [options.thresholdgt] - Set the upper threshold to pass the image to our live team. E.g. thresholdgt=70 would send all images that AIM gives a nudity probability of greater than 70 to our live team.\n   * @param {Object} [options.customimgid] - A custom ID you wish to associate with the image that will be carried through to the callback\n   * @param {Object} [options.callback] - You may also submit a URL encoded callback on a per image basis\n   * @return {Promise}\n   */\n  async hybridImgCheck(imgurl, options) {\n    let method = 'webpurify.hybrid.imgcheck';\n    let params = { method, imgurl };\n    try {\n      const res = await this.get(params, options, API_HOSTS['im']);\n      return Number.parseFloat(res.nudity);\n    } catch(error) {\n      return error;\n    }\n  }\n}\n",
+    "static": true,
+    "longname": "/Users/miles/Projects/webpurify/src/webpurify.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 64,
+    "kind": "class",
+    "name": "WebPurify",
+    "memberof": "src/webpurify.js",
+    "static": true,
+    "longname": "src/webpurify.js~WebPurify",
+    "access": "public",
+    "export": true,
+    "importPath": "webpurify/src/webpurify.js",
+    "importStyle": "WebPurify",
+    "description": "WebPurify NPM Module\nA Node NPM module for interacting with the WebPurify API",
+    "lineNumber": 11,
+    "interface": false
+  },
+  {
+    "__docId__": 65,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#constructor",
+    "access": "public",
+    "description": "",
+    "lineNumber": 21,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{WebPurify} A WebPurify instance."
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options",
+        "description": "Pass configuration options here, or declare them in their respective ENV variables."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options.api_key",
+        "description": "WebPurify API Key. ENV variable (takes precedence): WEBPURIFY_API_KEY"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options.endpoint",
+        "description": "Available: 'us', 'eu', 'ap'. Default: 'us'. ENV variable: WEBPURIFY_ENDPOINT"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options.enterprise",
+        "description": "Available: true, false. Default: false. ENV varable: WEBPURIFY_ENTERPRISE"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "WebPurify"
+      ],
+      "spread": false,
+      "description": "A WebPurify instance."
+    },
+    "throws": [
+      {
+        "types": [
+          "Error"
+        ],
+        "description": "Throws an error if parameters are invalid."
+      },
+      {
+        "types": [
+          "Error"
+        ],
+        "description": "Throws an error if API key is missing."
+      }
+    ]
+  },
+  {
+    "__docId__": 66,
+    "kind": "member",
+    "name": "_config",
+    "memberof": "src/webpurify.js~WebPurify",
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#_config",
+    "access": "private",
+    "description": null,
+    "lineNumber": 23,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 67,
+    "kind": "member",
+    "name": "_request_base",
+    "memberof": "src/webpurify.js~WebPurify",
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#_request_base",
+    "access": "private",
+    "description": null,
+    "lineNumber": 24,
+    "undocument": true,
+    "type": {
+      "types": [
+        "{\"host\": *, \"path\": *}"
+      ]
+    }
+  },
+  {
+    "__docId__": 68,
+    "kind": "member",
+    "name": "_query_base",
+    "memberof": "src/webpurify.js~WebPurify",
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#_query_base",
+    "access": "private",
+    "description": null,
+    "lineNumber": 25,
+    "undocument": true,
+    "type": {
+      "types": [
+        "{\"api_key\": *, \"format\": string}"
+      ]
+    }
+  },
+  {
+    "__docId__": 69,
+    "kind": "method",
+    "name": "request",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#request",
+    "access": "public",
+    "description": "Handles the HTTP/S requests",
+    "lineNumber": 37,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "host",
+        "description": "The hostname for the request URL (ie. api1.webpurify.com)"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "path",
+        "description": "The path of the request (ie. /services/rest/)"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "method",
+        "description": "The method, either 'GET or 'PUT'"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "ssl",
+        "description": "True or false for using HTTPS or HTTP. If you are using enterprise API, you can set this to true."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 70,
+    "kind": "method",
+    "name": "get",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#get",
+    "access": "public",
+    "description": "Formats the request for the request function",
+    "lineNumber": 70,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "params",
+        "description": "The params object passed into the request"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "{}",
+        "defaultRaw": {},
+        "name": "options",
+        "description": "The optional parameters for the API request"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "this._request_base.host",
+        "defaultRaw": "this._request_base.host",
+        "name": "host",
+        "description": "Optional request host"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 71,
+    "kind": "method",
+    "name": "strip",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#strip",
+    "access": "public",
+    "description": "Strips the WebPurify JSON response to be useful",
+    "lineNumber": 108,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "response",
+        "description": "The response JSON to be stripped"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "The stripped response"
+    }
+  },
+  {
+    "__docId__": 72,
+    "kind": "method",
+    "name": "check",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#check",
+    "access": "public",
+    "description": "Checks the passed text for any profanity. If found, returns true, else false.",
+    "lineNumber": 125,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "text",
+        "description": "The text to check for profanity"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options",
+        "description": "The optional API parameters"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 73,
+    "kind": "method",
+    "name": "checkCount",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#checkCount",
+    "access": "public",
+    "description": "Checks the passed text for any profanity. If found, returns number of found words, else 0.",
+    "lineNumber": 144,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "text",
+        "description": "The text to check for profanity"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options",
+        "description": "The optional API parameters"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 74,
+    "kind": "method",
+    "name": "replace",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#replace",
+    "access": "public",
+    "description": "Checks the passed text for any profanity. If found, returns the text with profanity altered by symbol. Else 0.",
+    "lineNumber": 164,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "text",
+        "description": "The text to check for profanity"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "replacesymbol",
+        "description": "The symbol to replace profanity with (ie. '*')"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options",
+        "description": "The optional API parameters"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 75,
+    "kind": "method",
+    "name": "return",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#return",
+    "access": "public",
+    "description": "Checks the passed text for any profanity. If found, returns an array of expletives.",
+    "lineNumber": 183,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "text",
+        "description": "The text to check for profanity"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options",
+        "description": "The optional API parameters"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 76,
+    "kind": "method",
+    "name": "addToBlacklist",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#addToBlacklist",
+    "access": "public",
+    "description": "Add a word to the blacklist",
+    "lineNumber": 202,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "word",
+        "description": "The word to add to the blacklist"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "ds",
+        "description": "1 if deepsearch, 0 or null if you don't care"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 77,
+    "kind": "method",
+    "name": "removeFromBlacklist",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#removeFromBlacklist",
+    "access": "public",
+    "description": "Remove a word from the blacklist",
+    "lineNumber": 220,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "word",
+        "description": "The word to remove from the blacklist"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 78,
+    "kind": "method",
+    "name": "getBlacklist",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#getBlacklist",
+    "access": "public",
+    "description": "Get the blacklist",
+    "lineNumber": 237,
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "params": []
+  },
+  {
+    "__docId__": 79,
+    "kind": "method",
+    "name": "addToWhitelist",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#addToWhitelist",
+    "access": "public",
+    "description": "Add a word to the whitelist",
+    "lineNumber": 255,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "word",
+        "description": "The word to add to the whitelist"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 80,
+    "kind": "method",
+    "name": "removeFromWhitelist",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#removeFromWhitelist",
+    "access": "public",
+    "description": "Remove a word from the whitelist",
+    "lineNumber": 273,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "word",
+        "description": "The word to remove from the whitelist"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 81,
+    "kind": "method",
+    "name": "getWhitelist",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#getWhitelist",
+    "access": "public",
+    "description": "Get the whitelist",
+    "lineNumber": 290,
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "params": []
+  },
+  {
+    "__docId__": 82,
+    "kind": "method",
+    "name": "imgStatus",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#imgStatus",
+    "access": "public",
+    "description": "Checks the imgid for status of moderation.",
+    "lineNumber": 309,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "imgid",
+        "description": "The URL of the image"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options",
+        "description": "The optional API parameters"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.customimgid",
+        "description": "A custom ID you wish to associate with the image that will be carried through to the callback"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 83,
+    "kind": "method",
+    "name": "imgCheck",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#imgCheck",
+    "access": "public",
+    "description": "Checks the passed imageurl moderation. It will need a callback.",
+    "lineNumber": 330,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "imgurl",
+        "description": "Full url to the image you would like moderated."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options",
+        "description": "The optional API parameters"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.customimgid",
+        "description": "A custom ID you wish to associate with the image that will be carried through to the callback"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.callback",
+        "description": "You may also submit a URL encoded callback on a per image basis"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.snstopic",
+        "description": "SNS Topic name. To use AWS SNS to receive results"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.photodna",
+        "description": "Set = 1 to check images for matches against known child exploitation hash datasets – You must activate PhotoDNA for your API Key in your admin console."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 84,
+    "kind": "method",
+    "name": "imgAccount",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#imgAccount",
+    "access": "public",
+    "description": "Checks the remaining submissions on licence for images.",
+    "lineNumber": 345,
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "params": []
+  },
+  {
+    "__docId__": 85,
+    "kind": "method",
+    "name": "aimImgCheck",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#aimImgCheck",
+    "access": "public",
+    "description": "Checks the passed imageurl moderation. It will need a callback.",
+    "lineNumber": 361,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "imgurl",
+        "description": "The URL of the image"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 86,
+    "kind": "method",
+    "name": "aimImgAccount",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#aimImgAccount",
+    "access": "public",
+    "description": "Check the number of AIM image submissions remaining on your license.",
+    "lineNumber": 376,
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "params": []
+  },
+  {
+    "__docId__": 87,
+    "kind": "method",
+    "name": "hybridImgCheck",
+    "memberof": "src/webpurify.js~WebPurify",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/webpurify.js~WebPurify#hybridImgCheck",
+    "access": "public",
+    "description": "Combine our Automated Intelligent Moderation system (AIM) and our Live\nmoderators to create a powerful low cost solution.\n\nImages submitted to this method, are first sent to AIM and then sent to\nour live moderation team based on thresholds you set.\n\nI.E any image that is given a 50% or greater probability by AIM can then be\nsent to our human moderation team for further review.",
+    "lineNumber": 405,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "imgurl",
+        "description": "The URL of the image"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options",
+        "description": "The optional API parameters"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.thresholdlt",
+        "description": "Set the lower threshold to pass the image to our live team. E.g. thresholdlt=50 would send all images that AIM gives a nudity probability of less than 50 to our live team."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.thresholdgt",
+        "description": "Set the upper threshold to pass the image to our live team. E.g. thresholdgt=70 would send all images that AIM gives a nudity probability of greater than 70 to our live team."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.customimgid",
+        "description": "A custom ID you wish to associate with the image that will be carried through to the callback"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "options.callback",
+        "description": "You may also submit a URL encoded callback on a per image basis"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Promise"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "kind": "index",
+    "content": "# WebPurify API for Node.js #\n[![npm version](https://badge.fury.io/js/webpurify.svg)](https://badge.fury.io/js/webpurify) [![Build Status](https://travis-ci.org/mileszim/webpurify.svg?branch=master)](https://travis-ci.org/mileszim/webpurify)\n\nThis module allows simple interaction with the WebPurify API within Node.js. For more information about WebPurify and the services it offers, check out http://webpurify.com/.\n\n### Commands ###\n\n##### Filters #####\n* [check](#check)\n* [checkCount](#checkcount)\n* [replace](#replace)\n* [return](#return)\n\n##### Blacklist #####\n* [addToBlacklist](#addtoblacklist)\n* [removeFromBlacklist](#removefromblacklist)\n* [getBlacklist](#getblacklist)\n\n##### Whitelist #####\n* [addToWhitelist](#addtowhitelist)\n* [removeFromWhitelist](#removefromwhitelist)\n* [getWhitelist](#getWhitelist)\n\n##### Image Moderation #####\n* [imgCheck](#imgcheck)\n* [imgStatus](#imgstatus)\n* [imgAccount](#imgaccount)\n* [aimImgCheck](#aimimgCheck)\n* [aimImgAccount](#aimimgAccount)\n* [hybridImgCheck](#hybridimgCheck)\n\n# Install & Initialize #\n\n`npm install webpurify`\n\nTo initialize:\n\n```js\n// ES6\nimport WebPurify from 'webpurify';\n\n// Otherwise\nconst WebPurify = require('webpurify');\n\nconst wp = new WebPurify({\n    api_key: ENV['WEBPURIFY_API_KEY']\n    //, endpoint:   'us'  // Optional, available choices: 'eu', 'ap'. Default: 'us'.\n    //, enterprise: false // Optional, set to true if you are using the enterprise API, allows SSL\n});\n```\n\n# Commands #\n\n### check ###\n\nCheck a string of text for profanity. Returns true if profanity found, false if none.\n\n```js\nwp.check('some profane text')\n.then(profanity => {\n  if (profanity) {\n    console.log('A bunch of sailors in here!');\n  } else {\n    console.log('This is a pure string');\n  }\n});\n```\n\n### checkCount ###\n\nCheck a string of text for profanity. Returns number of words if profanity found, 0 if none.\n\n```js\nwp.checkCount('some profane text')\n.then(profanity => {\n  if (profanity > 0) {\n    console.log(profanity.toString() + ' sailors in here!');\n  } else {\n    console.log('This is a pure string');\n  }\n});\n```\n\n### replace ###\nCheck a string of text for profanity. Replaces any found profanity with a provided symbol, and returns the formatted string.\n\n```js\nwp.replace('some profane text', '*')\n.then(purifiedText => {\n  console.log(purifiedText);\n});\n```\n\n### return ###\nCheck a string of text for profanity. If any found, returns an array of profane words. Else, returns empty array.\n\n```js\nwp.return('some profane text')\n.then(profanity => {\n  for (word in profanity) {\n    console.log(profanity[word]);\n  }\n});\n```\n\n\n### Options ###\nAll filter commands can take an additional options object, just before the callback. The available options are:\n\n```js\nvar optional = {\n  lang:   'en', // the 2 letter language code for the text you are submitting\n  semail: 1,    // treat email addresses like profanity\n  sphone: 1,    // treat phone numbers like profanity\n  slink:  1     // treat urls like profanity\n};\n\nwp.check('some profane text', optional)\n.then(profanity => {\n  console.log(profanity);\n});\n```\n\n### addToBlacklist ###\nAdd a word to the blacklist.\n\n```js\nwp.addToBlacklist('my_word')\n.then(success => {\n  if (success) { console.log('success!'); }\n});\n```\n\nCan also be called without callback:\n\n```js\nwp.addToBlacklist('my_word');\n```\n\nFor Deep search, add optional parameter 1 after word:\n\n```js\nwp.addToBlacklist('my_word', 1);\n```\n\n\n### removeFromBlacklist ###\nRemove a word from the blacklist.\n\n```js\nwp.removeFromBlacklist('my_word')\n.then(success => {\n  if (success) { console.log('success!'); }\n});\n```\n\nCan also be called without callback:\n\n```js\nwp.removeFromBlacklist('my_word');\n```\n\n### getBlacklist ###\nGet the blacklist as an array of words.\n\n```js\nwp.getBlacklist()\n.then(blacklist => {\n  for (word in blacklist) {\n    console.log(blacklist[word]);\n  }\n});\n```\n\n\n### addToWhitelist ###\nAdd a word to the whitelist.\n\n```js\nwp.addToWhitelist('my_word')\n.then(success => {\n  if (success) { console.log('success!'); }\n});\n```\n\nCan also be called without callback:\n\n```js\nwp.addToWhitelist('my_word');\n```\n\n\n### removeFromWhitelist ###\nRemove a word from the whitelist.\n\n```js\nwp.removeFromWhitelist('my_word')\n.then(success => {\n  if (success) { console.log('success!'); }\n});\n```\n\nCan also be called without callback:\n\n```js\nwp.removeFromWhitelist('my_word');\n```\n\n### getWhitelist ###\nGet the whitelist as an array of words.\n\n```js\nwp.getWhitelist()\n.then(whitelist => {\n  for (word in whitelist) {\n    console.log(whitelist[word]);\n  }\n});\n```\n\n## Image Moderation ##\n\n### imgCheck ###\nUse this method to submit an image to the moderation service. It will return an image ID that is used to return the results of the moderation to a callback function.\n\n```js\nwp.imgCheck('http://imageURL...')\n.then((imgid) => {\n  // this imgid could be used to check the status later\n});\n```\n\n### imgStatus ###\nReturns the moderation status of an image. Possible results can be: pending, approved, declined.\n\n```js\nwp.imgStatus('imgid')\n.then((status) => {\n  // this is the status of your moderation\n});\n```\n\n### imgAccount ###\nCheck the number of image submissions remaining on your license.\n\n```js\nwp.imgAccount()\n.then((remaining) => {\n  // this is how many subscriptions you have to use\n});\n```\n\n### aimImgCheck ###\nUse this method to submit an image to the WebPurify Automated Intelligent Moderation (AIM) Service. A percentage probability that the submitted image contains nudity will be returned in real-time.\n\n```js\nwp.aimImgCheck('http://imageURL...')\n.then((nudity) => {\n  if (nudity > 95) {\n      console.log('there\\'s probably some nudity going on');\n  }\n});\n```\n\n### aimImgAccount ###\nCheck the number of AIM image submissions remaining on your license.\n\n```js\nwp.aimImgAccount()\n.then((remaining) => {\n  // this is how many subscriptions you have to use\n});\n```\n\n### hybridImgCheck ###\nCombine our Automated Intelligent Moderation system (AIM) and our Live moderators to create a powerful low cost solution.\n\nImages submitted to this method, are first sent to AIM and then sent to our live moderation team based on thresholds you set.\n\nI.E any image that is given a 50% or greater probability by AIM can then be sent to our human moderation team for further review.\n\n```js\nwp.hybridImgCheck('http://imageURL...')\n.then((nudity) => {\n  if (nudity > 55) {\n      console.log('Maybe there\\'s nudity');\n\n      // use the customimgid parameter to poll for the live check\n  }\n});\n```\n",
+    "longname": "/Users/miles/Projects/webpurify/README.md",
+    "name": "./README.md",
+    "static": true,
+    "access": "public"
+  },
+  {
+    "kind": "packageJSON",
+    "content": "{\n  \"name\": \"webpurify\",\n  \"version\": \"2.0.0\",\n  \"description\": \"This provides an easy module for interacting with the WebPurify API\",\n  \"main\": \"dist/index.js\",\n  \"scripts\": {\n    \"postinstall\": \"npm run-script build\",\n    \"test\": \"./node_modules/.bin/mocha --require babel-register\",\n    \"build\": \"./node_modules/.bin/babel src --out-dir dist\",\n    \"build-docs\": \"./node_modules/.bin/esdoc\",\n    \"clean\": \"rm -rf ./node_modules ./dist\"\n  },\n  \"repository\": \"https://github.com/mileszim/webpurify\",\n  \"keywords\": [\n    \"webpurify\",\n    \"api\"\n  ],\n  \"author\": \"Miles Zimmerman\",\n  \"license\": \"MIT\",\n  \"devDependencies\": {\n    \"babel-cli\": \"^6.26.0\",\n    \"babel-preset-env\": \"^1.6.1\",\n    \"babel-register\": \"^6.26.0\",\n    \"chai\": \"^4.1.2\",\n    \"chai-as-promised\": \"^7.1.1\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"mocha\": \"^5.1.1\",\n    \"nock\": \"^9.2.5\",\n    \"sinon\": \"^4.5.0\"\n  },\n  \"dependencies\": {\n    \"babel-polyfill\": \"^6.26.0\"\n  }\n}\n",
+    "longname": "/Users/miles/Projects/webpurify/package.json",
+    "name": "package.json",
+    "static": true,
+    "access": "public"
+  }
+]

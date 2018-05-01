@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl">
+  <title data-ice="title">Home | webpurify</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="This provides an easy module for interacting with the WebPurify API"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="webpurify"><meta property="twitter:description" content="This provides an easy module for interacting with the WebPurify API"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/mileszim/webpurify"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/configuration.js~Configuration.html">Configuration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/webpurify.js~WebPurify.html">WebPurify</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-API_HOSTS">API_HOSTS</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="webpurify-api-for-node-js">WebPurify API for Node.js</h1><p><a href="https://badge.fury.io/js/webpurify"><img src="https://badge.fury.io/js/webpurify.svg" alt="npm version"></a> <a href="https://travis-ci.org/mileszim/webpurify"><img src="https://travis-ci.org/mileszim/webpurify.svg?branch=master" alt="Build Status"></a></p>
+<p>This module allows simple interaction with the WebPurify API within Node.js. For more information about WebPurify and the services it offers, check out <a href="http://webpurify.com/">http://webpurify.com/</a>.</p>
+<h3 id="commands">Commands</h3><h5 id="filters">Filters</h5><ul>
+<li><a href="#check">check</a></li>
+<li><a href="#checkcount">checkCount</a></li>
+<li><a href="#replace">replace</a></li>
+<li><a href="#return">return</a></li>
+</ul>
+<h5 id="blacklist">Blacklist</h5><ul>
+<li><a href="#addtoblacklist">addToBlacklist</a></li>
+<li><a href="#removefromblacklist">removeFromBlacklist</a></li>
+<li><a href="#getblacklist">getBlacklist</a></li>
+</ul>
+<h5 id="whitelist">Whitelist</h5><ul>
+<li><a href="#addtowhitelist">addToWhitelist</a></li>
+<li><a href="#removefromwhitelist">removeFromWhitelist</a></li>
+<li><a href="#getWhitelist">getWhitelist</a></li>
+</ul>
+<h5 id="image-moderation">Image Moderation</h5><ul>
+<li><a href="#imgcheck">imgCheck</a></li>
+<li><a href="#imgstatus">imgStatus</a></li>
+<li><a href="#imgaccount">imgAccount</a></li>
+<li><a href="#aimimgCheck">aimImgCheck</a></li>
+<li><a href="#aimimgAccount">aimImgAccount</a></li>
+<li><a href="#hybridimgCheck">hybridImgCheck</a></li>
+</ul>
+<h1 id="install--amp--initialize">Install &amp; Initialize</h1><p><code>npm install webpurify</code></p>
+<p>To initialize:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">// ES6
+import WebPurify from &apos;webpurify&apos;;
+
+// Otherwise
+const WebPurify = require(&apos;webpurify&apos;);
+
+const wp = new WebPurify({
+    api_key: ENV[&apos;WEBPURIFY_API_KEY&apos;]
+    //, endpoint:   &apos;us&apos;  // Optional, available choices: &apos;eu&apos;, &apos;ap&apos;. Default: &apos;us&apos;.
+    //, enterprise: false // Optional, set to true if you are using the enterprise API, allows SSL
+});</code>
+</code></pre>
+<h1 id="commands">Commands</h1><h3 id="check">check</h3><p>Check a string of text for profanity. Returns true if profanity found, false if none.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.check(&apos;some profane text&apos;)
+.then(profanity =&gt; {
+  if (profanity) {
+    console.log(&apos;A bunch of sailors in here!&apos;);
+  } else {
+    console.log(&apos;This is a pure string&apos;);
+  }
+});</code>
+</code></pre>
+<h3 id="checkcount">checkCount</h3><p>Check a string of text for profanity. Returns number of words if profanity found, 0 if none.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.checkCount(&apos;some profane text&apos;)
+.then(profanity =&gt; {
+  if (profanity &gt; 0) {
+    console.log(profanity.toString() + &apos; sailors in here!&apos;);
+  } else {
+    console.log(&apos;This is a pure string&apos;);
+  }
+});</code>
+</code></pre>
+<h3 id="replace">replace</h3><p>Check a string of text for profanity. Replaces any found profanity with a provided symbol, and returns the formatted string.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.replace(&apos;some profane text&apos;, &apos;*&apos;)
+.then(purifiedText =&gt; {
+  console.log(purifiedText);
+});</code>
+</code></pre>
+<h3 id="return">return</h3><p>Check a string of text for profanity. If any found, returns an array of profane words. Else, returns empty array.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.return(&apos;some profane text&apos;)
+.then(profanity =&gt; {
+  for (word in profanity) {
+    console.log(profanity[word]);
+  }
+});</code>
+</code></pre>
+<h3 id="options">Options</h3><p>All filter commands can take an additional options object, just before the callback. The available options are:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var optional = {
+  lang:   &apos;en&apos;, // the 2 letter language code for the text you are submitting
+  semail: 1,    // treat email addresses like profanity
+  sphone: 1,    // treat phone numbers like profanity
+  slink:  1     // treat urls like profanity
+};
+
+wp.check(&apos;some profane text&apos;, optional)
+.then(profanity =&gt; {
+  console.log(profanity);
+});</code>
+</code></pre>
+<h3 id="addtoblacklist">addToBlacklist</h3><p>Add a word to the blacklist.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.addToBlacklist(&apos;my_word&apos;)
+.then(success =&gt; {
+  if (success) { console.log(&apos;success!&apos;); }
+});</code>
+</code></pre>
+<p>Can also be called without callback:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.addToBlacklist(&apos;my_word&apos;);</code>
+</code></pre>
+<p>For Deep search, add optional parameter 1 after word:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.addToBlacklist(&apos;my_word&apos;, 1);</code>
+</code></pre>
+<h3 id="removefromblacklist">removeFromBlacklist</h3><p>Remove a word from the blacklist.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.removeFromBlacklist(&apos;my_word&apos;)
+.then(success =&gt; {
+  if (success) { console.log(&apos;success!&apos;); }
+});</code>
+</code></pre>
+<p>Can also be called without callback:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.removeFromBlacklist(&apos;my_word&apos;);</code>
+</code></pre>
+<h3 id="getblacklist">getBlacklist</h3><p>Get the blacklist as an array of words.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.getBlacklist()
+.then(blacklist =&gt; {
+  for (word in blacklist) {
+    console.log(blacklist[word]);
+  }
+});</code>
+</code></pre>
+<h3 id="addtowhitelist">addToWhitelist</h3><p>Add a word to the whitelist.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.addToWhitelist(&apos;my_word&apos;)
+.then(success =&gt; {
+  if (success) { console.log(&apos;success!&apos;); }
+});</code>
+</code></pre>
+<p>Can also be called without callback:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.addToWhitelist(&apos;my_word&apos;);</code>
+</code></pre>
+<h3 id="removefromwhitelist">removeFromWhitelist</h3><p>Remove a word from the whitelist.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.removeFromWhitelist(&apos;my_word&apos;)
+.then(success =&gt; {
+  if (success) { console.log(&apos;success!&apos;); }
+});</code>
+</code></pre>
+<p>Can also be called without callback:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.removeFromWhitelist(&apos;my_word&apos;);</code>
+</code></pre>
+<h3 id="getwhitelist">getWhitelist</h3><p>Get the whitelist as an array of words.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.getWhitelist()
+.then(whitelist =&gt; {
+  for (word in whitelist) {
+    console.log(whitelist[word]);
+  }
+});</code>
+</code></pre>
+<h2 id="image-moderation">Image Moderation</h2><h3 id="imgcheck">imgCheck</h3><p>Use this method to submit an image to the moderation service. It will return an image ID that is used to return the results of the moderation to a callback function.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.imgCheck(&apos;http://imageURL...&apos;)
+.then((imgid) =&gt; {
+  // this imgid could be used to check the status later
+});</code>
+</code></pre>
+<h3 id="imgstatus">imgStatus</h3><p>Returns the moderation status of an image. Possible results can be: pending, approved, declined.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.imgStatus(&apos;imgid&apos;)
+.then((status) =&gt; {
+  // this is the status of your moderation
+});</code>
+</code></pre>
+<h3 id="imgaccount">imgAccount</h3><p>Check the number of image submissions remaining on your license.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.imgAccount()
+.then((remaining) =&gt; {
+  // this is how many subscriptions you have to use
+});</code>
+</code></pre>
+<h3 id="aimimgcheck">aimImgCheck</h3><p>Use this method to submit an image to the WebPurify Automated Intelligent Moderation (AIM) Service. A percentage probability that the submitted image contains nudity will be returned in real-time.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.aimImgCheck(&apos;http://imageURL...&apos;)
+.then((nudity) =&gt; {
+  if (nudity &gt; 95) {
+      console.log(&apos;there\&apos;s probably some nudity going on&apos;);
+  }
+});</code>
+</code></pre>
+<h3 id="aimimgaccount">aimImgAccount</h3><p>Check the number of AIM image submissions remaining on your license.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.aimImgAccount()
+.then((remaining) =&gt; {
+  // this is how many subscriptions you have to use
+});</code>
+</code></pre>
+<h3 id="hybridimgcheck">hybridImgCheck</h3><p>Combine our Automated Intelligent Moderation system (AIM) and our Live moderators to create a powerful low cost solution.</p>
+<p>Images submitted to this method, are first sent to AIM and then sent to our live moderation team based on thresholds you set.</p>
+<p>I.E any image that is given a 50% or greater probability by AIM can then be sent to our human moderation team for further review.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">wp.hybridImgCheck(&apos;http://imageURL...&apos;)
+.then((nudity) =&gt; {
+  if (nudity &gt; 55) {
+      console.log(&apos;Maybe there\&apos;s nudity&apos;);
+
+      // use the customimgid parameter to poll for the live check
+  }
+});</code>
+</code></pre>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

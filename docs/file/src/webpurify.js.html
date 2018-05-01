@@ -1,8 +1,47 @@
-import http from 'http';
-import https from 'https';
-import url from 'url';
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/webpurify.js | webpurify</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="This provides an easy module for interacting with the WebPurify API"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="webpurify"><meta property="twitter:description" content="This provides an easy module for interacting with the WebPurify API"></head>
+<body class="layout-container" data-ice="rootContainer">
 
-import Configuration, { API_HOSTS } from './configuration';
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/mileszim/webpurify"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/configuration.js~Configuration.html">Configuration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/webpurify.js~WebPurify.html">WebPurify</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-API_HOSTS">API_HOSTS</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/webpurify.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import http from &apos;http&apos;;
+import https from &apos;https&apos;;
+import url from &apos;url&apos;;
+
+import Configuration, { API_HOSTS } from &apos;./configuration&apos;;
 
 /**
  * WebPurify NPM Module
@@ -12,7 +51,7 @@ export default class WebPurify {
   /**
    * @param {Object} options - Pass configuration options here, or declare them in their respective ENV variables.
    * @param {Object} options.api_key - WebPurify API Key. ENV variable (takes precedence): WEBPURIFY_API_KEY
-   * @param {Object} options.endpoint - Available: 'us', 'eu', 'ap'. Default: 'us'. ENV variable: WEBPURIFY_ENDPOINT
+   * @param {Object} options.endpoint - Available: &apos;us&apos;, &apos;eu&apos;, &apos;ap&apos;. Default: &apos;us&apos;. ENV variable: WEBPURIFY_ENDPOINT
    * @param {Object} options.enterprise - Available: true, false. Default: false. ENV varable: WEBPURIFY_ENTERPRISE
    * @throws {Error} Throws an error if parameters are invalid.
    * @throws {Error} Throws an error if API key is missing.
@@ -22,7 +61,7 @@ export default class WebPurify {
     const configuration = new Configuration(options);
     this._config = configuration.config;
     this._request_base = { host: this._config.endpoint, path: this._config.path };
-    this._query_base = { api_key: this._config.api_key, format: 'json' };
+    this._query_base = { api_key: this._config.api_key, format: &apos;json&apos; };
   }
 
 
@@ -30,7 +69,7 @@ export default class WebPurify {
    * Handles the HTTP/S requests
    * @param {string} host - The hostname for the request URL (ie. api1.webpurify.com)
    * @param {string} path - The path of the request (ie. /services/rest/)
-   * @param {string} method - The method, either 'GET or 'PUT'
+   * @param {string} method - The method, either &apos;GET or &apos;PUT&apos;
    * @param {boolean} ssl - True or false for using HTTPS or HTTP. If you are using enterprise API, you can set this to true.
    * @return {Promise}
    */
@@ -41,11 +80,11 @@ export default class WebPurify {
       method: method
     };
     const baseType = ssl ? http : https;
-    return new Promise((resolve, reject) => {
-      const req = baseType.request(options, (res) => {
+    return new Promise((resolve, reject) =&gt; {
+      const req = baseType.request(options, (res) =&gt; {
         const buff = [];
-        res.on('data', chunk => buff.push(chunk));
-        res.on('end', () => {
+        res.on(&apos;data&apos;, chunk =&gt; buff.push(chunk));
+        res.on(&apos;end&apos;, () =&gt; {
           try {
             let parsed = JSON.parse(buff.toString());
             return resolve(parsed);
@@ -54,7 +93,7 @@ export default class WebPurify {
           }
         });
       });
-      req.on('error', (error) => reject(error));
+      req.on(&apos;error&apos;, (error) =&gt; reject(error));
       req.end();
     });
   }
@@ -77,20 +116,20 @@ export default class WebPurify {
 
     // make request
     try {
-      parsed = await this.request(host, path, 'GET', this.config.enterprise);
+      parsed = await this.request(host, path, &apos;GET&apos;, this.config.enterprise);
       rsp = parsed ? parsed.rsp : null;
     } catch(error) {
       return error;
     }
 
-    if (!rsp || !rsp.hasOwnProperty('@attributes')) {
-      const error = new Error("Malformed Webpurify response");
+    if (!rsp || !rsp.hasOwnProperty(&apos;@attributes&apos;)) {
+      const error = new Error(&quot;Malformed Webpurify response&quot;);
       error.response = parsed;
       return Promise.reject(error);
     }
 
-    if (rsp.hasOwnProperty('err')) {
-      const errAttrs = rsp.err['@attributes'] || { msg: "Unknown Webpurify Error" };
+    if (rsp.hasOwnProperty(&apos;err&apos;)) {
+      const errAttrs = rsp.err[&apos;@attributes&apos;] || { msg: &quot;Unknown Webpurify Error&quot; };
       const error = new Error(errAttrs.msg);
       error.code = errAttrs.code;
       return Promise.reject(error);
@@ -107,7 +146,7 @@ export default class WebPurify {
    */
   strip(response) {
     if (response) {
-      delete response['@attributes'];
+      delete response[&apos;@attributes&apos;];
       delete response.api_key;
       delete response.method;
       delete response.format;
@@ -123,12 +162,12 @@ export default class WebPurify {
    * @return {Promise}
    */
   async check(text, options) {
-    const method = 'webpurify.live.check';
+    const method = &apos;webpurify.live.check&apos;;
     const params = { method, text };
 
     try {
       const res = await this.get(params, options);
-      return res.found === '1';
+      return res.found === &apos;1&apos;;
     } catch(error) {
       return error;
     }
@@ -142,7 +181,7 @@ export default class WebPurify {
    * @return {Promise}
    */
   async checkCount(text, options) {
-    let method = 'webpurify.live.checkcount';
+    let method = &apos;webpurify.live.checkcount&apos;;
     let params = { method, text };
 
     try {
@@ -157,12 +196,12 @@ export default class WebPurify {
   /**
    * Checks the passed text for any profanity. If found, returns the text with profanity altered by symbol. Else 0.
    * @param  {string} text - The text to check for profanity
-   * @param  {string} replacesymbol - The symbol to replace profanity with (ie. '*')
+   * @param  {string} replacesymbol - The symbol to replace profanity with (ie. &apos;*&apos;)
    * @param  {Object} options - The optional API parameters
    * @return {Promise}
    */
   async replace(text, replacesymbol, options) {
-    let method = 'webpurify.live.replace';
+    let method = &apos;webpurify.live.replace&apos;;
     let params = { method, text, replacesymbol };
 
     try {
@@ -181,12 +220,12 @@ export default class WebPurify {
    * @return {Promise}
    */
   async return(text, options) {
-    let method = 'webpurify.live.return';
+    let method = &apos;webpurify.live.return&apos;;
     let params = { method, text };
 
     try {
       const res = await this.get(params, options);
-      return [].concat(res.expletive).filter(w => typeof w === 'string');
+      return [].concat(res.expletive).filter(w =&gt; typeof w === &apos;string&apos;);
     } catch(error) {
       return error;
     }
@@ -196,16 +235,16 @@ export default class WebPurify {
   /**
    * Add a word to the blacklist
    * @param {string} word - The word to add to the blacklist
-   * @param {string} ds - 1 if deepsearch, 0 or null if you don't care
+   * @param {string} ds - 1 if deepsearch, 0 or null if you don&apos;t care
    * @return {Promise}
    */
   async addToBlacklist(word, ds = null) {
-    let method = 'webpurify.live.addtoblacklist';
+    let method = &apos;webpurify.live.addtoblacklist&apos;;
     let params = { method, word, ds };
 
     try {
       const res = await this.get(params);
-      return res.success === '1';
+      return res.success === &apos;1&apos;;
     } catch(error) {
       return error;
     }
@@ -218,12 +257,12 @@ export default class WebPurify {
    * @return {Promise}
    */
   async removeFromBlacklist(word) {
-    let method = 'webpurify.live.removefromblacklist';
+    let method = &apos;webpurify.live.removefromblacklist&apos;;
     let params = { method, word };
 
     try {
       const res = await this.get(params);
-      return res.success === '1';
+      return res.success === &apos;1&apos;;
     } catch(error) {
       return error;
     }
@@ -235,12 +274,12 @@ export default class WebPurify {
    * @return {Promise}
    */
   async getBlacklist() {
-    let method = 'webpurify.live.getblacklist';
+    let method = &apos;webpurify.live.getblacklist&apos;;
     let params = { method };
 
     try {
       const res = await this.get(params, options);
-      return [].concat(res.word).filter(w => typeof w === 'string');
+      return [].concat(res.word).filter(w =&gt; typeof w === &apos;string&apos;);
     } catch(error) {
       return error;
     }
@@ -253,12 +292,12 @@ export default class WebPurify {
    * @return {Promise}
    */
   async addToWhitelist(word) {
-    let method = 'webpurify.live.addtowhitelist';
+    let method = &apos;webpurify.live.addtowhitelist&apos;;
     let params = { method, word };
 
     try {
       const res = await this.get(params);
-      return res.success === '1';
+      return res.success === &apos;1&apos;;
     } catch(error) {
       return error;
     }
@@ -271,12 +310,12 @@ export default class WebPurify {
    * @return {Promise}
    */
   async removeFromWhitelist(word) {
-    let method = 'webpurify.live.removefromwhitelist';
+    let method = &apos;webpurify.live.removefromwhitelist&apos;;
     let params = { method, word };
 
     try {
       const res = await this.get(params);
-      return res.success === '1';
+      return res.success === &apos;1&apos;;
     } catch(error) {
       return error;
     }
@@ -288,12 +327,12 @@ export default class WebPurify {
    * @return {Promise}
    */
   async getWhitelist() {
-    let method = 'webpurify.live.getwhitelist';
+    let method = &apos;webpurify.live.getwhitelist&apos;;
     let params = { method };
 
     try {
       const res = await this.get(params, options);
-      return [].concat(res.word).filter(w => typeof w === 'string');
+      return [].concat(res.word).filter(w =&gt; typeof w === &apos;string&apos;);
     } catch(error) {
       return error;
     }
@@ -307,10 +346,10 @@ export default class WebPurify {
    * @return {Promise}
    */
   async imgStatus(imgid, options = {}) {
-    let method = 'webpurify.live.imgstatus';
+    let method = &apos;webpurify.live.imgstatus&apos;;
     let params = { method, imgid };
     try {
-      const res = await this.get(params, options, API_HOSTS['im']);
+      const res = await this.get(params, options, API_HOSTS[&apos;im&apos;]);
       return res.status;
     } catch(error) {
       return error;
@@ -324,14 +363,14 @@ export default class WebPurify {
    * @param {Object} [options.customimgid] - A custom ID you wish to associate with the image that will be carried through to the callback
    * @param {Object} [options.callback] - You may also submit a URL encoded callback on a per image basis
    * @param {Object} [options.snstopic] - SNS Topic name. To use AWS SNS to receive results
-   * @param {object} [options.photodna] - Set = 1 to check images for matches against known child exploitation hash datasets – You must activate PhotoDNA for your API Key in your admin console.
+   * @param {object} [options.photodna] - Set = 1 to check images for matches against known child exploitation hash datasets &#x2013; You must activate PhotoDNA for your API Key in your admin console.
    * @return {Promise}
    */
   async imgCheck(imgurl, options) {
-    let method = 'webpurify.live.imgcheck';
+    let method = &apos;webpurify.live.imgcheck&apos;;
     let params = { method, imgurl };
     try {
-      const res = await this.get(params, options, API_HOSTS['im']);
+      const res = await this.get(params, options, API_HOSTS[&apos;im&apos;]);
       return res.imgid;
     } catch(error) {
       return error;
@@ -343,10 +382,10 @@ export default class WebPurify {
    * @return {Promise}
    */
   async imgAccount() {
-    let method = 'webpurify.live.imgaccount';
+    let method = &apos;webpurify.live.imgaccount&apos;;
     let params = { method };
     try {
-      const res = await this.get(params, null, API_HOSTS['im']);
+      const res = await this.get(params, null, API_HOSTS[&apos;im&apos;]);
       return res.remaining;
     } catch(error) {
       return error;
@@ -359,10 +398,10 @@ export default class WebPurify {
    * @return {Promise}
    */
   async aimImgCheck(imgurl) {
-    let method = 'webpurify.aim.imgcheck';
+    let method = &apos;webpurify.aim.imgcheck&apos;;
     let params = { method, imgurl };
     try {
-      const res = await this.get(params, null, API_HOSTS['im']);
+      const res = await this.get(params, null, API_HOSTS[&apos;im&apos;]);
       return Number.parseFloat(res.nudity);
     } catch(error) {
       return error;
@@ -374,10 +413,10 @@ export default class WebPurify {
    * @return {Promise}
    */
   async aimImgAccount() {
-    let method = 'webpurify.aim.imgaccount';
+    let method = &apos;webpurify.aim.imgaccount&apos;;
     let params = { method };
     try {
-      const res = await this.get(params, null, API_HOSTS['im']);
+      const res = await this.get(params, null, API_HOSTS[&apos;im&apos;]);
       return res.remaining;
     } catch(error) {
       return error;
@@ -403,13 +442,30 @@ export default class WebPurify {
    * @return {Promise}
    */
   async hybridImgCheck(imgurl, options) {
-    let method = 'webpurify.hybrid.imgcheck';
+    let method = &apos;webpurify.hybrid.imgcheck&apos;;
     let params = { method, imgurl };
     try {
-      const res = await this.get(params, options, API_HOSTS['im']);
+      const res = await this.get(params, options, API_HOSTS[&apos;im&apos;]);
       return Number.parseFloat(res.nudity);
     } catch(error) {
       return error;
     }
   }
 }
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
