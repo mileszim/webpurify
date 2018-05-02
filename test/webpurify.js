@@ -52,11 +52,13 @@ describe('WebPurify', function() {
   // Setup
   chai.use(chaiap);
   should();
-  nock.disableNetConnect();
+  //nock.recorder.rec();
 
   before(function() {
     this.wp = new WebPurify({ api_key: 'sdfsdfsdf' });
     this.wp_ssl = new WebPurify({ api_key: 'sdfsdfsdf', enterprise: true });
+
+    nock.disableNetConnect();
   });
 
   beforeEach(function() {
@@ -67,11 +69,11 @@ describe('WebPurify', function() {
       })
       .reply(500, MALFORMED_SCOPE);
     this.errorScope = nock(/api1\.webpurify\.com/)
-        .get(/\/services\/rest\//)
-        .query(function(queryObject) {
-          return queryObject.method === 'error.unknown';
-        })
-        .reply(500, ERROR_SCOPE);
+      .get(/\/services\/rest\//)
+      .query(function(queryObject) {
+        return queryObject.method === 'error.unknown';
+      })
+      .reply(500, ERROR_SCOPE);
     this.wpScope = nock(/api1\.webpurify\.com/)
       .get(/\/services\/rest\//)
       .query(true)
@@ -138,67 +140,64 @@ describe('WebPurify', function() {
   // Methods
   describe('#request', function() {
     beforeEach(function() {
-      this.simpleScope = nock(/test\.com/).get('/test').reply(200, { my: 'request' });
+      this.simpleScope = nock(/http[s]{0,1}:\/\/test\.com/).get('/test').reply(200, { my: 'request' });
       this.host = 'test.com';
       this.path = '/test';
       this.method = 'GET';
       this.ssl = false;
     });
 
-    it('should issue a request', async function() {
-      var req = await this.wp.request(this.host, this.path, this.method, this.ssl);
-      expect(this.simpleScope.isDone()).to.be.true;
+    it('should issue a request', function() {
+      const req = this.wp.request(this.host, this.path, this.method, this.ssl);
+      return expect(req).to.eventually.be.fulfilled;
     });
 
     it('should return a promise', function() {
       const req = this.wp.request(this.host, this.path, this.method, this.ssl);
-      expect(req.then).to.be.a('function');
-      expect(req.catch).to.be.a('function');
+      expect(req instanceof Promise).to.equal(true);
     });
 
-    it('should resolve promise if request valid', async function() {
-      const req = await this.wp.request(this.host, this.path, this.method, this.ssl);
-      expect(this.simpleScope.isDone()).to.be.true;
-      expect(req).to.deep.equal({ my: 'request' });
+    it('should resolve promise if request valid', function() {
+      const req = this.wp.request(this.host, this.path, this.method, this.ssl);
+      return req.should.eventually.have.property('my');
     });
 
     it('should reject promise if request invalid', function() {
-      this.simpleScope = nock(/test\.com/).get('/invalid').reply(500);
+      this.simpleScope.get('/invalid').replyWithError('something is on fire yo');
       const req = this.wp.request(this.host, '/invalid', this.method, this.ssl);
       return req.should.be.rejected;
     });
   });
 
   describe('#get', function() {
-    it('should issue a get request', async function() {
+    it('should issue a get request', function() {
       const params = { method: 'some.method', text: 'blah' };
-      var req = await this.wp.get(params);
-      expect(req).to.not.be.empty;
+      const req = this.wp.get(params);
+      return req.should.eventually.be.fulfilled;
     });
 
     it('should return a promise', function() {
       const params = { method: 'some.method', text: 'blah' };
       const req = this.wp.get(params);
-      expect(req.then).to.be.a('function');
-      expect(req.catch).to.be.a('function');
+      expect(req instanceof Promise).to.equal(true);
     });
 
     it('should reject promise if malformed response', function() {
       const params = { method: 'error.malformed', text: 'blah' };
       const req = this.wp.get(params);
-      expect(req).to.be.rejectedWith(Error, /Malformed Webpurify response/);
+      return req.should.be.rejectedWith(Error, /Malformed Webpurify response/);
     });
 
     it('should reject promise if unknown error in request', function() {
       const params = { method: 'error.unknown', text: 'blah' };
       const req = this.wp.get(params);
-      expect(req).to.be.rejectedWith(Error, /Unknown Webpurify Error/);
+      return req.should.be.rejectedWith(Error, /Unknown Webpurify Error/);
     });
 
-    it('should resolve promise if valid request & response', async function() {
+    it('should resolve promise if valid request & response', function() {
       const params = { method: 'some.method', text: 'blah' };
-      const req = await this.wp.get(params);
-      expect(req).to.not.be.empty;
+      const req = this.wp.get(params);
+      return req.should.be.fulfilled;
     });
   });
 
@@ -223,9 +222,9 @@ describe('WebPurify', function() {
     });
 
     it('should return true if profanity', function() {
-      const newNock = generateResponse('webpurify.live.check', { found: '1' });
+      const nock = generateResponse('webpurify.live.check', { found: '1' });
       const req = this.wp.check('some profanity');
-      return expect(req).to.eventually.equal(true);
+      return req.should.eventually.equal(true);
     });
   });
 
@@ -240,7 +239,7 @@ describe('WebPurify', function() {
     it('should number of profane if profanity', function() {
       const newNock = generateResponse('webpurify.live.checkcount', { found: '2' });
       const req = this.wp.checkCount('some profanity');
-      return expect(req).to.eventually.equal(2);
+      return req.should.eventually.equal(2);
     });
   });
 
