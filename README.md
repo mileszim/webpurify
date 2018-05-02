@@ -25,9 +25,9 @@ This module allows simple interaction with the WebPurify API within Node.js. For
 * [imgCheck](#imgcheck)
 * [imgStatus](#imgstatus)
 * [imgAccount](#imgaccount)
-* [aimImgCheck](#aimimgCheck)
-* [aimImgAccount](#aimimgAccount)
-* [hybridImgCheck](#hybridimgCheck)
+* [aimImgCheck](#aimimgcheck)
+* [aimImgAccount](#aimimgaccount)
+* [hybridImgCheck](#hybridimgcheck)
 
 # Install & Initialize #
 
