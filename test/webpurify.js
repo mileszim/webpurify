@@ -165,7 +165,7 @@ describe('WebPurify', function() {
     it('should reject promise if request invalid', function() {
       this.simpleScope = nock(/test\.com/).get('/invalid').reply(500);
       const req = this.wp.request(this.host, '/invalid', this.method, this.ssl);
-      expect(req).to.be.rejected;
+      return req.should.be.rejected;
     });
   });
 
@@ -219,13 +219,13 @@ describe('WebPurify', function() {
   describe('#check', function() {
     it('should return false if no profanity', function() {
       const req = this.wp.check('no profanity');
-      expect(req).to.eventually.equal(false);
+      return expect(req).to.eventually.equal(false);
     });
 
     it('should return true if profanity', function() {
       const newNock = generateResponse('webpurify.live.check', { found: '1' });
       const req = this.wp.check('some profanity');
-      expect(req).to.eventually.equal(true);
+      return expect(req).to.eventually.equal(true);
     });
   });
 
@@ -234,13 +234,13 @@ describe('WebPurify', function() {
     it('should 0 if no profanity', function() {
       const newNock = generateResponse('webpurify.live.checkcount', { found: '0' });
       const req = this.wp.checkCount('no profanity');
-      expect(req).to.eventually.equal(0);
+      return expect(req).to.eventually.equal(0);
     });
 
     it('should number of profane if profanity', function() {
       const newNock = generateResponse('webpurify.live.checkcount', { found: '2' });
       const req = this.wp.checkCount('some profanity');
-      expect(req).to.eventually.equal(2);
+      return expect(req).to.eventually.equal(2);
     });
   });
 
@@ -249,7 +249,7 @@ describe('WebPurify', function() {
     it('should replace profanity with symbol', function() {
       const newNock = generateResponse('webpurify.live.replace', { text: 'its *******' });
       const req = this.wp.replace('its profane', '*');
-      expect(req).to.eventually.equal('its *******');
+      return expect(req).to.eventually.equal('its *******');
     });
   });
 
@@ -258,13 +258,13 @@ describe('WebPurify', function() {
     it('should return an array of profanity', function() {
       const newNock = generateResponse('webpurify.live.return', { expletive: ['some', 'profanity'] });
       const req = this.wp.return('some profanity');
-      expect(req).to.eventually.equal(['some', 'profanity']);
+      return expect(req).to.eventually.equal(['some', 'profanity']);
     });
 
     it('should return an empty array if no profanity', function() {
       const newNock = generateResponse('webpurify.live.return', { expletive: [] });
       const req = this.wp.return('no profanity');
-      expect(req).to.eventually.equal([]);
+      return expect(req).to.eventually.equal([]);
     });
   });
 
@@ -273,7 +273,7 @@ describe('WebPurify', function() {
     it('should return true on success', function() {
       const newNock = generateResponse('webpurify.live.addtoblacklist', { success: '1' });
       const req = this.wp.addToBlacklist('its profane');
-      expect(req).to.eventually.equal(true);
+      return expect(req).to.eventually.equal(true);
     });
   });
 
@@ -282,7 +282,7 @@ describe('WebPurify', function() {
     it('should return true on success', function() {
       const newNock = generateResponse('webpurify.live.removefromblacklist', { success: '1' });
       const req = this.wp.removeFromBlacklist('its profane');
-      expect(req).to.eventually.equal(true);
+      return expect(req).to.eventually.equal(true);
     });
   });
 
@@ -291,13 +291,13 @@ describe('WebPurify', function() {
     it('should return an array of profanity in list', function() {
       const newNock = generateResponse('webpurify.live.getblacklist', { word: ['some', 'profanity'] });
       const req = this.wp.getBlacklist();
-      expect(req).to.eventually.equal(['some', 'profanity']);
+      return expect(req).to.eventually.equal(['some', 'profanity']);
     });
 
     it('should return an empty array if no profanity', function() {
       const newNock = generateResponse('webpurify.live.getblacklist', {});
       const req = this.wp.getBlacklist();
-      expect(req).to.eventually.equal([]);
+      return expect(req).to.eventually.equal([]);
     });
   });
 
@@ -306,7 +306,7 @@ describe('WebPurify', function() {
     it('should return true on success', function() {
       const newNock = generateResponse('webpurify.live.addtowhitelist', { success: '1' });
       const req = this.wp.addToWhitelist('its profane');
-      expect(req).to.eventually.equal(true);
+      return expect(req).to.eventually.equal(true);
     });
   });
 
@@ -315,7 +315,7 @@ describe('WebPurify', function() {
     it('should return true on success', function() {
       const newNock = generateResponse('webpurify.live.removefromwhitelist', { success: '1' });
       const req = this.wp.removeFromWhitelist('its profane');
-      expect(req).to.eventually.equal(true);
+      return expect(req).to.eventually.equal(true);
     });
   });
 
@@ -324,72 +324,40 @@ describe('WebPurify', function() {
     it('should return an array of profanity in list', function() {
       const newNock = generateResponse('webpurify.live.getwhitelist', { word: ['some', 'cleanliness'] });
       const req = this.wp.getWhitelist();
-      expect(req).to.eventually.equal(['some', 'cleanliness']);
+      return expect(req).to.eventually.equal(['some', 'cleanliness']);
     });
 
     it('should return an empty array if no profanity', function() {
       const newNock = generateResponse('webpurify.live.getwhitelist', {});
       const req = this.wp.getWhitelist();
-      expect(req).to.eventually.equal([]);
+      return expect(req).to.eventually.equal([]);
     });
   });
-
 
 
   describe('#imgCheck', function() {
-    // imgurl (Required)
-    //   Full url to the image you would like moderated.
-    // format (Optional)
-    //   Response format: xml or json. Defaults to xml.
-    // customimgid (Optional)
-    //   A custom ID you wish to associate with the image
-    //   that will be carried through to the callback.
-    // callback (Optional)
-    //   You may also submit a URL encoded callback on
-    //   a per image basis: read more
-
     it('should return imgid – the ID of the moderation process', function() {
       const newNock = generateResponse('webpurify.live.imgcheck', { imgid: '123' });
       const req = this.wp.imgCheck('imgURL');
-      expect(req).to.eventually.equal('123');
+      return expect(req).to.eventually.equal('123');
     });
-
   });
 
-  describe('#imgStatus', function() {
-    // api_key (Required)
-    //   Your API application key.
-    // imgid (Required, if customimgid is not used)
-    //   Image id
-    // customimgid (Optional)
-    //   Custom Image id
-    // format (Optional)
-    //   Response format: xml or json. Defaults to xml.
 
+  describe('#imgStatus', function() {
     it('should return the status – pending|approved|declined', function() {
       const newNock = generateResponse('webpurify.live.imgstatus', { status: 'approved' });
       const req = this.wp.imgStatus('imgID');
-      expect(req).to.eventually.equal('approved');
+      return expect(req).to.eventually.equal('approved');
     });
-
   });
 
-  describe('#imgAccount', function() {
-    // api_key (Required)
-    //   Your API application key.
-    // imgid (Required, if customimgid is not used)
-    //   Image id
-    // customimgid (Optional)
-    //   Custom Image id
-    // format (Optional)
-    //   Response format: xml or json. Defaults to xml.
 
+  describe('#imgAccount', function() {
     it('should return the remaining image submissions on license', function() {
       const newNock = generateResponse('webpurify.life.imgaccount', { remaining: '151' });
       const req = this.wp.imgAccount();
-      expect(req).to.eventually.equal('151');
+      return expect(req).to.eventually.equal('151');
     });
-
   });
-
 });
