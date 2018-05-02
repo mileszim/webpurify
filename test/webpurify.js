@@ -1,4 +1,4 @@
-import chai, { expect, should } from 'chai';
+import chai, { expect, should, assert } from 'chai';
 import sinon from 'sinon';
 import http from 'http';
 import chaiap from 'chai-as-promised';
@@ -81,6 +81,9 @@ describe('WebPurify', function() {
 
   // WebPurify
   it('should construct a new instance', function() {
+    const requiredPlugin = require('../dist');
+    assert.equal(requiredPlugin, WebPurify);
+    assert.notEqual(requiredPlugin.default, WebPurify);
     expect(this.wp).to.be.instanceof(WebPurify);
   });
 
@@ -105,6 +108,29 @@ describe('WebPurify', function() {
 
   it('should configure a query base', function() {
     expect(this.wp._query_base).to.deep.equal({ api_key: 'sdfsdfsdf', format: 'json' });
+  });
+
+  it('should have all documented functions available', function() {
+    const functions = [
+      'check',
+      'checkCount',
+      'replace',
+      'return',
+      'addToBlacklist',
+      'removeFromBlacklist',
+      'getBlacklist',
+      'addToWhitelist',
+      'removeFromWhitelist',
+      'getWhitelist',
+      'imgCheck',
+      'imgStatus',
+      'imgAccount',
+      'aimImgCheck',
+      'aimImgAccount',
+      'hybridImgCheck',
+    ];
+    const wpFunctions = Object.getOwnPropertyNames(this.wp);
+    functions.forEach(f => expect(this.wp[f]).to.not.equal(undefined));
   });
 
 
