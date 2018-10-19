@@ -4,7 +4,7 @@
   "description": "This provides an easy module for interacting with the WebPurify API",
   "main": "dist/index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --compilers js:@babel/register",
+    "test": "./node_modules/.bin/mocha --require @babel/register",
     "build": "./node_modules/.bin/babel src --out-dir dist",
     "build-docs": "./node_modules/.bin/esdoc",
     "clean": "rm -rf ./node_modules ./dist"
@@ -29,7 +29,5 @@
     "mocha": "^5.2.0",
     "nock": "^10.0.1",
     "sinon": "^7.0.0"
-  },
-  "dependencies": {
   }
 }
