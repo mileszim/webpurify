@@ -820,7 +820,7 @@
     "__docId__": 62,
     "kind": "file",
     "name": "src/index.js",
-    "content": "import \"babel-polyfill\";\n\nimport WebPurify from './webpurify';\nmodule.exports = WebPurify;\n",
+    "content": "import WebPurify from './webpurify';\nmodule.exports = WebPurify;\n",
     "static": true,
     "longname": "/Users/miles/Projects/webpurify/src/index.js",
     "access": "public",
@@ -2054,7 +2054,7 @@
   },
   {
     "kind": "packageJSON",
-    "content": "{\n  \"name\": \"webpurify\",\n  \"version\": \"2.0.1\",\n  \"description\": \"This provides an easy module for interacting with the WebPurify API\",\n  \"main\": \"dist/index.js\",\n  \"scripts\": {\n    \"postinstall\": \"npm run-script build\",\n    \"test\": \"./node_modules/.bin/mocha --require babel-register\",\n    \"build\": \"./node_modules/.bin/babel src --out-dir dist\",\n    \"build-docs\": \"./node_modules/.bin/esdoc\",\n    \"clean\": \"rm -rf ./node_modules ./dist\"\n  },\n  \"repository\": \"https://github.com/mileszim/webpurify\",\n  \"keywords\": [\n    \"webpurify\",\n    \"api\"\n  ],\n  \"author\": \"Miles Zimmerman\",\n  \"license\": \"MIT\",\n  \"devDependencies\": {\n    \"babel-cli\": \"^6.26.0\",\n    \"babel-preset-env\": \"^1.6.1\",\n    \"babel-register\": \"^6.26.0\",\n    \"chai\": \"^4.1.2\",\n    \"chai-as-promised\": \"^7.1.1\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"mocha\": \"^5.1.1\",\n    \"nock\": \"^9.2.5\",\n    \"sinon\": \"^4.5.0\"\n  },\n  \"dependencies\": {\n    \"babel-polyfill\": \"^6.26.0\"\n  }\n}\n",
+    "content": "{\n  \"name\": \"webpurify\",\n  \"version\": \"2.1.0\",\n  \"description\": \"This provides an easy module for interacting with the WebPurify API\",\n  \"main\": \"dist/index.js\",\n  \"scripts\": {\n    \"test\": \"./node_modules/.bin/mocha --require @babel/register\",\n    \"build\": \"./node_modules/.bin/babel src --out-dir dist\",\n    \"build-docs\": \"./node_modules/.bin/esdoc\",\n    \"clean\": \"rm -rf ./node_modules ./dist\"\n  },\n  \"repository\": \"https://github.com/mileszim/webpurify\",\n  \"keywords\": [\n    \"webpurify\",\n    \"api\"\n  ],\n  \"author\": \"Miles Zimmerman\",\n  \"license\": \"MIT\",\n  \"engines\": {\n    \"node\": \"6.* || 8.* || >= 10.*\"\n  },\n  \"devDependencies\": {\n    \"@babel/cli\": \"^7.1.2\",\n    \"@babel/core\": \"^7.1.2\",\n    \"@babel/preset-env\": \"^7.1.0\",\n    \"@babel/register\": \"^7.0.0\",\n    \"@babel/polyfill\": \"^7.0.0\",\n    \"chai\": \"^4.2.0\",\n    \"chai-as-promised\": \"^7.1.1\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"mocha\": \"^5.2.0\",\n    \"nock\": \"^10.0.1\",\n    \"sinon\": \"^7.0.0\"\n  }\n}\n",
     "longname": "/Users/miles/Projects/webpurify/package.json",
     "name": "package.json",
     "static": true,
