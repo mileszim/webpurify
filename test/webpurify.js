@@ -35,6 +35,21 @@ const ERROR_SCOPE = {
   }
 };
 
+
+// Object.entries polyfill for node 6
+if (!Object.entries) {
+  Object.entries = function( obj ){
+    var ownProps = Object.keys( obj ),
+        i = ownProps.length,
+        resArray = new Array(i); // preallocate the Array
+    while (i--)
+      resArray[i] = [ownProps[i], obj[ownProps[i]]];
+
+    return resArray;
+  };
+}
+
+
 function generateResponse(method = "some.method", mergeOptions = {}, code = 200) {
   let resScope = Object.assign({}, GENERIC_SCOPE);
   resScope["rsp"]["method"] = method;
