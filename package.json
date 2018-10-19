@@ -16,6 +16,9 @@
   ],
   "author": "Miles Zimmerman",
   "license": "MIT",
+  "engines": {
+    "node": "6.* || 8.* || >= 10.*"
+  },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
