@@ -222,7 +222,7 @@ describe('WebPurify', function() {
       expect(req).to.eventually.equal(false);
     });
 
-    it('should return true if profanity', function() {
+    it('should return true if profanity', async function() {
       const newNock = generateResponse('webpurify.live.check', { found: '1' });
       const req = this.wp.check('some profanity');
       expect(req).to.eventually.equal(true);

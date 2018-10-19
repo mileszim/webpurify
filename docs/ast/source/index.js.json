@@ -1,28 +1,28 @@
 {
   "type": "File",
   "start": 0,
-  "end": 91,
+  "end": 65,
   "loc": {
     "start": {
       "line": 1,
       "column": 0
     },
     "end": {
-      "line": 5,
+      "line": 3,
       "column": 0
     }
   },
   "program": {
     "type": "Program",
     "start": 0,
-    "end": 91,
+    "end": 65,
     "loc": {
       "start": {
         "line": 1,
         "column": 0
       },
       "end": {
-        "line": 5,
+        "line": 3,
         "column": 0
       }
     },
@@ -31,7 +31,7 @@
       {
         "type": "ImportDeclaration",
         "start": 0,
-        "end": 24,
+        "end": 36,
         "loc": {
           "start": {
             "line": 1,
@@ -39,71 +39,35 @@
           },
           "end": {
             "line": 1,
-            "column": 24
-          }
-        },
-        "specifiers": [],
-        "source": {
-          "type": "StringLiteral",
-          "start": 7,
-          "end": 23,
-          "loc": {
-            "start": {
-              "line": 1,
-              "column": 7
-            },
-            "end": {
-              "line": 1,
-              "column": 23
-            }
-          },
-          "extra": {
-            "rawValue": "babel-polyfill",
-            "raw": "\"babel-polyfill\""
-          },
-          "value": "babel-polyfill"
-        }
-      },
-      {
-        "type": "ImportDeclaration",
-        "start": 26,
-        "end": 62,
-        "loc": {
-          "start": {
-            "line": 3,
-            "column": 0
-          },
-          "end": {
-            "line": 3,
             "column": 36
           }
         },
         "specifiers": [
           {
             "type": "ImportDefaultSpecifier",
-            "start": 33,
-            "end": 42,
+            "start": 7,
+            "end": 16,
             "loc": {
               "start": {
-                "line": 3,
+                "line": 1,
                 "column": 7
               },
               "end": {
-                "line": 3,
+                "line": 1,
                 "column": 16
               }
             },
             "local": {
               "type": "Identifier",
-              "start": 33,
-              "end": 42,
+              "start": 7,
+              "end": 16,
               "loc": {
                 "start": {
-                  "line": 3,
+                  "line": 1,
                   "column": 7
                 },
                 "end": {
-                  "line": 3,
+                  "line": 1,
                   "column": 16
                 },
                 "identifierName": "WebPurify"
@@ -114,15 +78,15 @@
         ],
         "source": {
           "type": "StringLiteral",
-          "start": 48,
-          "end": 61,
+          "start": 22,
+          "end": 35,
           "loc": {
             "start": {
-              "line": 3,
+              "line": 1,
               "column": 22
             },
             "end": {
-              "line": 3,
+              "line": 1,
               "column": 35
             }
           },
@@ -135,58 +99,58 @@
       },
       {
         "type": "ExpressionStatement",
-        "start": 63,
-        "end": 90,
+        "start": 37,
+        "end": 64,
         "loc": {
           "start": {
-            "line": 4,
+            "line": 2,
             "column": 0
           },
           "end": {
-            "line": 4,
+            "line": 2,
             "column": 27
           }
         },
         "expression": {
           "type": "AssignmentExpression",
-          "start": 63,
-          "end": 89,
+          "start": 37,
+          "end": 63,
           "loc": {
             "start": {
-              "line": 4,
+              "line": 2,
               "column": 0
             },
             "end": {
-              "line": 4,
+              "line": 2,
               "column": 26
             }
           },
           "operator": "=",
           "left": {
             "type": "MemberExpression",
-            "start": 63,
-            "end": 77,
+            "start": 37,
+            "end": 51,
             "loc": {
               "start": {
-                "line": 4,
+                "line": 2,
                 "column": 0
               },
               "end": {
-                "line": 4,
+                "line": 2,
                 "column": 14
               }
             },
             "object": {
               "type": "Identifier",
-              "start": 63,
-              "end": 69,
+              "start": 37,
+              "end": 43,
               "loc": {
                 "start": {
-                  "line": 4,
+                  "line": 2,
                   "column": 0
                 },
                 "end": {
-                  "line": 4,
+                  "line": 2,
                   "column": 6
                 },
                 "identifierName": "module"
@@ -195,15 +159,15 @@
             },
             "property": {
               "type": "Identifier",
-              "start": 70,
-              "end": 77,
+              "start": 44,
+              "end": 51,
               "loc": {
                 "start": {
-                  "line": 4,
+                  "line": 2,
                   "column": 7
                 },
                 "end": {
-                  "line": 4,
+                  "line": 2,
                   "column": 14
                 },
                 "identifierName": "exports"
@@ -214,15 +178,15 @@
           },
           "right": {
             "type": "Identifier",
-            "start": 80,
-            "end": 89,
+            "start": 54,
+            "end": 63,
             "loc": {
               "start": {
-                "line": 4,
+                "line": 2,
                 "column": 17
               },
               "end": {
-                "line": 4,
+                "line": 2,
                 "column": 26
               },
               "identifierName": "WebPurify"
@@ -266,87 +230,6 @@
     },
     {
       "type": {
-        "label": "string",
-        "beforeExpr": false,
-        "startsExpr": true,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null,
-        "updateContext": null
-      },
-      "value": "babel-polyfill",
-      "start": 7,
-      "end": 23,
-      "loc": {
-        "start": {
-          "line": 1,
-          "column": 7
-        },
-        "end": {
-          "line": 1,
-          "column": 23
-        }
-      }
-    },
-    {
-      "type": {
-        "label": ";",
-        "beforeExpr": true,
-        "startsExpr": false,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null,
-        "updateContext": null
-      },
-      "start": 23,
-      "end": 24,
-      "loc": {
-        "start": {
-          "line": 1,
-          "column": 23
-        },
-        "end": {
-          "line": 1,
-          "column": 24
-        }
-      }
-    },
-    {
-      "type": {
-        "label": "import",
-        "keyword": "import",
-        "beforeExpr": false,
-        "startsExpr": true,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null,
-        "updateContext": null
-      },
-      "value": "import",
-      "start": 26,
-      "end": 32,
-      "loc": {
-        "start": {
-          "line": 3,
-          "column": 0
-        },
-        "end": {
-          "line": 3,
-          "column": 6
-        }
-      }
-    },
-    {
-      "type": {
         "label": "name",
         "beforeExpr": false,
         "startsExpr": true,
@@ -358,15 +241,15 @@
         "binop": null
       },
       "value": "WebPurify",
-      "start": 33,
-      "end": 42,
+      "start": 7,
+      "end": 16,
       "loc": {
         "start": {
-          "line": 3,
+          "line": 1,
           "column": 7
         },
         "end": {
-          "line": 3,
+          "line": 1,
           "column": 16
         }
       }
@@ -384,15 +267,15 @@
         "binop": null
       },
       "value": "from",
-      "start": 43,
-      "end": 47,
+      "start": 17,
+      "end": 21,
       "loc": {
         "start": {
-          "line": 3,
+          "line": 1,
           "column": 17
         },
         "end": {
-          "line": 3,
+          "line": 1,
           "column": 21
         }
       }
@@ -411,15 +294,15 @@
         "updateContext": null
       },
       "value": "./webpurify",
-      "start": 48,
-      "end": 61,
+      "start": 22,
+      "end": 35,
       "loc": {
         "start": {
-          "line": 3,
+          "line": 1,
           "column": 22
         },
         "end": {
-          "line": 3,
+          "line": 1,
           "column": 35
         }
       }
@@ -437,15 +320,15 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 61,
-      "end": 62,
+      "start": 35,
+      "end": 36,
       "loc": {
         "start": {
-          "line": 3,
+          "line": 1,
           "column": 35
         },
         "end": {
-          "line": 3,
+          "line": 1,
           "column": 36
         }
       }
@@ -463,15 +346,15 @@
         "binop": null
       },
       "value": "module",
-      "start": 63,
-      "end": 69,
+      "start": 37,
+      "end": 43,
       "loc": {
         "start": {
-          "line": 4,
+          "line": 2,
           "column": 0
         },
         "end": {
-          "line": 4,
+          "line": 2,
           "column": 6
         }
       }
@@ -489,15 +372,15 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 69,
-      "end": 70,
+      "start": 43,
+      "end": 44,
       "loc": {
         "start": {
-          "line": 4,
+          "line": 2,
           "column": 6
         },
         "end": {
-          "line": 4,
+          "line": 2,
           "column": 7
         }
       }
@@ -515,15 +398,15 @@
         "binop": null
       },
       "value": "exports",
-      "start": 70,
-      "end": 77,
+      "start": 44,
+      "end": 51,
       "loc": {
         "start": {
-          "line": 4,
+          "line": 2,
           "column": 7
         },
         "end": {
-          "line": 4,
+          "line": 2,
           "column": 14
         }
       }
@@ -542,15 +425,15 @@
         "updateContext": null
       },
       "value": "=",
-      "start": 78,
-      "end": 79,
+      "start": 52,
+      "end": 53,
       "loc": {
         "start": {
-          "line": 4,
+          "line": 2,
           "column": 15
         },
         "end": {
-          "line": 4,
+          "line": 2,
           "column": 16
         }
       }
@@ -568,15 +451,15 @@
         "binop": null
       },
       "value": "WebPurify",
-      "start": 80,
-      "end": 89,
+      "start": 54,
+      "end": 63,
       "loc": {
         "start": {
-          "line": 4,
+          "line": 2,
           "column": 17
         },
         "end": {
-          "line": 4,
+          "line": 2,
           "column": 26
         }
       }
@@ -594,15 +477,15 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 89,
-      "end": 90,
+      "start": 63,
+      "end": 64,
       "loc": {
         "start": {
-          "line": 4,
+          "line": 2,
           "column": 26
         },
         "end": {
-          "line": 4,
+          "line": 2,
           "column": 27
         }
       }
@@ -620,15 +503,15 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 91,
-      "end": 91,
+      "start": 65,
+      "end": 65,
       "loc": {
         "start": {
-          "line": 5,
+          "line": 3,
           "column": 0
         },
         "end": {
-          "line": 5,
+          "line": 3,
           "column": 0
         }
       }
